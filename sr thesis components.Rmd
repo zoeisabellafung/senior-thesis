@@ -65,8 +65,9 @@ write.csv(USDA2fires_clean, "USDA2fires_clean.csv")
 # load USDA 1 pre & post fire data
 USDA1_prefire <- read.csv("data/USDA_RDA_pre_post_trees.csv") %>%
   clean_names() %>% # standardize column names
-  filter(yr_fire_name %in% USDAfires_clean$yr_fire_name) %>% # subset data to only include CA fires w/ location, species, and fire severity data
-  add_column(latitude=case_when(
+  filter(yr_fire_name %in% USDAfires_clean$yr_fire_name) %>%
+  select(yr_fire_name, species, dataset, tree_num, genus, species_name, dbh_cm, drc_cm, ht_m, hcb_pre, cr_pre, cc, vr, cl_m) # subset data to only include CA fires w/ location, species, and fire severity data
+USDA1_prefire <- mutate(USDA1_prefire, latitude=case_when(
     str_detect(yr_fire_name, "1989 - SEKI Crystal") ~ "36.60068",
     str_detect(yr_fire_name, "SEKI Grant West I") ~ "36.74582",
     str_detect(yr_fire_name, "SEKI Highway 2") ~ "36.57336",
@@ -134,7 +135,89 @@ USDA1_prefire <- read.csv("data/USDA_RDA_pre_post_trees.csv") %>%
     str_detect(yr_fire_name, "Rim") ~ "37.90192",
     str_detect(yr_fire_name, "Salmon Complex") ~ "41.31864",
     str_detect(yr_fire_name, "Wooded Hills") ~ "32.85336"
+  )) %>%
+  mutate(USDA1_prefire, longitude=case_when(
+    str_detect(yr_fire_name, "1989 - SEKI Crystal") ~ "-118.8102",
+    str_detect(yr_fire_name, "SEKI Grant West I") ~ "-118.9772",
+    str_detect(yr_fire_name, "SEKI Highway 2") ~ "-118.7604",
+    str_detect(yr_fire_name, "SEKI Tharps") ~ "-118.7428",
+    str_detect(yr_fire_name, "SEKI Deer Creek PNF") ~ "-118.6585", # stopped here - continue in next row
+    str_detect(yr_fire_name, "SEKI Grant West") ~ "36.74582",
+    str_detect(yr_fire_name, "LAVO Knob/ Lost Creek") ~ "40.56738",
+    str_detect(yr_fire_name, "SEKI Hole-inthe-Wall") ~ "36.78695",
+    str_detect(yr_fire_name, "SEKI Picnic Estates") ~ "36.79198",
+    str_detect(yr_fire_name, "Crystal") ~ "39.51724",
+    str_detect(yr_fire_name, "LAVO Butte Lake") ~ "40.58129",
+    str_detect(yr_fire_name, "SEKI Mineral King") ~ "36.46600",
+    str_detect(yr_fire_name, "WHIS Brandy Creek") ~ "40.61878",
+    str_detect(yr_fire_name, "1996 - WHIS Shasta Divide") ~ "40.57916",
+    str_detect(yr_fire_name, "REDW Mainstem") ~ "41.12729",
+    str_detect(yr_fire_name, "REDW Midbasin") ~ "41.13717",
+    str_detect(yr_fire_name, "Bucks") ~ "39.88539",
+    str_detect(yr_fire_name, "SEKI Hercules") ~ "36.56936",
+    str_detect(yr_fire_name, "SEKI Mineral KingS10") ~ "36.46601",
+    str_detect(yr_fire_name, "Storrie") ~ "40.02744",
+    str_detect(yr_fire_name, "Volcano Spring") ~ "39.15980",
+    str_detect(yr_fire_name, "FSS2") ~ "36.59506",
+    str_detect(yr_fire_name, "FSS5") ~ "36.58481",
+    str_detect(yr_fire_name, "FSS6") ~ "36.58518",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 174") ~ "41.54627",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 178") ~ "41.56750",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 179") ~ "41.58725",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 1") ~ "36.59455",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 4") ~ "36.58567",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 5") ~ "36.58582",
+    str_detect(yr_fire_name, "Star") ~ "39.09857",
+    str_detect(yr_fire_name, "Swain") ~ "40.67535",
+    str_detect(yr_fire_name, "Blodgett 129 - 60") ~ "38.91730",
+    str_detect(yr_fire_name, "Blodgett 130 - 340") ~ "38.89821",
+    str_detect(yr_fire_name, "Blodgett 131 - 400") ~ "38.89666",
+    str_detect(yr_fire_name, "Cone") ~ "40.75172",
+    str_detect(yr_fire_name, "McNalley") ~ "36.57336",
+    str_detect(yr_fire_name, "REDW Copper Creek") ~ "41.15085",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 181") ~ "41.60037",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 182") ~ "41.56346",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 183") ~ "41.55452",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 2") ~ "36.59416",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 3") ~ "36.59189",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 8") ~ "36.57340",
+    str_detect(yr_fire_name, "LABE South Boundary") ~ "41.69815",
+    str_detect(yr_fire_name, "2003 - WHIS Shasta Divide") ~ "40.57916",
+    str_detect(yr_fire_name, "Power") ~ "38.50190",
+    str_detect(yr_fire_name, "Tennant") ~ "41.55805",
+    str_detect(yr_fire_name, "Tharps2") ~ "36.56328",
+    str_detect(yr_fire_name, "Harding") ~ "39.63345",
+    str_detect(yr_fire_name, "SEKI Lewis Creek") ~ "36.76013",
+    str_detect(yr_fire_name, "Angora") ~ "38.88529",
+    str_detect(yr_fire_name, "Antelope") ~ "40.14120",
+    str_detect(yr_fire_name, "Grass Valley") ~ "34.26739",
+    str_detect(yr_fire_name, "PW-4") ~ "37.80125",
+    str_detect(yr_fire_name, "American River Complex") ~ "39.22988",
+    str_detect(yr_fire_name, "Peterson") ~ "40.89497",
+    str_detect(yr_fire_name, "Piute") ~ "35.48923",
+    str_detect(yr_fire_name, "Rich") ~ "40.06137",
+    str_detect(yr_fire_name, "2008 - Seki Crystal") ~ "36.60068",
+    str_detect(yr_fire_name, "WHIS White Rock") ~ "40.64606",
+    str_detect(yr_fire_name, "Milford") ~ "40.10646",
+    str_detect(yr_fire_name, "REDW Eastside") ~ "41.14705",
+    str_detect(yr_fire_name, "Mountain") ~ "33.71030",
+    str_detect(yr_fire_name, "Rim") ~ "37.90192",
+    str_detect(yr_fire_name, "Salmon Complex") ~ "41.31864",
+    str_detect(yr_fire_name, "Wooded Hills") ~ "32.85336"
   ))
+
+# write csv for USDA1 prefire data
+write.csv(USDA1_prefire, "USDA1_prefire.csv")
+
+# test mutate on a smaller data table
+prefiretest <- slice(USDA1_prefire, 1:5) %>% # select first 5 rows of USDA1 prefire
+  select(yr_fire_name, species, dataset) %>% # only keep first 3 variables
+  mutate(latitude=case_when(
+    str_detect(yr_fire_name, "Grass Valley") ~ "34.26739",
+    str_detect(yr_fire_name, "FSS2") ~ "36.59506",
+    str_detect(yr_fire_name, "FSS5") ~ "36.58481",
+    str_detect(yr_fire_name, "McNalley") ~ "36.57336")) # add latitude column
+
 ```
 
 ### vegetation data

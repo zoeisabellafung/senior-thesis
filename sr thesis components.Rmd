@@ -65,8 +65,11 @@ write.csv(USDA2fires_clean, "USDA2fires_clean.csv")
 # load USDA 1 pre & post fire data
 USDA1_prefire <- read.csv("data/USDA_RDA_pre_post_trees.csv") %>%
   clean_names() %>% # standardize column names
-  filter(yr_fire_name %in% USDAfires_clean$yr_fire_name) %>% # subset data to only include CA fires w/ location, species, and fire severity data
-  add_column(latitude=case_when(
+  filter(yr_fire_name %in% USDAfires_clean$yr_fire_name) %>%
+  select(yr_fire_name, species, dataset, tree_num, genus, species_name, dbh_cm, drc_cm, ht_m, hcb_pre, cr_pre, cc, vr, cl_m) # subset data to only include CA fires w/ location, species, and fire severity data
+
+# add latitude data
+USDA1_prefire <- mutate(USDA1_prefire, latitude=case_when(
     str_detect(yr_fire_name, "1989 - SEKI Crystal") ~ "36.60068",
     str_detect(yr_fire_name, "SEKI Grant West I") ~ "36.74582",
     str_detect(yr_fire_name, "SEKI Highway 2") ~ "36.57336",
@@ -135,6 +138,107 @@ USDA1_prefire <- read.csv("data/USDA_RDA_pre_post_trees.csv") %>%
     str_detect(yr_fire_name, "Salmon Complex") ~ "41.31864",
     str_detect(yr_fire_name, "Wooded Hills") ~ "32.85336"
   ))
+
+# add longitude data
+USDA1_prefire <- mutate(USDA1_prefire, longitude=case_when(
+    str_detect(yr_fire_name, "1989 - SEKI Crystal") ~ "-118.8102",
+    str_detect(yr_fire_name, "SEKI Grant West I") ~ "-118.9772",
+    str_detect(yr_fire_name, "SEKI Highway 2") ~ "-118.7604",
+    str_detect(yr_fire_name, "SEKI Tharps") ~ "-118.7428",
+    str_detect(yr_fire_name, "SEKI Deer Creek PNF") ~ "-118.6585", # stopped here - continue in next row
+    str_detect(yr_fire_name, "SEKI Grant West") ~ "-118.9772",
+    str_detect(yr_fire_name, "LAVO Knob/ Lost Creek") ~ "-121.5252",
+    str_detect(yr_fire_name, "SEKI Hole-inthe-Wall") ~ "-118.6302",
+    str_detect(yr_fire_name, "SEKI Picnic Estates") ~ "-118.6669",
+    str_detect(yr_fire_name, "Crystal") ~ "-120.0372",
+    str_detect(yr_fire_name, "LAVO Butte Lake") ~ "-121.2966",
+    str_detect(yr_fire_name, "SEKI Mineral King") ~ "-118.6934",
+    str_detect(yr_fire_name, "WHIS Brandy Creek") ~ "-122.5739",
+    str_detect(yr_fire_name, "1996 - WHIS Shasta Divide") ~ "-122.5247",
+    str_detect(yr_fire_name, "REDW Mainstem") ~ "-123.8691",
+    str_detect(yr_fire_name, "REDW Midbasin") ~ "-123.8881",
+    str_detect(yr_fire_name, "Bucks") ~ "-121.3127",
+    str_detect(yr_fire_name, "SEKI Hercules") ~ "-118.7515",
+    str_detect(yr_fire_name, "SEKI Mineral KingS10") ~ "-118.6935",
+    str_detect(yr_fire_name, "Storrie") ~ "-121.2872",
+    str_detect(yr_fire_name, "Volcano Spring") ~ "-120.6647",
+    str_detect(yr_fire_name, "FSS2") ~ "-118.7470",
+    str_detect(yr_fire_name, "FSS5") ~ "-118.7552",
+    str_detect(yr_fire_name, "FSS6") ~ "-118.7596",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 174") ~ "-121.8868",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 178") ~ "-121.8468",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 179") ~ "-121.8417",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 1") ~ "-118.7470",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 4") ~ "-118.7549",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 5") ~ "-118.7592",
+    str_detect(yr_fire_name, "Star") ~ "-120.4895",
+    str_detect(yr_fire_name, "Swain") ~ "-121.2609",
+    str_detect(yr_fire_name, "Blodgett 129 - 60") ~ "-120.6639",
+    str_detect(yr_fire_name, "Blodgett 130 - 340") ~ "-120.6545",
+    str_detect(yr_fire_name, "Blodgett 131 - 400") ~ "-120.6489",
+    str_detect(yr_fire_name, "Cone") ~ "-121.1582",
+    str_detect(yr_fire_name, "McNalley") ~ "-118.4001",
+    str_detect(yr_fire_name, "REDW Copper Creek") ~ "-123.8945",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 181") ~ "-121.8468",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 182") ~ "-121.8937",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 183") ~ "-121.8638",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 2") ~ "-118.7520",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 3") ~ "-118.7552",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 8") ~ "-118.7721",
+    str_detect(yr_fire_name, "LABE South Boundary") ~ "-121.5030",
+    str_detect(yr_fire_name, "2003 - WHIS Shasta Divide") ~ "-122.5247",
+    str_detect(yr_fire_name, "Power") ~ "-120.2801",
+    str_detect(yr_fire_name, "Tennant") ~ "-121.9136",
+    str_detect(yr_fire_name, "Tharps2") ~ "-118.7428",
+    str_detect(yr_fire_name, "Harding") ~ "-120.3098",
+    str_detect(yr_fire_name, "SEKI Lewis Creek") ~ "-118.7051",
+    str_detect(yr_fire_name, "Angora") ~ "-120.0365",
+    str_detect(yr_fire_name, "Antelope") ~ "-120.5751",
+    str_detect(yr_fire_name, "Grass Valley") ~ "-117.2301",
+    str_detect(yr_fire_name, "PW-4") ~ "-119.8694",
+    str_detect(yr_fire_name, "American River Complex") ~ "-120.6351",
+    str_detect(yr_fire_name, "Peterson") ~ "-121.3170",
+    str_detect(yr_fire_name, "Piute") ~ "-118.3568",
+    str_detect(yr_fire_name, "Rich") ~ "-121.1244",
+    str_detect(yr_fire_name, "2008 - Seki Crystal") ~ "-118.8102",
+    str_detect(yr_fire_name, "WHIS White Rock") ~ "-122.5381",
+    str_detect(yr_fire_name, "Milford") ~ "-120.3957",
+    str_detect(yr_fire_name, "REDW Eastside") ~ "-123.8678",
+    str_detect(yr_fire_name, "Mountain") ~ "--116.7062",
+    str_detect(yr_fire_name, "Rim") ~ "--120.0836",
+    str_detect(yr_fire_name, "Salmon Complex") ~ "-123.1824",
+    str_detect(yr_fire_name, "Wooded Hills") ~ "-116.4381"
+  ))
+
+# create list of the CA fires w/ pre-fire data available
+USDA1pre_fires_list <- distinct(USDA1_prefire,yr_fire_name)
+
+# create a dataset with only fire name, latitude, and longitude for pre-fire data
+USDA1prefire_clean <- USDA1_prefire[, c("yr_fire_name", "latitude", "longitude")]
+
+# remove repeat rows: keep only 1 row for each set of fire/coordinates
+USDA1prefire_clean <- distinct(USDA1prefire_clean)
+
+# write csv for USDA1 prefire data
+write.csv(USDA1prefire_clean, "USDA1prefire_clean.csv")
+
+# test mutate on a smaller data table
+prefiretest <- slice(USDA1_prefire, 1:5) %>% # select first 5 rows of USDA1 prefire
+  select(yr_fire_name, species, dataset) %>% # only keep first 3 variables
+  mutate(latitude=case_when(
+    str_detect(yr_fire_name, "Grass Valley") ~ "34.26739",
+    str_detect(yr_fire_name, "FSS2") ~ "36.59506",
+    str_detect(yr_fire_name, "FSS5") ~ "36.58481",
+    str_detect(yr_fire_name, "McNalley") ~ "36.57336")) # add latitude column
+
+# create data frame for USDA 1 post-fire data
+USDA1_postfire <- read.csv("data/USDA_RDA_pre_post_trees.csv") %>%
+  clean_names() %>% # standardize variable names
+  filter(yr_fire_name %in% USDAfires_clean$yr_fire_name) %>%
+  select(yr_fire_name, species, dataset, times_burned, tree_num, genus, species_name, hcb_post, cr_post, csh_m, cls_m, clk_m, cls_percent, clk_percent, cvs_percent, cvk_percent, cbs, bcha_m, bchm_m, bch_percent, bca, ckr, gca, gir_percent, dmr) # select only columns relating to post-fire measurements
+
+# load USDA 2 pre & post fire data
+crag <- read.csv("data/USDA:USFS/2005_Crag/!FBAT_Trees_Crag_Rawdata")
 ```
 
 ### vegetation data

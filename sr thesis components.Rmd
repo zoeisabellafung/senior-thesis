@@ -210,6 +210,9 @@ USDA1_prefire <- mutate(USDA1_prefire, longitude=case_when(
     str_detect(yr_fire_name, "Wooded Hills") ~ "-116.4381"
   ))
 
+# identify the species for which pre/post-fire data exists
+USDA1_species <- distinct(USDA1_prefire, species)
+
 # create list of the CA fires w/ pre-fire data available
 USDA1pre_fires_list <- distinct(USDA1_prefire,yr_fire_name)
 
@@ -235,7 +238,7 @@ prefiretest <- slice(USDA1_prefire, 1:5) %>% # select first 5 rows of USDA1 pref
 USDA1_postfire <- read.csv("data/USDA_RDA_pre_post_trees.csv") %>%
   clean_names() %>% # standardize variable names
   filter(yr_fire_name %in% USDAfires_clean$yr_fire_name) %>%
-  select(yr_fire_name, species, dataset, times_burned, tree_num, genus, species_name, hcb_post, cr_post, csh_m, cls_m, clk_m, cls_percent, clk_percent, cvs_percent, cvk_percent, cbs, bcha_m, bchm_m, bch_percent, bca, ckr, gca, gir_percent, dmr) # select only columns relating to post-fire measurements
+  select(yr_fire_name, species, dataset, times_burned, tree_num, genus, species_name, csh_m, cls_m, clk_m, cls_percent, clk_percent, cvs_percent, cvk_percent, cbs, bcha_m, bchm_m, bch_percent, bca, ckr, gca, gir_percent) # select only columns relating to post-fire measurements
 
 # load USDA 2 pre & post fire data
 crag <- read.csv("data/USDA:USFS/2005_Crag/!FBAT_Trees_Crag_Rawdata")
@@ -247,9 +250,11 @@ crag <- read.csv("data/USDA:USFS/2005_Crag/!FBAT_Trees_Crag_Rawdata")
 vegetation <- read.csv("data/VTM_species_location.csv")
 ```
 
-### plant trait data
+### leaf trait data
 ```{r}
-# load plant trait dataset
+# load leaf trait dataset
+leaf_traits_summary <- read.csv("data/LDMC-LL-LLength.csv")
+
 ```
 
 ## map building

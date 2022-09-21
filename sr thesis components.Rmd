@@ -245,7 +245,10 @@ USDA1_postfire <- read.csv("data/USDA_RDA_pre_post_trees.csv") %>%
   filter(yr_fire_name %in% USDAfires_clean$yr_fire_name) %>%
   select(yr_fire_name, species, dataset, times_burned, tree_num, genus, species_name, csh_m, cls_m, clk_m, cls_percent, clk_percent, cvs_percent, cvk_percent, cbs, bcha_m, bchm_m, bch_percent, bca, ckr, gca, gir_percent) # select only columns relating to post-fire measurements
 
-
+# determine how many data points are available for post-fire data (include crown scorch height & max bole char height measurements)
+USDA1_postfire <- drop_na(USDA1_postfire, csh_m) %>% 
+  drop_na(bchm_m) %>% 
+  distinct(yr_fire_name, species, dataset, tree_num, genus, species_name, csh_m, cls_m, clk_m, cls_percent, clk_percent, cvs_percent, cvk_percent, cbs, bcha_m, bchm_m, bch_percent, bca, ckr, gca, gir_percent) # drop duplicate rows -- 6,970 data points w/ both crown scorch height and max bole char height
 
 # load USDA 2 pre & post fire data
 crag <- read.csv("data/USDA:USFS/2005_Crag/!FBAT_Trees_Crag_Rawdata")

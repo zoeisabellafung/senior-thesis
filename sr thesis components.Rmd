@@ -59,9 +59,27 @@ USDA2fires_clean <- as.data.frame(cbind(yr_fire_name,latitude,longitude))
 
 # create a .csv file for USDA2fires_clean
 write.csv(USDA2fires_clean, "USDA2fires_clean.csv")
+
+### PLOT locations for Nicole's data -- Laguna Mtn, Bluff Mesa, & Thomas fires
+# read in all plot location data & organize
+laguna_location <- read_csv("data/Nicole-data/LagunaMtn_plot_coordinates.csv") %>%
+  clean_names() %>% # standardize column names
+  select(site_year, plot_id, treatment_unit, easting, northing) %>% # subset data 
+  as.data.frame() %>%
+  drop_na("plot_id")
+bluffmesa_location <- read_csv("data/Nicole-data/BluffMesa_plot_coordinates.csv") %>%
+  clean_names() %>% # standardize column names
+  select(site_year, plot_id, treatment_unit, easting, northing) %>% # subset data
+  as.data.frame() %>%
+  drop_na("plot_id")
+thomas_location <- read_csv("data/Nicole-data/ThomasFire_plot_coordinates.csv") %>%
+  clean_names() %>% # standardize column names
+  select(site_year, plot_id, treatment_unit, easting, northing) %>% # subset data 
+  as.data.frame() %>%
+  drop_na("plot_id")
 ```
 
-#### pre-fire
+#### pre-fire: USDA/USFS data
 ```{r}
 # load USDA 1 pre & post fire data
 USDA1_prefire <- read.csv("data/USDA_RDA_pre_post_trees.csv") %>%
@@ -252,6 +270,30 @@ USDA1_postfire <- drop_na(USDA1_postfire, csh_m) %>%
 
 # load USDA 2 pre & post fire data
 crag <- read.csv("data/USDA:USFS/2005_Crag/!FBAT_Trees_Crag_Rawdata")
+```
+
+#### pre-fire - Nicole's data
+```{r}
+# load in all pre-fire data
+laguna_pre <- read_csv("data/Nicole-data/LagunaMtn_pre_2016.csv") %>%
+  clean_names() %>% # standardize column names
+  select(project, date, id, treatment, tag_number, status, species, dbh_cm, height_m, heigt_to_crown_m, dbh_ft, basal_area_sq_ft_indiv) %>% # subset data 
+  as.data.frame() %>%
+  rename("height_to_crown_m"="heigt_to_crown_m", "plot_id"="id", "treatment_unit"="treatment")
+bluffmesa_pre <- read_csv("data/Nicole-data/BluffMesa_pre_2016.csv") %>%
+  clean_names() %>% # standardize column names
+  select(project, date, id, treatment, tag_number, status, species, dbh_cm, height_m, heigt_to_crown_m, dbh_ft, ba_indiv_sq_ft) %>% # subset data 
+  as.data.frame() %>%
+  rename("height_to_crown_m"="heigt_to_crown_m", "plot_id"="id", "treatment_unit"="treatment", "basal_area_sq_ft_indiv"="ba_indiv_sq_ft")
+```
+
+### post-fire data
+#### Nicole's data
+```{r}
+# load in all post-fire data
+laguna_post <- read_csv("data/Nicole-data/LagunaMtn_post_2017.csv")
+thomas_post1 <- read_csv("data/Nicole-data/ThomasFire_post_2018.csv")
+thomas_post2 <- read_csv("data/Nicole-data/ThomasFire_post_2018_2.csv")
 ```
 
 ### vegetation data

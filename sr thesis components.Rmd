@@ -164,7 +164,7 @@ USDA1_prefire <- mutate(USDA1_prefire, longitude=case_when(
     str_detect(yr_fire_name, "SEKI Grant West I") ~ "-118.9772",
     str_detect(yr_fire_name, "SEKI Highway 2") ~ "-118.7604",
     str_detect(yr_fire_name, "SEKI Tharps") ~ "-118.7428",
-    str_detect(yr_fire_name, "SEKI Deer Creek PNF") ~ "-118.6585", # stopped here - continue in next row
+    str_detect(yr_fire_name, "SEKI Deer Creek PNF") ~ "-118.6585", 
     str_detect(yr_fire_name, "SEKI Grant West") ~ "-118.9772",
     str_detect(yr_fire_name, "LAVO Knob/ Lost Creek") ~ "-121.5252",
     str_detect(yr_fire_name, "SEKI Hole-inthe-Wall") ~ "-118.6302",
@@ -274,7 +274,7 @@ crag <- read.csv("data/USDA:USFS/2005_Crag/!FBAT_Trees_Crag_Rawdata")
 
 #### pre-fire - Nicole's data
 ```{r}
-# load in all pre-fire data
+# load in all pre-fire data & organize
 laguna_pre <- read_csv("data/Nicole-data/LagunaMtn_pre_2016.csv") %>%
   clean_names() %>% # standardize column names
   select(project, date, id, treatment, tag_number, status, species, dbh_cm, height_m, heigt_to_crown_m, dbh_ft, basal_area_sq_ft_indiv) %>% # subset data 
@@ -285,6 +285,82 @@ bluffmesa_pre <- read_csv("data/Nicole-data/BluffMesa_pre_2016.csv") %>%
   select(project, date, id, treatment, tag_number, status, species, dbh_cm, height_m, heigt_to_crown_m, dbh_ft, ba_indiv_sq_ft) %>% # subset data 
   as.data.frame() %>%
   rename("height_to_crown_m"="heigt_to_crown_m", "plot_id"="id", "treatment_unit"="treatment", "basal_area_sq_ft_indiv"="ba_indiv_sq_ft")
+
+# since location data is organized by PLOT, find plot averages for DBH (subset by species)
+laguna_species <- unique(laguna_pre$species) # create list of all species present in laguna fire data
+laguna_pre <- laguna_pre %>%
+  drop_na("species") # drop rows where species is not specified
+
+laguna_pre_PIJE <- filter(laguna_pre, species == "PIJE") # create data frame w/ only PIJE sp.
+laguna_pre_QUCH <- filter(laguna_pre, species == "QUCH") # create data frame w/ only QUCH sp.
+laguna_pre_QUKE <- filter(laguna_pre, species == "QUKE") # create data frame w/ only QUKE sp.
+laguna_pre_PICO <- filter(laguna_pre, species == "PICO") # create data frame w/ only PICO sp.
+laguna_pre_CADE <- filter(laguna_pre, species == "CADE") # create data frame w/ only CADE sp.
+
+laguna_pre_PIJE_plots <- unique(laguna_pre_PIJE$plot_id) # print each plot ID where PIJE is present
+
+# create a data frame for each plot 
+laguna_pre_PIJE_80 <- filter(laguna_pre_PIJE, plot_id == "80")
+laguna_pre_PIJE_81 <- filter(laguna_pre_PIJE, plot_id == "81")
+laguna_pre_PIJE_82 <- filter(laguna_pre_PIJE, plot_id == "82")
+laguna_pre_PIJE_83 <- filter(laguna_pre_PIJE, plot_id == "83")
+laguna_pre_PIJE_85 <- filter(laguna_pre_PIJE, plot_id == "85")
+laguna_pre_PIJE_86 <- filter(laguna_pre_PIJE, plot_id == "86")
+laguna_pre_PIJE_87 <- filter(laguna_pre_PIJE, plot_id == "87")
+laguna_pre_PIJE_88 <- filter(laguna_pre_PIJE, plot_id == "88")
+laguna_pre_PIJE_89 <- filter(laguna_pre_PIJE, plot_id == "89")
+laguna_pre_PIJE_90 <- filter(laguna_pre_PIJE, plot_id == "90")
+laguna_pre_PIJE_91 <- filter(laguna_pre_PIJE, plot_id == "91")
+laguna_pre_PIJE_92 <- filter(laguna_pre_PIJE, plot_id == "92")
+laguna_pre_PIJE_93 <- filter(laguna_pre_PIJE, plot_id == "93")
+laguna_pre_PIJE_97 <- filter(laguna_pre_PIJE, plot_id == "97")
+laguna_pre_PIJE_98 <- filter(laguna_pre_PIJE, plot_id == "98")
+laguna_pre_PIJE_99 <- filter(laguna_pre_PIJE, plot_id == "99")
+laguna_pre_PIJE_105 <- filter(laguna_pre_PIJE, plot_id == "105")
+laguna_pre_PIJE_106 <- filter(laguna_pre_PIJE, plot_id == "106")
+laguna_pre_PIJE_107 <- filter(laguna_pre_PIJE, plot_id == "107")
+laguna_pre_PIJE_108 <- filter(laguna_pre_PIJE, plot_id == "108")
+laguna_pre_PIJE_109 <- filter(laguna_pre_PIJE, plot_id == "109")
+laguna_pre_PIJE_110 <- filter(laguna_pre_PIJE, plot_id == "110")
+laguna_pre_PIJE_111 <- filter(laguna_pre_PIJE, plot_id == "111")
+laguna_pre_PIJE_112 <- filter(laguna_pre_PIJE, plot_id == "112")
+laguna_pre_PIJE_113 <- filter(laguna_pre_PIJE, plot_id == "113")
+
+# create vectors of avg. dbh (cm) for each plot
+l.80 <- mean(laguna_pre_PIJE_80$dbh_cm)
+l.81 <- mean(laguna_pre_PIJE_81$dbh_cm)
+l.82 <- mean(laguna_pre_PIJE_82$dbh_cm)
+l.83 <- mean(laguna_pre_PIJE_83$dbh_cm)
+l.85 <- mean(laguna_pre_PIJE_85$dbh_cm)
+l.86 <- mean(laguna_pre_PIJE_86$dbh_cm)
+l.87 <- mean(laguna_pre_PIJE_87$dbh_cm)
+l.88 <- mean(laguna_pre_PIJE_88$dbh_cm)
+l.89 <- mean(laguna_pre_PIJE_89$dbh_cm)
+l.90 <- mean(laguna_pre_PIJE_90$dbh_cm)
+l.91 <- mean(laguna_pre_PIJE_91$dbh_cm)
+l.92 <- mean(laguna_pre_PIJE_92$dbh_cm)
+l.93 <- mean(laguna_pre_PIJE_93$dbh_cm)
+l.97 <- mean(laguna_pre_PIJE_97$dbh_cm)
+l.98 <- mean(laguna_pre_PIJE_98$dbh_cm)
+l.99 <- mean(laguna_pre_PIJE_99$dbh_cm)
+l.105 <- mean(laguna_pre_PIJE_105$dbh_cm)
+l.106 <- mean(laguna_pre_PIJE_106$dbh_cm)
+l.107 <- mean(laguna_pre_PIJE_107$dbh_cm)
+l.108 <- mean(laguna_pre_PIJE_108$dbh_cm)
+l.109 <- mean(laguna_pre_PIJE_109$dbh_cm)
+l.110 <- mean(laguna_pre_PIJE_110$dbh_cm)
+l.111 <- mean(laguna_pre_PIJE_111$dbh_cm)
+l.112 <- mean(laguna_pre_PIJE_112$dbh_cm)
+l.113 <- mean(laguna_pre_PIJE_113$dbh_cm)
+
+# create data frame: project, year, plot_id, & dbh_cm
+laguna <- rep("Laguna Mtn.", times = 100)
+laguna_pre_PIJE_clean <- data.frame(
+  project = rep("Laguna Mtn.", length = 25), # how do i get the length to match the vector length rather than having to manually type in a length?
+  year = rep("2016", length = 25),
+  plot_id = c(laguna_pre_PIJE_plots),
+  dbh_cm = c(l.80, l.81, l.82, l.83, l.85, l.86, l.87, l.88, l.89, l.90, l.91, l.92, l.93, l.97, l.98, l.99, l.105, l.106, l.107, l.108, l.109, l.110, l.111, l.112, l.113)
+)
 ```
 
 ### post-fire data
@@ -292,6 +368,7 @@ bluffmesa_pre <- read_csv("data/Nicole-data/BluffMesa_pre_2016.csv") %>%
 ```{r}
 # load in all post-fire data
 laguna_post <- read_csv("data/Nicole-data/LagunaMtn_post_2017.csv")
+bluffmeas_post <- read_csv("data/Nicole-data/BluffMesa_post_2021.csv")
 thomas_post1 <- read_csv("data/Nicole-data/ThomasFire_post_2018.csv")
 thomas_post2 <- read_csv("data/Nicole-data/ThomasFire_post_2018_2.csv")
 ```

@@ -275,18 +275,20 @@ crag <- read.csv("data/USDA:USFS/2005_Crag/!FBAT_Trees_Crag_Rawdata")
 #### pre-fire - Nicole's data
 ```{r}
 # load in all pre-fire data & organize
-laguna_pre <- read_csv("data/Nicole-data/LagunaMtn_pre_2016.csv") %>%
+laguna_pre <- read_csv("data/Nicole-data/LagunaMtn_pre_2016.csv")  %>%
   clean_names() %>% # standardize column names
   select(project, date, id, treatment, tag_number, status, species, dbh_cm, height_m, heigt_to_crown_m, dbh_ft, basal_area_sq_ft_indiv) %>% # subset data 
-  as.data.frame() %>%
-  rename("height_to_crown_m"="heigt_to_crown_m", "plot_id"="id", "treatment_unit"="treatment")
+  as.data.frame()%>%
+  rename("height_to_crown_m"="heigt_to_crown_m", "plot_id"="id", "treatment_unit"="treatment") %>%
+  mutate(tree_area = ((pi*(laguna_pre$dbh_cm^2)/4)/100)) # add column w/ area measurements for each tree
 bluffmesa_pre <- read_csv("data/Nicole-data/BluffMesa_pre_2016.csv") %>%
   clean_names() %>% # standardize column names
   select(project, date, id, treatment, tag_number, status, species, dbh_cm, height_m, heigt_to_crown_m, dbh_ft, ba_indiv_sq_ft) %>% # subset data 
   as.data.frame() %>%
-  rename("height_to_crown_m"="heigt_to_crown_m", "plot_id"="id", "treatment_unit"="treatment", "basal_area_sq_ft_indiv"="ba_indiv_sq_ft")
+  rename("height_to_crown_m"="heigt_to_crown_m", "plot_id"="id", "treatment_unit"="treatment", "basal_area_sq_ft_indiv"="ba_indiv_sq_ft") %>%
+  mutate(tree_area = ((pi*(bluffmesa_pre$dbh_cm^2)/4)/100)) # add column with area measurements for each tree
 
-# since location data is organized by PLOT, find plot averages for DBH (subset by species)
+# since location data is organized by PLOT, find tree area per plot (subset by species)
 laguna_species <- unique(laguna_pre$species) # create list of all species present in laguna fire data
 laguna_pre <- laguna_pre %>%
   drop_na("species") # drop rows where species is not specified
@@ -300,6 +302,7 @@ laguna_pre_CADE <- filter(laguna_pre, species == "CADE") # create data frame w/ 
 laguna_pre_PIJE_plots <- unique(laguna_pre_PIJE$plot_id) # print each plot ID where PIJE is present
 
 # create a data frame for each plot 
+## NOTE: each plot is an 11.3m radius circular plot
 laguna_pre_PIJE_80 <- filter(laguna_pre_PIJE, plot_id == "80")
 laguna_pre_PIJE_81 <- filter(laguna_pre_PIJE, plot_id == "81")
 laguna_pre_PIJE_82 <- filter(laguna_pre_PIJE, plot_id == "82")
@@ -326,40 +329,53 @@ laguna_pre_PIJE_111 <- filter(laguna_pre_PIJE, plot_id == "111")
 laguna_pre_PIJE_112 <- filter(laguna_pre_PIJE, plot_id == "112")
 laguna_pre_PIJE_113 <- filter(laguna_pre_PIJE, plot_id == "113")
 
-# create vectors of avg. dbh (cm) for each plot
-l.80 <- mean(laguna_pre_PIJE_80$dbh_cm)
-l.81 <- mean(laguna_pre_PIJE_81$dbh_cm)
-l.82 <- mean(laguna_pre_PIJE_82$dbh_cm)
-l.83 <- mean(laguna_pre_PIJE_83$dbh_cm)
-l.85 <- mean(laguna_pre_PIJE_85$dbh_cm)
-l.86 <- mean(laguna_pre_PIJE_86$dbh_cm)
-l.87 <- mean(laguna_pre_PIJE_87$dbh_cm)
-l.88 <- mean(laguna_pre_PIJE_88$dbh_cm)
-l.89 <- mean(laguna_pre_PIJE_89$dbh_cm)
-l.90 <- mean(laguna_pre_PIJE_90$dbh_cm)
-l.91 <- mean(laguna_pre_PIJE_91$dbh_cm)
-l.92 <- mean(laguna_pre_PIJE_92$dbh_cm)
-l.93 <- mean(laguna_pre_PIJE_93$dbh_cm)
-l.97 <- mean(laguna_pre_PIJE_97$dbh_cm)
-l.98 <- mean(laguna_pre_PIJE_98$dbh_cm)
-l.99 <- mean(laguna_pre_PIJE_99$dbh_cm)
-l.105 <- mean(laguna_pre_PIJE_105$dbh_cm)
-l.106 <- mean(laguna_pre_PIJE_106$dbh_cm)
-l.107 <- mean(laguna_pre_PIJE_107$dbh_cm)
-l.108 <- mean(laguna_pre_PIJE_108$dbh_cm)
-l.109 <- mean(laguna_pre_PIJE_109$dbh_cm)
-l.110 <- mean(laguna_pre_PIJE_110$dbh_cm)
-l.111 <- mean(laguna_pre_PIJE_111$dbh_cm)
-l.112 <- mean(laguna_pre_PIJE_112$dbh_cm)
-l.113 <- mean(laguna_pre_PIJE_113$dbh_cm)
+# calculate plot area
+plot_area <- pi*(11.3^2)
+## plot area = 401.15m^2
 
+# create vectors of the sum of each species' area per plot
+l_p_80 <- sum(laguna_pre_PIJE_80$tree_area)
+l_p_81 <- sum(laguna_pre_PIJE_81$tree_area)
+l_p_82 <- sum(laguna_pre_PIJE_82$tree_area)
+l_p_83 <- sum(laguna_pre_PIJE_83$tree_area)
+l_p_85 <- sum(laguna_pre_PIJE_85$tree_area)
+l_p_86 <- sum(laguna_pre_PIJE_86$tree_area)
+l_p_87 <- sum(laguna_pre_PIJE_87$tree_area)
+l_p_88 <- sum(laguna_pre_PIJE_88$tree_area)
+l_p_89 <- sum(laguna_pre_PIJE_89$tree_area)
+l_p_90 <- sum(laguna_pre_PIJE_90$tree_area)
+l_p_91 <- sum(laguna_pre_PIJE_91$tree_area)
+l_p_92 <- sum(laguna_pre_PIJE_92$tree_area)
+l_p_93 <- sum(laguna_pre_PIJE_93$tree_area)
+l_p_97 <- sum(laguna_pre_PIJE_97$tree_area)
+l_p_98 <- sum(laguna_pre_PIJE_98$tree_area)
+l_p_99 <- sum(laguna_pre_PIJE_99$tree_area)
+l_p_105 <- sum(laguna_pre_PIJE_105$tree_area)
+l_p_106 <- sum(laguna_pre_PIJE_106$tree_area)
+l_p_107 <- sum(laguna_pre_PIJE_107$tree_area)
+l_p_108 <- sum(laguna_pre_PIJE_108$tree_area)
+l_p_109 <- sum(laguna_pre_PIJE_109$tree_area)
+l_p_110 <- sum(laguna_pre_PIJE_110$tree_area)
+l_p_111 <- sum(laguna_pre_PIJE_111$tree_area)
+l_p_112 <- sum(laguna_pre_PIJE_112$tree_area)
+l_p_113 <- sum(laguna_pre_PIJE_113$tree_area)
+
+# create data frame: project, year, plot_id, & abundance for PIJE
+laguna_pre_PIJE_clean <- data.frame(
+  project = rep("Laguna Mtn.", times = 25),
+  year = rep("2016", length = 25),
+  plot_id = c(laguna_pre_PIJE_plots),
+  abundance = c(l_p_80/plot_area, l_p_81/plot_area, l_p_82/plot_area, l_p_83/plot_area, l_p_85/plot_area, l_p_86/plot_area, l_p_87/plot_area, l_p_88/plot_area, l_p_89/plot_area, l_p_90/plot_area, l_p_91/plot_area, l_p_92/plot_area, l_p_93/plot_area, l_p_97/plot_area, l_p_98/plot_area, l_p_99/plot_area, l_p_105/plot_area, l_p_106/plot_area, l_p_107/plot_area, l_p_108/plot_area, l_p_109/plot_area, l_p_110/plot_area, l_p_111/plot_area, l_p_112/plot_area, l_p_113/plot_area)
+)
+  
+# to combine data frames w/ same column variables: use rbind()
 # create data frame: project, year, plot_id, & dbh_cm
 laguna <- rep("Laguna Mtn.", times = 100)
 laguna_pre_PIJE_clean <- data.frame(
   project = rep("Laguna Mtn.", length = 25), # how do i get the length to match the vector length rather than having to manually type in a length?
   year = rep("2016", length = 25),
   plot_id = c(laguna_pre_PIJE_plots),
-  dbh_cm = c(l.80, l.81, l.82, l.83, l.85, l.86, l.87, l.88, l.89, l.90, l.91, l.92, l.93, l.97, l.98, l.99, l.105, l.106, l.107, l.108, l.109, l.110, l.111, l.112, l.113)
+  dbh_cm = c(l_p_80, l_p_81, l_p_82, l_p_83, l_p_85, l_p_86, l_p_87, l_p_88, l_p_89, l_p_90, l_p_91, l_p_92, l_p_93, l_p_97, l_p_98, l_p_99, l_p_105, l_p_106, l_p_107, l_p_108, l_p_109, l_p_110, l_p_111, l_p_112, l_p_113)
 )
 ```
 

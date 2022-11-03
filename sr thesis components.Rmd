@@ -299,6 +299,8 @@ laguna_pre_QUKE <- filter(laguna_pre, species == "QUKE") # create data frame w/ 
 laguna_pre_PICO <- filter(laguna_pre, species == "PICO") # create data frame w/ only PICO sp.
 laguna_pre_CADE <- filter(laguna_pre, species == "CADE") # create data frame w/ only CADE sp.
 
+#### PIJE
+
 laguna_pre_PIJE_plots <- unique(laguna_pre_PIJE$plot_id) # print each plot ID where PIJE is present
 
 # create a data frame for each plot 
@@ -362,20 +364,137 @@ l_p_113 <- sum(laguna_pre_PIJE_113$tree_area)
 
 # create data frame: project, year, plot_id, & abundance for PIJE
 laguna_pre_PIJE_clean <- data.frame(
-  project = rep("Laguna Mtn.", times = 25),
-  year = rep("2016", length = 25),
+  project = rep("Laguna Mtn.", times = length(laguna_pre_PIJE_plots)), 
+  year = rep("2016", times = length(laguna_pre_PIJE_plots)),
   plot_id = c(laguna_pre_PIJE_plots),
   abundance = c(l_p_80/plot_area, l_p_81/plot_area, l_p_82/plot_area, l_p_83/plot_area, l_p_85/plot_area, l_p_86/plot_area, l_p_87/plot_area, l_p_88/plot_area, l_p_89/plot_area, l_p_90/plot_area, l_p_91/plot_area, l_p_92/plot_area, l_p_93/plot_area, l_p_97/plot_area, l_p_98/plot_area, l_p_99/plot_area, l_p_105/plot_area, l_p_106/plot_area, l_p_107/plot_area, l_p_108/plot_area, l_p_109/plot_area, l_p_110/plot_area, l_p_111/plot_area, l_p_112/plot_area, l_p_113/plot_area)
 )
-  
-# to combine data frames w/ same column variables: use rbind()
-# create data frame: project, year, plot_id, & dbh_cm
-laguna <- rep("Laguna Mtn.", times = 100)
-laguna_pre_PIJE_clean <- data.frame(
-  project = rep("Laguna Mtn.", length = 25), # how do i get the length to match the vector length rather than having to manually type in a length?
-  year = rep("2016", length = 25),
-  plot_id = c(laguna_pre_PIJE_plots),
-  dbh_cm = c(l_p_80, l_p_81, l_p_82, l_p_83, l_p_85, l_p_86, l_p_87, l_p_88, l_p_89, l_p_90, l_p_91, l_p_92, l_p_93, l_p_97, l_p_98, l_p_99, l_p_105, l_p_106, l_p_107, l_p_108, l_p_109, l_p_110, l_p_111, l_p_112, l_p_113)
+
+#### QUCH
+
+laguna_pre_QUCH_plots <- unique(laguna_pre_QUCH$plot_id) # print each plot ID where QUCH is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.3m radius circular plot
+laguna_pre_QUCH_80 <- filter(laguna_pre_QUCH, plot_id == "80")
+laguna_pre_QUCH_81 <- filter(laguna_pre_QUCH, plot_id == "81")
+laguna_pre_QUCH_82 <- filter(laguna_pre_QUCH, plot_id == "82")
+laguna_pre_QUCH_83 <- filter(laguna_pre_QUCH, plot_id == "83")
+laguna_pre_QUCH_87 <- filter(laguna_pre_QUCH, plot_id == "87")
+laguna_pre_QUCH_110 <- filter(laguna_pre_QUCH, plot_id == "110")
+
+## plot area = 401.15m^2
+
+# create vectors of the sum of each species' area per plot
+l_qc_80 <- sum(laguna_pre_QUCH_80$tree_area)
+l_qc_81 <- sum(laguna_pre_QUCH_81$tree_area)
+l_qc_82 <- sum(laguna_pre_QUCH_82$tree_area)
+l_qc_83 <- sum(laguna_pre_QUCH_83$tree_area)
+l_qc_87 <- sum(laguna_pre_QUCH_87$tree_area)
+l_qc_110 <- sum(laguna_pre_QUCH_110$tree_area)
+
+# create data frame: project, year, plot_id, & abundance for PIJE
+laguna_pre_QUCH_clean <- data.frame(
+  project = rep("Laguna Mtn.", times = length(laguna_pre_QUCH_plots)), # how do i get the length to match the vector length rather than having to manually type in a length?
+  year = rep("2016", times = length(laguna_pre_QUCH_plots)),
+  plot_id = c(laguna_pre_QUCH_plots),
+  abundance = c(l_qc_80/plot_area, l_qc_81/plot_area, l_qc_82/plot_area, l_qc_83/plot_area, l_qc_87/plot_area, l_qc_110/plot_area)
+)
+
+#### QUKE
+
+laguna_pre_QUKE_plots <- unique(laguna_pre_QUKE$plot_id) # print each plot ID where QUKE is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.3m radius circular plot
+laguna_pre_QUKE_80 <- filter(laguna_pre_QUKE, plot_id == "80")
+laguna_pre_QUKE_81 <- filter(laguna_pre_QUKE, plot_id == "81")
+laguna_pre_QUKE_82 <- filter(laguna_pre_QUKE, plot_id == "82")
+laguna_pre_QUKE_83 <- filter(laguna_pre_QUKE, plot_id == "83")
+laguna_pre_QUKE_85 <- filter(laguna_pre_QUKE, plot_id == "85")
+laguna_pre_QUKE_86 <- filter(laguna_pre_QUKE, plot_id == "86")
+laguna_pre_QUKE_87 <- filter(laguna_pre_QUKE, plot_id == "87")
+laguna_pre_QUKE_88 <- filter(laguna_pre_QUKE, plot_id == "88")
+laguna_pre_QUKE_91 <- filter(laguna_pre_QUKE, plot_id == "91")
+laguna_pre_QUKE_92 <- filter(laguna_pre_QUKE, plot_id == "92")
+laguna_pre_QUKE_93 <- filter(laguna_pre_QUKE, plot_id == "93")
+laguna_pre_QUKE_95 <- filter(laguna_pre_QUKE, plot_id == "95")
+laguna_pre_QUKE_97 <- filter(laguna_pre_QUKE, plot_id == "97")
+laguna_pre_QUKE_98 <- filter(laguna_pre_QUKE, plot_id == "98")
+laguna_pre_QUKE_99 <- filter(laguna_pre_QUKE, plot_id == "99")
+laguna_pre_QUKE_105 <- filter(laguna_pre_QUKE, plot_id == "105")
+laguna_pre_QUKE_108 <- filter(laguna_pre_QUKE, plot_id == "108")
+laguna_pre_QUKE_109 <- filter(laguna_pre_QUKE, plot_id == "109")
+laguna_pre_QUKE_111 <- filter(laguna_pre_QUKE, plot_id == "111")
+laguna_pre_QUKE_112 <- filter(laguna_pre_QUKE, plot_id == "112")
+laguna_pre_QUKE_113 <- filter(laguna_pre_QUKE, plot_id == "113")
+laguna_pre_QUKE_114 <- filter(laguna_pre_QUKE, plot_id == "114")
+laguna_pre_QUKE_115 <- filter(laguna_pre_QUKE, plot_id == "115")
+
+## plot area = 401.15m^2
+
+# create vectors of the sum of each species' area per plot
+l_qk_80 <- sum(laguna_pre_QUKE_80$tree_area)
+l_qk_81 <- sum(laguna_pre_QUKE_81$tree_area)
+l_qk_82 <- sum(laguna_pre_QUKE_82$tree_area)
+l_qk_83 <- sum(laguna_pre_QUKE_83$tree_area)
+l_qk_85 <- sum(laguna_pre_QUKE_85$tree_area)
+l_qk_86 <- sum(laguna_pre_QUKE_86$tree_area)
+l_qk_87 <- sum(laguna_pre_QUKE_87$tree_area)
+l_qk_88 <- sum(laguna_pre_QUKE_88$tree_area)
+l_qk_91 <- sum(laguna_pre_QUKE_91$tree_area)
+l_qk_92 <- sum(laguna_pre_QUKE_92$tree_area)
+l_qk_93 <- sum(laguna_pre_QUKE_93$tree_area)
+l_qk_95 <- sum(laguna_pre_QUKE_95$tree_area)
+l_qk_97 <- sum(laguna_pre_QUKE_97$tree_area)
+l_qk_98 <- sum(laguna_pre_QUKE_98$tree_area)
+l_qk_99 <- sum(laguna_pre_QUKE_99$tree_area)
+l_qk_105 <- sum(laguna_pre_QUKE_105$tree_area)
+l_qk_108 <- sum(laguna_pre_QUKE_108$tree_area)
+l_qk_109 <- sum(laguna_pre_QUKE_109$tree_area)
+l_qk_111 <- sum(laguna_pre_QUKE_111$tree_area)
+l_qk_112 <- sum(laguna_pre_QUKE_112$tree_area)
+l_qk_113 <- sum(laguna_pre_QUKE_113$tree_area)
+l_qk_114 <- sum(laguna_pre_QUKE_114$tree_area)
+l_qk_115 <- sum(laguna_pre_QUKE_115$tree_area)
+
+# create data frame: project, year, plot_id, & abundance for PIJE
+laguna_pre_QUKE_clean <- data.frame(
+  project = rep("Laguna Mtn.", times = length(laguna_pre_QUKE_plots)), 
+  year = rep("2016", times = length(laguna_pre_QUKE_plots)),
+  plot_id = c(laguna_pre_QUKE_plots),
+  abundance = c(l_qk_80/plot_area, l_qk_81/plot_area, l_qk_82/plot_area, l_qk_83/plot_area, l_qk_85/plot_area, l_qk_86/plot_area, l_qk_87/plot_area, l_qk_88/plot_area, l_qk_91/plot_area, l_qk_92/plot_area, l_qk_93/plot_area, l_qk_95/plot_area, l_qk_97/plot_area, l_qk_98/plot_area, l_qk_99/plot_area, l_qk_105/plot_area, l_qk_108/plot_area, l_qk_109/plot_area, l_qk_111/plot_area, l_qk_112/plot_area, l_qk_113/plot_area, l_qk_114/plot_area, l_qk_115/plot_area)
+)
+
+#### PICO
+
+laguna_pre_PICO_plots <- unique(laguna_pre_PICO$plot_id) # print each plot ID where PICO is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.3m radius circular plot
+laguna_pre_PICO_89 <- filter(laguna_pre_PICO, plot_id == "89")
+laguna_pre_PICO_90 <- filter(laguna_pre_PICO, plot_id == "90")
+laguna_pre_PICO_91 <- filter(laguna_pre_PICO, plot_id == "91")
+laguna_pre_PICO_111 <- filter(laguna_pre_PICO, plot_id == "111")
+laguna_pre_PICO_112 <- filter(laguna_pre_PICO, plot_id == "112")
+laguna_pre_PICO_113 <- filter(laguna_pre_PICO, plot_id == "113")
+
+## plot area = 401.15m^2
+
+# create vectors of the sum of each species' area per plot
+l_pc_89 <- sum(laguna_pre_PICO_89$tree_area)
+l_pc_90 <- sum(laguna_pre_PICO_90$tree_area)
+l_pc_91 <- sum(laguna_pre_PICO_91$tree_area)
+l_pc_111 <- sum(laguna_pre_PICO_111$tree_area)
+l_pc_112 <- sum(laguna_pre_PICO_112$tree_area)
+l_pc_113 <- sum(laguna_pre_PICO_113$tree_area)
+
+# create data frame: project, year, plot_id, & abundance for PICO
+laguna_pre_PICO_clean <- data.frame(
+  project = rep("Laguna Mtn.", times = length(laguna_pre_PICO_plots)), 
+  year = rep("2016", times = length(laguna_pre_PICO_plots)),
+  plot_id = c(laguna_pre_PICO_plots),
+  abundance = c(l_pc_89/plot_area, l_pc_90/plot_area, l_pc_91/plot_area, l_pc_111/plot_area, l_pc_112/plot_area, l_pc_113/plot_area)
 )
 ```
 

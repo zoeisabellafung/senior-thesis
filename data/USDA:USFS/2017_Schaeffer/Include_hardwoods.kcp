@@ -1,0 +1,10 @@
+!! Created by Nicole Vaillant, 12/6/15 
+
+!! Set the FFE parameters to:
+FMIN
+
+!! CANCALC base the CBD & CBH values on all trees >6ft tall which is the defaults
+!!            method    min ht       spp   cut off
+CANCALC            0         6         1        30
+
+END

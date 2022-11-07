@@ -275,10 +275,10 @@ crag <- read.csv("data/USDA:USFS/2005_Crag/!FBAT_Trees_Crag_Rawdata")
 #### pre-fire - Nicole's data
 ```{r}
 # load in all pre-fire data & organize
-laguna_pre <- read_csv("data/Nicole-data/LagunaMtn_pre_2016.csv")  %>%
+laguna_pre <- read_csv("data/Nicole-data/LagunaMtn_pre_2016.csv") %>%
   clean_names() %>% # standardize column names
   select(project, date, id, treatment, tag_number, status, species, dbh_cm, height_m, heigt_to_crown_m, dbh_ft, basal_area_sq_ft_indiv) %>% # subset data 
-  as.data.frame()%>%
+  as.data.frame() %>%
   rename("height_to_crown_m"="heigt_to_crown_m", "plot_id"="id", "treatment_unit"="treatment") %>%
   mutate(tree_area = ((pi*(laguna_pre$dbh_cm^2)/4)/100)) # add column w/ area measurements for each tree
 bluffmesa_pre <- read_csv("data/Nicole-data/BluffMesa_pre_2016.csv") %>%
@@ -297,7 +297,7 @@ laguna_pre_PIJE <- filter(laguna_pre, species == "PIJE") # create data frame w/ 
 laguna_pre_QUCH <- filter(laguna_pre, species == "QUCH") # create data frame w/ only QUCH sp.
 laguna_pre_QUKE <- filter(laguna_pre, species == "QUKE") # create data frame w/ only QUKE sp.
 laguna_pre_PICO <- filter(laguna_pre, species == "PICO") # create data frame w/ only PICO sp.
-laguna_pre_CADE <- filter(laguna_pre, species == "CADE") # create data frame w/ only CADE sp.
+laguna_pre_CADE <- filter(laguna_pre, species == "CADE") # create data frame w/ only CADE sp. --> I did not end up including this species in my leaf trait data since it wasn't listed as a species in the TRY database
 
 #### PIJE
 
@@ -366,6 +366,7 @@ l_p_113 <- sum(laguna_pre_PIJE_113$tree_area)
 laguna_pre_PIJE_clean <- data.frame(
   project = rep("Laguna Mtn.", times = length(laguna_pre_PIJE_plots)), 
   year = rep("2016", times = length(laguna_pre_PIJE_plots)),
+  species = rep("PIJE", times = length(laguna_pre_PIJE_plots)),
   plot_id = c(laguna_pre_PIJE_plots),
   abundance = c(l_p_80/plot_area, l_p_81/plot_area, l_p_82/plot_area, l_p_83/plot_area, l_p_85/plot_area, l_p_86/plot_area, l_p_87/plot_area, l_p_88/plot_area, l_p_89/plot_area, l_p_90/plot_area, l_p_91/plot_area, l_p_92/plot_area, l_p_93/plot_area, l_p_97/plot_area, l_p_98/plot_area, l_p_99/plot_area, l_p_105/plot_area, l_p_106/plot_area, l_p_107/plot_area, l_p_108/plot_area, l_p_109/plot_area, l_p_110/plot_area, l_p_111/plot_area, l_p_112/plot_area, l_p_113/plot_area)
 )
@@ -397,6 +398,7 @@ l_qc_110 <- sum(laguna_pre_QUCH_110$tree_area)
 laguna_pre_QUCH_clean <- data.frame(
   project = rep("Laguna Mtn.", times = length(laguna_pre_QUCH_plots)), # how do i get the length to match the vector length rather than having to manually type in a length?
   year = rep("2016", times = length(laguna_pre_QUCH_plots)),
+  species = rep("QUCH", times = length(laguna_pre_QUCH_plots)),
   plot_id = c(laguna_pre_QUCH_plots),
   abundance = c(l_qc_80/plot_area, l_qc_81/plot_area, l_qc_82/plot_area, l_qc_83/plot_area, l_qc_87/plot_area, l_qc_110/plot_area)
 )
@@ -462,6 +464,7 @@ l_qk_115 <- sum(laguna_pre_QUKE_115$tree_area)
 laguna_pre_QUKE_clean <- data.frame(
   project = rep("Laguna Mtn.", times = length(laguna_pre_QUKE_plots)), 
   year = rep("2016", times = length(laguna_pre_QUKE_plots)),
+  species = rep("QUKE", times = length(laguna_pre_QUKE_plots)),
   plot_id = c(laguna_pre_QUKE_plots),
   abundance = c(l_qk_80/plot_area, l_qk_81/plot_area, l_qk_82/plot_area, l_qk_83/plot_area, l_qk_85/plot_area, l_qk_86/plot_area, l_qk_87/plot_area, l_qk_88/plot_area, l_qk_91/plot_area, l_qk_92/plot_area, l_qk_93/plot_area, l_qk_95/plot_area, l_qk_97/plot_area, l_qk_98/plot_area, l_qk_99/plot_area, l_qk_105/plot_area, l_qk_108/plot_area, l_qk_109/plot_area, l_qk_111/plot_area, l_qk_112/plot_area, l_qk_113/plot_area, l_qk_114/plot_area, l_qk_115/plot_area)
 )
@@ -493,9 +496,77 @@ l_pc_113 <- sum(laguna_pre_PICO_113$tree_area)
 laguna_pre_PICO_clean <- data.frame(
   project = rep("Laguna Mtn.", times = length(laguna_pre_PICO_plots)), 
   year = rep("2016", times = length(laguna_pre_PICO_plots)),
+  species = rep("PICO", times = length(laguna_pre_PICO_plots)),
   plot_id = c(laguna_pre_PICO_plots),
   abundance = c(l_pc_89/plot_area, l_pc_90/plot_area, l_pc_91/plot_area, l_pc_111/plot_area, l_pc_112/plot_area, l_pc_113/plot_area)
 )
+
+# combine all pre-fire data from laguna plots
+laguna_pre_clean <- rbind(laguna_pre_PIJE_clean, laguna_pre_QUCH_clean, laguna_pre_QUKE_clean, laguna_pre_PICO_clean)
+
+# repeat for bluff mesa
+bluffmesa_species <- unique(bluffmesa_pre$species) # create list of all species present in laguna fire data
+bluffmesa_pre <- bluffmesa_pre %>%
+  drop_na("species") # drop rows where species is not specified
+
+bluffmesa_pre_ABCO <- filter(bluffmesa_pre, species == "ABCO") # create data frame w/ only ABCO sp.
+bluffmesa_pre_PIJE <- filter(bluffmesa_pre, species == "PIJE") # create data frame w/ only PIJE sp.
+bluffmesa_pre_PILA <- filter(bluffmesa_pre, species == "PILA") # create data frame w/ only PILA sp.
+
+#### ABCO
+
+bluffmesa_pre_ABCO_plots <- unique(bluffmesa_pre_ABCO$plot_id) # print each plot ID where ABCO is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.3m radius circular plot
+bluffmesa_pre_ABCO_1 <- filter(bluffmesa_pre_ABCO, plot_id == "1")
+bluffmesa_pre_ABCO_2 <- filter(bluffmesa_pre_ABCO, plot_id == "2")
+bluffmesa_pre_ABCO_3 <- filter(bluffmesa_pre_ABCO, plot_id == "3")
+bluffmesa_pre_ABCO_5 <- filter(bluffmesa_pre_ABCO, plot_id == "5")
+bluffmesa_pre_ABCO_6 <- filter(bluffmesa_pre_ABCO, plot_id == "6")
+bluffmesa_pre_ABCO_8 <- filter(bluffmesa_pre_ABCO, plot_id == "8")
+bluffmesa_pre_ABCO_9 <- filter(bluffmesa_pre_ABCO, plot_id == "9")
+bluffmesa_pre_ABCO_10 <- filter(bluffmesa_pre_ABCO, plot_id == "10")
+bluffmesa_pre_ABCO_11 <- filter(bluffmesa_pre_ABCO, plot_id == "11")
+bluffmesa_pre_ABCO_12 <- filter(bluffmesa_pre_ABCO, plot_id == "12")
+bluffmesa_pre_ABCO_20 <- filter(bluffmesa_pre_ABCO, plot_id == "20")
+bluffmesa_pre_ABCO_102 <- filter(bluffmesa_pre_ABCO, plot_id == "102")
+bluffmesa_pre_ABCO_103 <- filter(bluffmesa_pre_ABCO, plot_id == "103")
+bluffmesa_pre_ABCO_104 <- filter(bluffmesa_pre_ABCO, plot_id == "104")
+bluffmesa_pre_ABCO_105 <- filter(bluffmesa_pre_ABCO, plot_id == "105")
+bluffmesa_pre_ABCO_106 <- filter(bluffmesa_pre_ABCO, plot_id == "106")
+
+# calculate plot area
+plot_area <- pi*(11.3^2)
+## plot area = 401.15m^2
+
+# create vectors of the sum of each species' area per plot
+bm_a1 <- sum(bluffmesa_pre_ABCO_1$tree_area)
+bm_a2 <- sum(bluffmesa_pre_ABCO_2$tree_area)
+bm_a3 <- sum(bluffmesa_pre_ABCO_3$tree_area)
+bm_a5 <- sum(bluffmesa_pre_ABCO_5$tree_area)
+bm_a6 <- sum(bluffmesa_pre_ABCO_6$tree_area)
+bm_a8 <- sum(bluffmesa_pre_ABCO_8$tree_area)
+bm_a9 <- sum(bluffmesa_pre_ABCO_9$tree_area)
+bm_a10 <- sum(bluffmesa_pre_ABCO_10$tree_area)
+bm_a11 <- sum(bluffmesa_pre_ABCO_11$tree_area)
+bm_a12 <- sum(bluffmesa_pre_ABCO_12$tree_area)
+bm_a20 <- sum(bluffmesa_pre_ABCO_20$tree_area)
+bm_a102 <- sum(bluffmesa_pre_ABCO_102$tree_area)
+bm_a103 <- sum(bluffmesa_pre_ABCO_103$tree_area)
+bm_a104 <- sum(bluffmesa_pre_ABCO_104$tree_area)
+bm_a105 <- sum(bluffmesa_pre_ABCO_105$tree_area)
+bm_a106 <- sum(bluffmesa_pre_ABCO_106$tree_area)
+
+# create data frame: project, year, plot_id, & abundance for ABCO
+bluffmesa_pre_ABCO_clean <- data.frame(
+  project = rep("Bluff Mesa", times = length(bluffmesa_pre_ABCO_plots)), 
+  year = rep("2016", times = length(bluffmesa_pre_ABCO_plots)),
+  species = rep("ABCO", times = length(bluffmesa_pre_ABCO_plots)),
+  plot_id = c(laguna_pre_PIJE_plots), ## LEFT OFF HERE
+  abundance = c(l_p_80/plot_area, l_p_81/plot_area, l_p_82/plot_area, l_p_83/plot_area, l_p_85/plot_area, l_p_86/plot_area, l_p_87/plot_area, l_p_88/plot_area, l_p_89/plot_area, l_p_90/plot_area, l_p_91/plot_area, l_p_92/plot_area, l_p_93/plot_area, l_p_97/plot_area, l_p_98/plot_area, l_p_99/plot_area, l_p_105/plot_area, l_p_106/plot_area, l_p_107/plot_area, l_p_108/plot_area, l_p_109/plot_area, l_p_110/plot_area, l_p_111/plot_area, l_p_112/plot_area, l_p_113/plot_area)
+)
+
 ```
 
 ### post-fire data
@@ -508,17 +579,16 @@ thomas_post1 <- read_csv("data/Nicole-data/ThomasFire_post_2018.csv")
 thomas_post2 <- read_csv("data/Nicole-data/ThomasFire_post_2018_2.csv")
 ```
 
-### vegetation data
-```{r}
-# load vegetation data
-vegetation <- read.csv("data/VTM_species_location.csv")
-```
-
 ### leaf trait data
 ```{r}
-# load leaf trait dataset
-leaf_traits_summary <- read.csv("data/LDMC-LL-LLength.csv")
-
+# determine the species present in the pre/post fire data
+laguna_species <- unique(laguna_pre$species) # create list of all species present in laguna fire data
+bluffmesa_species <- unique(bluffmesa_pre$species) # create list of all species present in bluff mesa fire data
+ 
+# read in data from TRY database
+leaf_area <- read.csv("data/Veg-data/leaf_area.csv") %>%
+  clean_names() %>%
+  select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value)
 ```
 
 ## map building

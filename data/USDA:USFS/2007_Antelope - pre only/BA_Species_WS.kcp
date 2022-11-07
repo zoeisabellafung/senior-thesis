@@ -1,0 +1,104 @@
+!! Created by Nicole Vaillant, August 10, 2013, then updated by CE on 12/03/15 for Rough fire and MOST future Sierra Nevada area fires I hope, based on WS variant. Updated again 3 August 2017 by A. Reiner to add the rest of the species in the Western Sierras, plus added the 'include Hardwoods' cancalc command. Additional syntax tweaks 8/8/2017.   
+
+!! This will calculate the BA by species for the FTA spreadsheet. It aslo calculates the TPA by diameter breaks (<6" and 6"+)and QMD for the report.
+!! CE left in most species below, and doesn't matter if they were not on any or all plots.
+!! CE removed Cornus, cuz there was no Cornus at Beaver/French, but paste this stuff between the folowing quotes back in for another fire "BA_CORNU=SPMCDBH(2,DG,0,0,999,0,999,0)".
+
+
+COMPUTE            0
+
+BA_ALL=SPMCDBH(2,0,0,0,999,0,999,0)
+BA_ABCO=SPMCDBH(2,WF,0,0,999,0,999,0)
+BA_ABMA=SPMCDBH(2,RF,0,0,999,0,999,0)
+BA_CADE27=SPMCDBH(2,IC,0,0,999,0,999,0)
+BA_PILA=SPMCDBH(2,SP,0,0,999,0,999,0)
+BA_PIPO=SPMCDBH(2,PP,0,0,999,0,999,0)
+BA_PIJE=SPMCDBH(2,JP,0,0,999,0,999,0)
+BA_PSME=SPMCDBH(2,DF,0,0,999,0,999,0)
+BA_QUKE=SPMCDBH(2,BO,0,0,999,0,999,0)
+BA_QUCH2=SPMCDBH(2,CY,0,0,999,0,999,0)
+BA_SEGI2=SPMCDBH(2,GS,0,0,999,0,999,0)
+BA_ARME=SPMCDBH(2,MA,0,0,999,0,999,0)
+BA_PICO=SPMCDBH(2,LP,0,0,999,0,999,0)
+BA_PIAL=SPMCDBH(2,WB,0,0,999,0,999,0)
+BA_PIMO3=SPMCDBH(2,WP,0,0,999,0,999,0)
+BA_PIMO=SPMCDBH(2,PM,0,0,999,0,999,0)
+BA_ABAM=SPMCDBH(2,SF,0,0,999,0,999,0)
+BA_PIAT=SPMCDBH(2,KP,0,0,999,0,999,0)
+BA_PIBA=SPMCDBH(2,FP,0,0,999,0,999,0)
+BA_PICO3=SPMCDBH(2,CP,0,0,999,0,999,0)
+BA_PIFL2=SPMCDBH(2,LM,0,0,999,0,999,0)
+BA_PIRA2=SPMCDBH(2,MP,0,0,999,0,999,0)
+BA_PIAS2=SPMCDBH(2,GP,0,0,999,0,999,0)
+BA_PIWA=SPMCDBH(2,WE,0,0,999,0,999,0)
+BA_PILO=SPMCDBH(2,GB,0,0,999,0,999,0)
+BA_PSMA=SPMCDBH(2,BD,0,0,999,0,999,0)
+BA_SESE3=SPMCDBH(2,RW,0,0,999,0,999,0)
+BA_TSME=SPMCDBH(2,MH,0,0,999,0,999,0)
+BA_JUOC=SPMCDBH(2,WJ,0,0,999,0,999,0)
+BA_JUOS=SPMCDBH(2,UJ,0,0,999,0,999,0)
+BA_JUCA7=SPMCDBH(2,CJ,0,0,999,0,999,0)
+BA_QUAG=SPMCDBH(2,LO,0,0,999,0,999,0)
+BA_QUDO=SPMCDBH(2,BL,0,0,999,0,999,0)
+BA_QULO=SPMCDBH(2,VO,0,0,999,0,999,0)
+BA_QUWI2=SPMCDBH(2,IO,0,0,999,0,999,0)
+BA_LIDE3=SPMCDBH(2,TO,0,0,999,0,999,0)
+BA_CHCHC4=SPMCDBH(2,GC,0,0,999,0,999,0)
+BA_POTR5=SPMCDBH(2,AS,0,0,999,0,999,0)
+BA_UMCA=SPMCDBH(2,CL,0,0,999,0,999,0)
+BA_ARME=SPMCDBH(2,MA,0,0,999,0,999,0)
+BA_CONU4=SPMCDBH(2,DG,0,0,999,0,999,0)
+BA_ACMA3=SPMCDBH(2,BM,0,0,999,0,999,0)
+BA_CELE3=SPMCDBH(2,MC,0,0,999,0,999,0)
+BA_OS=SPMCDBH(2,OS,0,0,999,0,999,0)
+BA_OH=SPMCDBH(2,OH,0,0,999,0,999,0)
+
+
+TPA_LT6=SPMCDBH(1,0,0,0,5.9,0,999,0)
+TPA_GT6=SPMCDBH(1,0,0,6.0,999,0,999,0)
+QMD=SPMCDBH(5,0,0,0,999,0,999,0)
+
+END
+
+FMIN
+
+!! CANCALC base the CBD & CBH values on all trees >6ft tall which is the defaults
+!!            method    min ht       spp   cut off
+CANCALC            0         6         1        30
+
+
+END
+
+!!SPMCDBH Returns the trees, basal area, total cubic volume,merchantable cubic
+!!foot volume, total board foot volume, quadratic mean diameter,
+!!average height, percent cover, average mistletoe rating, stand density
+!!index, or average diameter growth per acre for a given species, treevalue
+!!class, tree status, and range of diameter and height. The first
+!!three arguments are required.
+
+
+!!Argument 1 = code indicating which measurement is desired, as follows:
+!!	1 = trees per acre,
+!!	2 = basal area per acre,
+!!	3 = total cubic volume/acre, or
+!!	4 = total board foot volume/acre
+!!	5 = quadratic mean diameter
+!!	6 = average height
+!!	7 = percent cover
+!!	8 = average dwarf mistletoe rating
+!!	9 = merchantable cubic foot volume/acre
+!!	10 = average diameter growth for the cycle
+!!	11 = stand density index
+!!
+!!Argument 2 = alpha or numeric species code where 0 (or All) indicates that the 
+!!sum over all species is desired. Numeric species codes are variant specific.
+!!
+!!Argument 3 = tree-value class (IMC codes 1,2, or 3; see Wykoff and others 1982, p. 16) where 0 indicates that the 
+!!sum over all tree-value classes is desired.
+!!
+!!Arguments 4 and 5 = diameter range for trees included in the sum. The default values are 0.0 and 999.0.
+!!
+!!Arguments 6 and 7 = height range for trees included in the sum. The default values are 0.0 and 999.0.
+!!
+!!Argument 8 = tree status for trees included in the sum, where 0 indicates live trees, 1 indicates recent mortality trees, 
+!!and 2 indicates harvested trees. The default value is 0.

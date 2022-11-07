@@ -1,0 +1,513 @@
+<?xml-stylesheet href='C:\LSP Program Files\Metavist\Metavist_Beta4\XML\NBII_classic.xsl' type='text/xsl'?>
+<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <origin>Collins, Brandon M.</origin>
+        <origin>Fry, Danny L.</origin>
+        <origin>Lydersen, Jamie M.</origin>
+        <origin>Everett, Richard G.</origin>
+        <origin>Stephens, Scott L.</origin>
+        <pubdate>2017</pubdate>
+        <title>Tree and shrub measurements in Stanislaus National Forest and Yosemite National Park, collected in 1911 and 2005–2013</title>
+        <geoform>tabular digital data</geoform>
+        <pubinfo>
+          <pubplace>Fort Collins, CO</pubplace>
+          <publish>Forest Service Research Data Archive</publish>
+        </pubinfo>
+        <onlink>https://doi.org/10.2737/RDS-2017-0045</onlink>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract>This data publication contains tabular data with repeat measurements of tree and shrub data for a set of transects located in Stanislaus National Forest (STF) and Yosemite National Park (YOSE) in California. These transects represent part of a systematic timber inventory collected across a large mixed-conifer dominated landscape by the U.S. Forest Service in 1911. Trees were tallied by species, diameter and height within 40 x 400 meter (m) strips that spanned the center of quarter-quarter sections (QQs) delineated by the Public Land Survey System. Shrub cover was determined using an ocular estimate. Repeat data were collected in either 2005, 2007 or 2013 in three to four 0.1 hectare circular plots (radius 17.8 m) per transect, centered at random, non-overlapping distances along the historical transect centerline. This data publication therefore contains measurements such as the percentage cover of shrubs for multiple species, basal area of dead and live conifer trees, and density of live conifer trees with various diameters at breast height for both STF and YOSE in 1911 and the remeasurement year of 2005, 2007, or 2013.</abstract>
+      <purpose>These data were used to compare forest change due to fire exclusion and logging over the 20th century between Yosemite National Park, which was protected from timber harvesting, and Stanislaus National Forest.</purpose>
+    </descript>
+    <timeperd>
+      <timeinfo>
+        <rngdates>
+          <begdate>1911</begdate>
+          <enddate>2013</enddate>
+        </rngdates>
+      </timeinfo>
+      <current>Ground condition</current>
+    </timeperd>
+    <status>
+      <progress>Complete</progress>
+      <update>As needed</update>
+    </status>
+    <spdom>
+      <descgeog>Portions of the Stanislaus National Forest and Yosemite National Park in California.</descgeog>
+      <bounding>
+        <westbc>-119.94281</westbc>
+        <eastbc>-119.70126</eastbc>
+        <northbc>37.89186</northbc>
+        <southbc>37.70868</southbc>
+        <boundalt>
+          <altmin>1200.000</altmin>
+          <altmax>2140.000</altmax>
+          <altunits>meters</altunits>
+        </boundalt>
+      </bounding>
+    </spdom>
+    <keywords>
+      <theme>
+        <themekt>ISO 19115 Topic Category</themekt>
+        <themekey>environment</themekey>
+      </theme>
+      <theme>
+        <themekt>National Research &amp; Development Taxonomy</themekt>
+        <themekey>Fire suppression, pre-suppression</themekey>
+        <themekey>Ecology, Ecosystems, &amp; Environment</themekey>
+        <themekey>Ecology</themekey>
+        <themekey>Fire</themekey>
+        <themekey>Fire ecology</themekey>
+        <themekey>Forest &amp; Plant Health</themekey>
+        <themekey>Human effects</themekey>
+        <themekey>Natural Resource Management &amp; Use</themekey>
+        <themekey>Forest management</themekey>
+        <themekey>Restoration</themekey>
+      </theme>
+      <theme>
+        <themekt>None</themekt>
+        <themekey>fire exclusion</themekey>
+        <themekey>forest restoration</themekey>
+        <themekey>reference conditions</themekey>
+        <themekey>departure</themekey>
+        <themekey>mixed-conifer</themekey>
+      </theme>
+      <place>
+        <placekt>None</placekt>
+        <placekey>Stanislaus National Forest</placekey>
+        <placekey>Yosemite National Park</placekey>
+        <placekey>Sierra Nevada</placekey>
+        <placekey>California</placekey>
+      </place>
+    </keywords>
+    <taxonomy>
+      <keywtax>
+        <taxonkt>None</taxonkt>
+        <taxonkey>multiple species</taxonkey>
+        <taxonkey>plants</taxonkey>
+      </keywtax>
+      <taxonsys>
+        <classsys>
+          <classcit>
+            <citeinfo>
+              <origin>ITIS</origin>
+              <pubdate>2017</pubdate>
+              <title>Integrated Taxonomic Information System</title>
+              <geoform>Database</geoform>
+              <othercit>Retrieved [August, 31, 2017]</othercit>
+              <onlink>https://www.itis.gov</onlink>
+            </citeinfo>
+          </classcit>
+        </classsys>
+      </taxonsys>
+      <taxoncl>
+        <taxonrn>Kingdom</taxonrn>
+        <taxonrv>Plantae</taxonrv>
+        <common>plantes</common>
+        <common>Planta</common>
+        <common>Vegetal</common>
+        <common>plants</common>
+        <taxoncl>
+          <taxonrn>Subkingdom</taxonrn>
+          <taxonrv>Viridiplantae</taxonrv>
+          <taxoncl>
+            <taxonrn>Infrakingdom</taxonrn>
+            <taxonrv>Streptophyta</taxonrv>
+            <common>land plants</common>
+            <taxoncl>
+              <taxonrn>Superdivision</taxonrn>
+              <taxonrv>Embryophyta</taxonrv>
+              <taxoncl>
+                <taxonrn>Division</taxonrn>
+                <taxonrv>Tracheophyta</taxonrv>
+                <common>vascular plants</common>
+                <common>tracheophytes</common>
+                <taxoncl>
+                  <taxonrn>Subdivision</taxonrn>
+                  <taxonrv>Spermatophytina</taxonrv>
+                  <common>spermatophytes</common>
+                  <common>seed plants</common>
+                  <common>phanérogames</common>
+                  <taxoncl>
+                    <taxonrn>Class</taxonrn>
+                    <taxonrv>Magnoliopsida</taxonrv>
+                    <taxoncl>
+                      <taxonrn>Superorder</taxonrn>
+                      <taxonrv>Asteranae</taxonrv>
+                      <taxoncl>
+                        <taxonrn>Order</taxonrn>
+                        <taxonrv>Ericales</taxonrv>
+                        <taxoncl>
+                          <taxonrn>Family</taxonrn>
+                          <taxonrv>Ericaceae</taxonrv>
+                          <common>heaths</common>
+                          <common>éricacées</common>
+                          <taxoncl>
+                            <taxonrn>Genus</taxonrn>
+                            <taxonrv>Arctostaphylos</taxonrv>
+                            <common>bearberry</common>
+                            <common>manzanitas</common>
+                          </taxoncl>
+                        </taxoncl>
+                      </taxoncl>
+                    </taxoncl>
+                    <taxoncl>
+                      <taxonrn>Superorder</taxonrn>
+                      <taxonrv>Rosanae</taxonrv>
+                      <taxoncl>
+                        <taxonrn>Order</taxonrn>
+                        <taxonrv>Fagales</taxonrv>
+                        <taxoncl>
+                          <taxonrn>Family</taxonrn>
+                          <taxonrv>Fagaceae</taxonrv>
+                          <taxoncl>
+                            <taxonrn>Genus</taxonrn>
+                            <taxonrv>Quercus</taxonrv>
+                            <common>chêne</common>
+                            <common>oak</common>
+                          </taxoncl>
+                        </taxoncl>
+                      </taxoncl>
+                      <taxoncl>
+                        <taxonrn>Order</taxonrn>
+                        <taxonrv>Rosales</taxonrv>
+                        <taxoncl>
+                          <taxonrn>Family</taxonrn>
+                          <taxonrv>Rosaceae</taxonrv>
+                          <common>roses</common>
+                          <taxoncl>
+                            <taxonrn>Genus</taxonrn>
+                            <taxonrv>Chamaebatia</taxonrv>
+                            <common>mountain misery</common>
+                            <taxoncl>
+                              <taxonrn>Species</taxonrn>
+                              <taxonrv>Chamaebatia foliolosa</taxonrv>
+                              <common>mountain misery</common>
+                            </taxoncl>
+                          </taxoncl>
+                        </taxoncl>
+                        <taxoncl>
+                          <taxonrn>Family</taxonrn>
+                          <taxonrv>Rhamnaceae</taxonrv>
+                          <common>buckthorns</common>
+                          <common>nerpruns</common>
+                          <taxoncl>
+                            <taxonrn>Genus</taxonrn>
+                            <taxonrv>Ceanothus</taxonrv>
+                          </taxoncl>
+                        </taxoncl>
+                      </taxoncl>
+                    </taxoncl>
+                  </taxoncl>
+                  <taxoncl>
+                    <taxonrn>Class</taxonrn>
+                    <taxonrv>Pinopsida</taxonrv>
+                    <common>conifers</common>
+                    <taxoncl>
+                      <taxonrn>Subclass</taxonrn>
+                      <taxonrv>Pinidae</taxonrv>
+                      <taxoncl>
+                        <taxonrn>Order</taxonrn>
+                        <taxonrv>Pinales</taxonrv>
+                        <common>pines</common>
+                        <taxoncl>
+                          <taxonrn>Family</taxonrn>
+                          <taxonrv>Pinaceae</taxonrv>
+                          <common>pines</common>
+                          <taxoncl>
+                            <taxonrn>Genus</taxonrn>
+                            <taxonrv>Abies</taxonrv>
+                            <common>fir</common>
+                            <taxoncl>
+                              <taxonrn>Species</taxonrn>
+                              <taxonrv>Abies concolor</taxonrv>
+                              <common>balsam fir</common>
+                              <common>silver fir</common>
+                              <common>Colorado fir</common>
+                              <common>concolor fir</common>
+                              <common>white balsam</common>
+                              <common>oyamel de California</common>
+                              <common>white fir</common>
+                            </taxoncl>
+                          </taxoncl>
+                          <taxoncl>
+                            <taxonrn>Genus</taxonrn>
+                            <taxonrv>Pinus</taxonrv>
+                            <common>pine</common>
+                            <taxoncl>
+                              <taxonrn>Species</taxonrn>
+                              <taxonrv>Pinus lambertiana</taxonrv>
+                              <common>sugar pine</common>
+                              <common>California sugar pine</common>
+                              <common>pino de azúcar</common>
+                            </taxoncl>
+                            <taxoncl>
+                              <taxonrn>Species</taxonrn>
+                              <taxonrv>Pinus ponderosa</taxonrv>
+                              <common>ponderosa pine</common>
+                              <common>bull pine</common>
+                              <common>western yellow pine</common>
+                              <common>blackjack pine</common>
+                              <common>pinabete</common>
+                              <common>rock pine</common>
+                            </taxoncl>
+                          </taxoncl>
+                        </taxoncl>
+                        <taxoncl>
+                          <taxonrn>Family</taxonrn>
+                          <taxonrv>Cupressaceae</taxonrv>
+                          <common>cypress</common>
+                          <common>redwood</common>
+                          <taxoncl>
+                            <taxonrn>Genus</taxonrn>
+                            <taxonrv>Calocedrus</taxonrv>
+                            <common>incense cedar</common>
+                            <taxoncl>
+                              <taxonrn>Species</taxonrn>
+                              <taxonrv>Calocedrus decurrens</taxonrv>
+                              <common>incense cedar</common>
+                            </taxoncl>
+                          </taxoncl>
+                        </taxoncl>
+                      </taxoncl>
+                    </taxoncl>
+                  </taxoncl>
+                </taxoncl>
+              </taxoncl>
+            </taxoncl>
+          </taxoncl>
+        </taxoncl>
+      </taxoncl>
+    </taxonomy>
+    <accconst>None</accconst>
+    <useconst>These data were collected using funding from the U.S. Government and can be used without additional permissions or fees. If you use these data in a publication, presentation, or other research product please use the following citation:  
+		
+Collins, Brandon M.; Fry, Danny L.; Lydersen, Jamie M.; Everett, Richard G.; Stephens, Scott L. 2017. Tree and shrub measurements in Stanislaus National Forest and Yosemite National Park, collected in 1911 and 2005–2013. Fort Collins, CO: Forest Service Research Data Archive. https://doi.org/10.2737/RDS-2017-0045</useconst>
+    <ptcontac>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>Center for Fire Research and Outreach, University of California, Berkeley</cntorg>
+          <cntper>Brandon Collins</cntper>
+        </cntorgp>
+        <cntpos>Research Scientist</cntpos>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>College of Natural Resources, University of California</address>
+          <city>Berkeley</city>
+          <state>CA</state>
+          <postal>94720-3114</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntvoice>510-664-7027</cntvoice>
+      </cntinfo>
+    </ptcontac>
+    <datacred>Funding was provided by US National Park Service (NPS), Pacific West Region; USDA Forest Service, Pacific Southwest Research Station (PSW); and the University of California, Division of Agriculture and Natural Resources (UCANR).</datacred>
+    <crossref>
+      <citeinfo>
+        <origin>Collins, Brandon M.</origin>
+        <origin>Fry, Danny L.</origin>
+        <origin>Lydersen, Jamie M.</origin>
+        <origin>Everett, Richard G.</origin>
+        <origin>Stephens, Scott L.</origin>
+        <pubdate>2017</pubdate>
+        <title>Impacts of different land management histories on forest change</title>
+        <geoform>Journal Article</geoform>
+        <serinfo>
+          <sername>Ecological Applications</sername>
+        </serinfo>
+        <othercit>IN PRESS</othercit>
+      </citeinfo>
+    </crossref>
+    <crossref>
+      <citeinfo>
+        <origin>Collins, Brandon M.</origin>
+        <origin>Lydersen, Jamie M.</origin>
+        <origin>Everett, Richard G.</origin>
+        <origin>Fry, Danny L.</origin>
+        <origin>Stephens, Scott L.</origin>
+        <pubdate>2015</pubdate>
+        <title>Historical tree and shrub measurements on the Stanislaus National Forest: 1911 timber survey data</title>
+        <geoform>tabular digital data</geoform>
+        <pubinfo>
+          <pubplace>Fort Collins, CO</pubplace>
+          <publish>Forest Service Research Data Archive</publish>
+        </pubinfo>
+        <onlink>https://doi.org/10.2737/RDS-2015-0011</onlink>
+      </citeinfo>
+    </crossref>
+  </idinfo>
+  <dataqual>
+    <attracc>
+      <attraccr>Tabular digital data were scanned for erroneous entries. The data contain no outliers and all fields are complete. To assess spatial accuracy, comparison was made between a GIS overlay of survey transect locations with topographic maps and qualitative notes entered by surveyors (e.g., location of stream crossing or ridge inflection along a transect) where available.</attraccr>
+    </attracc>
+    <logic>Not applicable</logic>
+    <complete>The timber survey data from 1911 were collected for a greater number of transects but only those that were resampled in 2005-2013 are included in this data publication. See Collins et al. 2017 for more details. Historical tree and shrub data for a larger set of the transects on the Stanislaus National Forest are available in Collins et al. 2015.
+	
+Historical records indicate there might have been California black oak (Quercus kelloggii) in the study area, but the fact that there are no data for these species suggests that the inventory may have been limited to all conifers. In addition to this, data are included for dead trees, but it is possible that only those that were considered merchantable were actually included.</complete>
+    <lineage>
+      <method>
+        <methtype>Field</methtype>
+        <methdesc>The historical forest inventory of our study area was conducted in 1911 in the Stanislaus National Forest (STF) and Yosemite National Park (YOSE) in California. The inventory consisted of belt transects located systematically based on the Public Land Survey System (PLSS). Transects spanned the mid-line of quarter-quarter sections (16.2 hectares [ha] or 40 acres [ac] survey units; Q-Qs) in a 40.2 meter (m) by 402 m area (1.6 ha) and were a 10% sample of each inventoried Q-Q (USFS 1911, Collins et al. 2011). All trees &gt; 15.2 cm (6 inches [in]) diameter at breast height (dbh) were tallied by species within belt transects. Trees 15.2-30.5 centimeters (cm) (6-12 in) dbh were tallied in a single class. Trees &gt; 30.5 cm (12 in) dbh were tallied into classes based on dbh and tree height. The dbh classes were 5.1 cm (2 in) and height classes were 4.9 m (16 feet) (see Collins et al. [2011] for an example of the historic data sheet). Records specific to the historical inventory in this area indicate that all trees were tallied (USFS 1911), but the lack of California black oak (Quercus kelloggii) suggests that the inventory may have been limited to all conifers. Conifer species included Abies magnifica, Calocedrus decurrens, Pinus ponderosa and P. lambertiana. Additionally, while dead trees appear to have been recorded on all transects, it is possible that only those that were considered merchantable were actually included. Shrub cover was recorded by species for each transect. We used a PLSS layer in ArcGIS, which contained Q-Q boundaries, to obtain Universal Transverse Mercator coordinates for the starting and ending points of these transects. These points defined the theoretical centerline of the historical belt transects. We use the term ‘theoretical’ to point out uncertainty in the exact transect locations due to potential errors incurred in locating (compassing and distancing) transects originally. The belt transects were re-measured by field technicians during the summer of either 2005, 2007 or 2013. In order to re-measure a greater number of transects we opted to subsample from within the original belt transects. Subsampling was done by establishing four 0.1 ha circular plots (radius 17.8 m) centered at random, non-overlapping distances along the theoretical historical transect centerline. In some cases only three plots were established for a given historical transect (13% of transects). In each plot we recorded tree species, height, and dbh for all trees 5.1 cm dbh and above. In addition we recorded shrub cover by species using an ocular estimate at each plot.</methdesc>
+        <methcite>
+          <citeinfo>
+            <origin>Collins, Brandon M.</origin>
+            <origin>Fry, Danny L.</origin>
+            <origin>Lydersen, Jamie M.</origin>
+            <origin>Everett, Richard G.</origin>
+            <origin>Stephens, Scott L.</origin>
+            <pubdate>2017</pubdate>
+            <title>Impacts of different land management histories on forest change</title>
+            <geoform>Journal Article</geoform>
+            <serinfo>
+              <sername>Ecological Applications</sername>
+            </serinfo>
+            <othercit>IN PRESS</othercit>
+          </citeinfo>
+        </methcite>
+        <methcite>
+          <citeinfo>
+            <origin>Collins, Brandon M.</origin>
+            <origin>Everett, Richard G.</origin>
+            <origin>Stephens, Scott L.</origin>
+            <pubdate>2011</pubdate>
+            <title>Impacts of fire exclusion and recent managed fire on forest structure in old growth Sierra Nevada mixed-conifer forests</title>
+            <geoform>journal article</geoform>
+            <serinfo>
+              <sername>Ecosphere</sername>
+              <issue>2(4): art51</issue>
+            </serinfo>
+            <onlink>https://doi.org/10.1890/es11-00026.1</onlink>
+          </citeinfo>
+        </methcite>
+        <methcite>
+          <citeinfo>
+            <origin>Miller, Jay D.</origin>
+            <origin>Thode, Andrea E.</origin>
+            <pubdate>2007</pubdate>
+            <title>Quantifying burn severity in a heterogeneous landscape with a relative version of the delta Normalized Burn Ratio (dNBR)</title>
+            <geoform>journal article</geoform>
+            <serinfo>
+              <sername>Remote Sensing of Environment</sername>
+              <issue>109(1): 66-80</issue>
+            </serinfo>
+            <onlink>https://doi.org/10.1016/j.rse.2006.12.006</onlink>
+          </citeinfo>
+        </methcite>
+      </method>
+      <procstep>
+        <procdesc>We generated the following forest structure and composition variables for each re-measured transect (n = 105; 55 in the Stanislaus National Forest, 50 in Yosemite National Park): live and dead basal area, basal area proportion of pine species, total tree density, tree density by dbh class (15.2 – 30.4 cm, 30.5 – 61.0 cm, 61.1 – 91.4 cm, &gt; 91.4 cm). These variables were scaled to the common unit area (per hectare), which for the re-measurement data involved aggregating sub-plots within a given transect. Shrub cover by species was summed into two stature classes, “tall” and “short”. The tall shrub class was dominated by several Ceanothus, Arctostaphylos, and Quercus species; the short class was dominated by Chamaebatia foliolosa (bear clover).</procdesc>
+        <procdate>2017</procdate>
+      </procstep>
+    </lineage>
+  </dataqual>
+  <eainfo>
+    <overview>
+      <eaover>Below is a description of the file included in this publication and a complete description of the contents.
+	  
+\Data\TransectData.csv: Comma-delimited ASCII text files containing tabular data for 105 transects in Stanislaus National Forest or Yosemite National Park at two time points. Variables included in this file are described below.
+
+Site = Location of plot; STF refers to Stanislaus National Forest and YOSE refers to Yosemite National Park.
+
+Period = Time period of data collection. Data labelled as 1911 were collected in 1911; data labelled as 2000 were collected in either 2005, 2007 or 2013.
+
+QQ = ID for quarter-quarter section, as delineated by the public land survey system (PLSS), in which a tree was recorded. IDs are formatted as Township, Range, Section and quarter-quarter number. Quarter-quarter numbers were assigned using the same pattern as used in the PLSS for section numbers, with alternating rows numbered in opposite directions starting in the northeast of the northeast quarter (QQ01) and ending in the southeast of the southeast quarter (QQ 16). For example, 1190103 refers to the northeast of the northwest quarter in section 1 of Township 1S, Range 19E. Irregularly shaped quarter-quarter sections that are referred to as “lots” under the PLSS were assigned a quarter-quarter number following the same pattern to ensure a unique ID for each QQ.
+
+TrtType = Management and fire history from 1995 through transect sampling date. Mod refers to moderate severity fire; Low refers to low severity fire; Thin refers to mechanical thinning; none refers to no fire or management treatment between 1995 and the transect sampling date. Fire severity was classified using the relative differenced normalized burn ratio (RdNBR) and thresholds derived for the Sierra Nevada by Miller and Thode (2007). Thinning included pre-commercial and commercial thinning. 
+
+ShortShrubCover = Percentage cover of shrubs &lt; 0.5 meters (m) in height; dominated by Chamaebatia foliolosa (bear clover). [0-100]
+
+TallShrubCover = Percentage cover of shrubs &gt; 0.5 m in height; dominated by several Ceanothus, Arctostaphylos, and Quercus species. [0-100]
+
+DeadBA = Basal area of dead conifer trees &gt; 15.2 centimeters (cm) diameter at breast height in each transect. [square meters per hectare (m2 ha-1)]
+
+LiveBA = Basal area of live conifer trees &gt; 15.2 cm diameter at breast height in each transect. [m2 ha-1]
+
+LiPineBAprop = Proportion of live conifer tree basal area consisting of Pinus lambertiana and Pinus ponderosa. [0-1]
+
+LiveTPH_6t12 = Density of live conifer trees with diameter at breast height between 15.2 and 30.5 cm (6 to 12 inches [in]). [trees per hectare (ha-1)].
+
+LiveTPH_12t24 = Density of live conifer trees with diameter at breast height between 30.6 and 61.0 cm (12 to 24 in). [ha-1]
+
+LiveTPH_24t36 = Density of live conifer trees with diameter at breast height between 61.1 and 91.4 cm (24 to 36 in). [ha-1]
+
+LiveTPH_GT36 = Density of live conifer trees with diameter at breast height &gt; 91.4 cm (36 in). [ha-1]
+
+TotLiveTPH_GT6 = Density of live conifer trees with diameter at breast height &gt; 15.2 cm (6 in). [ha-1]
+
+TotDeadTPH_GT6 = Density of dead conifer trees with diameter at breast height &gt; 15.2 cm (6 in). [ha-1]
+
+LiPineTPHprop6to12 = Proportion of live conifer tree density with diameter at breast height between 15.2 and 30.5 cm (6 to 12 in) consisting of Pinus lambertiana and Pinus ponderosa. [0-1]</eaover>
+      <eadetcit>Collins, Brandon M.; Fry, Danny L.; Lydersen, Jamie M.; Everett, Richard G.; Stephens, Scott L. IN PRESS. Impacts of different land management histories on forest change. Ecological Applications.</eadetcit>
+    </overview>
+  </eainfo>
+  <distinfo>
+    <distrib>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>USDA Forest Service, Research and Development</cntorg>
+        </cntorgp>
+        <cntpos>Research Data Archivist</cntpos>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>240 West Prospect Road</address>
+          <city>Fort Collins</city>
+          <state>CO</state>
+          <postal>80526</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntvoice>see Contact Instructions</cntvoice>
+        <cntinst>This contact information was current as of August 2017. For current information see Contact Us page on: https://doi.org/10.2737/RDS.</cntinst>
+      </cntinfo>
+    </distrib>
+    <resdesc>RDS-2017-0045</resdesc>
+    <distliab>Metadata documents have been reviewed for accuracy and completeness. Unless otherwise stated, all data and related materials are considered to satisfy the quality standards relative to the purpose for which the data were collected. However, neither the author, the Archive, nor any part of the federal government can assure the reliability or suitability of these data for a particular purpose. The act of distribution shall not constitute any such warranty, and no responsibility is assumed for a user's application of these data or related materials.
+
+The metadata, data, or related materials may be updated without notification. If a user believes errors are present in the metadata, data or related materials, please use the information in (1) Identification Information: Point of Contact, (2) Metadata Reference: Metadata Contact, or (3) Distribution Information: Distributor to notify the author or the Archive of the issues.</distliab>
+    <stdorder>
+      <digform>
+        <digtinfo>
+          <formname>ASCII</formname>
+          <formvern>see Format Specification</formvern>
+          <formspec>Comma-delimited ASCII text file (CSV)</formspec>
+          <filedec>Files zipped with Winzip 14.0</filedec>
+        </digtinfo>
+        <digtopt>
+          <onlinopt>
+            <computer>
+              <networka>
+                <networkr>https://doi.org/10.2737/RDS-2017-0045</networkr>
+              </networka>
+            </computer>
+          </onlinopt>
+        </digtopt>
+      </digform>
+      <fees>None</fees>
+    </stdorder>
+  </distinfo>
+  <metainfo>
+    <metd>20170831</metd>
+    <metc>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>Center for Fire Research and Outreach, University of California, Berkeley</cntorg>
+          <cntper>Brandon Collins</cntper>
+        </cntorgp>
+        <cntpos>Research Scientist</cntpos>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>College of Natural Resources, University of California</address>
+          <city>Berkeley</city>
+          <state>CA</state>
+          <postal>94720-3114</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntvoice>510-664-7027</cntvoice>
+      </cntinfo>
+    </metc>
+    <metstdn>FGDC Biological Data Profile of the Content Standard for Digital Geospatial Metadata</metstdn>
+    <metstdv>FGDC-STD-001.1-1999</metstdv>
+  </metainfo>
+</metadata>

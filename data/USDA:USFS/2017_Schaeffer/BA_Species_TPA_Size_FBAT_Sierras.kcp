@@ -1,0 +1,60 @@
+!! Created by Nicole Vaillant, August 10, 2013, then updated by CE on 12/03/15 for Rough fire and MOST future Sierra Nevada area fires I hope, based on WS variant.
+
+!! This will calculate the BA by species for the FTA spreadsheet. It aslo calculates the TPA by diameter breaks (<6" and 6"+)and QMD for the report.
+!! CE left in most species below, and doesn't matter if they were not on any or all plots.
+!! CE removed Cornus, cuz there was no Cornus at Beaver/French, but paste this stuff between the folowing quotes back in for another fire "BA_CORNU=SPMCDBH(2,DG,0,0,999,0,999,0)".
+
+
+COMPUTE            0
+
+BA_ALL=SPMCDBH(2,0,0,0,999,0,999,0)
+BA_ABCO=SPMCDBH(2,WF,0,0,999,0,999,0)
+BA_ABMA=SPMCDBH(2,RF,0,0,999,0,999,0)
+BA_CADE27=SPMCDBH(2,IC,0,0,999,0,999,0)
+BA_PILA=SPMCDBH(2,SP,0,0,999,0,999,0)
+BA_PIPO=SPMCDBH(2,PP,0,0,999,0,999,0)
+BA_PIJE=SPMCDBH(2,JP,0,0,999,0,999,0)
+BA_PSME=SPMCDBH(2,DF,0,0,999,0,999,0)
+BA_QUKE=SPMCDBH(2,BO,0,0,999,0,999,0)
+BA_QUCH2=SPMCDBH(2,CY,0,0,999,0,999,0)
+BA_SEGI2=SPMCDBH(2,GS,0,0,999,0,999,0)
+BA_ARME=SPMCDBH(2,MA,0,0,999,0,999,0)
+TPA_LT6=SPMCDBH(1,0,0,0,5.9,0,999,0)
+TPA_GT6=SPMCDBH(1,0,0,6.0,999,0,999,0)
+QMD=SPMCDBH(5,0,0,0,999,0,999,0)
+
+END
+
+!!SPMCDBH Returns the trees, basal area, total cubic volume,merchantable cubic
+!!foot volume, total board foot volume, quadratic mean diameter,
+!!average height, percent cover, average mistletoe rating, stand density
+!!index, or average diameter growth per acre for a given species, treevalue
+!!class, tree status, and range of diameter and height. The first
+!!three arguments are required.
+
+
+!!Argument 1 = code indicating which measurement is desired, as follows:
+!!	1 = trees per acre,
+!!	2 = basal area per acre,
+!!	3 = total cubic volume/acre, or
+!!	4 = total board foot volume/acre
+!!	5 = quadratic mean diameter
+!!	6 = average height
+!!	7 = percent cover
+!!	8 = average dwarf mistletoe rating
+!!	9 = merchantable cubic foot volume/acre
+!!	10 = average diameter growth for the cycle
+!!	11 = stand density index
+!!
+!!Argument 2 = alpha or numeric species code where 0 (or All) indicates that the 
+!!sum over all species is desired. Numeric species codes are variant specific.
+!!
+!!Argument 3 = tree-value class (IMC codes 1,2, or 3; see Wykoff and others 1982, p. 16) where 0 indicates that the 
+!!sum over all tree-value classes is desired.
+!!
+!!Arguments 4 and 5 = diameter range for trees included in the sum. The default values are 0.0 and 999.0.
+!!
+!!Arguments 6 and 7 = height range for trees included in the sum. The default values are 0.0 and 999.0.
+!!
+!!Argument 8 = tree status for trees included in the sum, where 0 indicates live trees, 1 indicates recent mortality trees, 
+!!and 2 indicates harvested trees. The default value is 0.

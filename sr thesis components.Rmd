@@ -676,6 +676,11 @@ leaf_area_QUKE <- leaf_area %>% # subset leaf area data to only include QUKE
   filter(leaf_area$species_name == "Quercus keloggii")
 leaf_area_ABCO <- leaf_area %>% # subset leaf area data to only include ABCO
   filter(leaf_area$species_name == "Abies concolor")
+
+## bluff mesa
+bluffmesa_plots <- unique(bluffmesa_pre$plot_id) %>% # list all of the plots included in the bluff mesa burn area
+  as.character()
+
 ```
 
 
@@ -718,14 +723,14 @@ laguna_114 <- (QUKE_leaf_area*0.098418239)
 laguna_115 <- (QUKE_leaf_area*0.168117903)
 
 # community weighted mean vector
-comm_weighted_mean <- c(laguna_80, laguna_81, laguna_82, laguna_83, laguna_85, laguna_86, laguna_87, laguna_88, laguna_89, laguna_90, laguna_91, laguna_92, laguna_93, laguna_95, laguna_97, laguna_98, laguna_99, laguna_105, laguna_106, laguna_107, laguna_108, laguna_109, laguna_110, laguna_111, laguna_112, laguna_113, laguna_114, laguna_115) %>%
+cwm_la_laguna <- c(laguna_80, laguna_81, laguna_82, laguna_83, laguna_85, laguna_86, laguna_87, laguna_88, laguna_89, laguna_90, laguna_91, laguna_92, laguna_93, laguna_95, laguna_97, laguna_98, laguna_99, laguna_105, laguna_106, laguna_107, laguna_108, laguna_109, laguna_110, laguna_111, laguna_112, laguna_113, laguna_114, laguna_115) %>%
   as.numeric()
 
 # data frame w/ plot ID & community weighted mean
-laguna_leaf_area <- data.frame(laguna_plots, comm_weighted_mean)
+laguna_leaf_area <- data.frame(laguna_plots, cwm_la_laguna)
 
 # bar plot of plot x community weighted means
-laguna_box <-ggplot(laguna_leaf_area, aes(laguna_plots, comm_weighted_mean)) + 
+laguna_la_box <-ggplot(laguna_leaf_area, aes(laguna_plots, cwm_la_laguna)) + 
   geom_col(fill = "darkseagreen") +
   xlab("Plot number") +
   ylab("Community weighted mean (cm^2)") +
@@ -733,9 +738,49 @@ laguna_box <-ggplot(laguna_leaf_area, aes(laguna_plots, comm_weighted_mean)) +
 
 # laguna_leaf_area %>% mutate(laguna_plots = fct_relevel(laguna_plots, "80", "81", "82", "83", "85", "86", "87", "88", "89", "90", "91", "92", "93", "95", "97", "98", "99", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115")) %>%
 
-laguna_box
+laguna_la_box
 
 ## bluff mesa
+# calculate ABCO mean leaf area
+ABCO_leaf_area <- (2.38 + 2.34 + 1.9 + 1.88 + 1.62 + 1.59 + 1.39 + 1.21 + 0.96 + 0.91 + 0.68 + 0.56 + 0.55 + 0.53 + 0.43 + 0.34 + 0.26 + 0.18 + 0.18 + 0.12 + 0.5)/21
+
+bluffmesa_1 <- (ABCO_leaf_area*0.033882058) # NOTE: missing PIJE data
+bluffmesa_2 <- (ABCO_leaf_area*0.122857311) # NOTE: missing PIJE data
+bluffmesa_3 <- (ABCO_leaf_area*0.065441891) # NOTE: missing PIJE data
+bluffmesa_4 <- "NA" # NOTE: missing PILA data
+bluffmesa_5 <- (ABCO_leaf_area*0.014806367) # NOTE: missing PIJE data
+bluffmesa_6 <- (ABCO_leaf_area*0.124677735) # NOTE: missing PIJE data
+bluffmesa_8 <- (ABCO_leaf_area*0.009390125) # NOTE: missing PIJE data
+bluffmesa_9 <- (ABCO_leaf_area*0.416190579) # NOTE: missing PIJE data
+bluffmesa_10 <- (ABCO_leaf_area*0.466818858) # NOTE: missing PIJE data
+bluffmesa_11 <- (ABCO_leaf_area*0.141235414) # NOTE: missing PIJE data
+bluffmesa_12 <- (ABCO_leaf_area*0.063165479) # NOTE: missing PIJE data
+bluffmesa_18 <- "NA" # NOTE: missing PIJE data
+bluffmesa_20 <- (ABCO_leaf_area*0.041526157) # NOTE: missing PIJE data
+bluffmesa_23 <- "NA" # NOTE: missing PIJE data 
+bluffmesa_101 <- "NA" # NOTE: missing PIJE data
+bluffmesa_102 <- (ABCO_leaf_area*0.251733299) # NOTE: missing PIJE data
+bluffmesa_103 <- (ABCO_leaf_area*0.098238703) 
+bluffmesa_104 <- (ABCO_leaf_area*0.109433785) # NOTE: missing PIJE data
+bluffmesa_105 <- (ABCO_leaf_area*0.003207769) # NOTE: missing PIJE data
+bluffmesa_106 <- (ABCO_leaf_area*0.078472864) # NOTE: missing PIJE data
+
+# community weighted mean vector
+cwm_la_bm <- c(bluffmesa_1, bluffmesa_2, bluffmesa_3, bluffmesa_4, bluffmesa_5, bluffmesa_6, bluffmesa_8, bluffmesa_9, bluffmesa_10, bluffmesa_11, bluffmesa_12, bluffmesa_18, bluffmesa_20, bluffmesa_23, bluffmesa_101, bluffmesa_102, bluffmesa_103, bluffmesa_104, bluffmesa_105, bluffmesa_106) %>%
+  as.numeric()
+
+# data frame w/ plot ID & community weighted mean
+bluffmesa_leaf_area <- data.frame(bluffmesa_plots, cwm_la_bm)
+
+# bar plot of plot x community weighted means
+bluffmesa_la_box <-ggplot(bluffmesa_leaf_area, aes(bluffmesa_plots, cwm_la_bm)) + 
+  geom_col(fill = "darkseagreen") +
+  xlab("Plot number") +
+  ylab("Community weighted mean (cm^2)") +
+  theme_bw() 
+
+bluffmesa_la_box
+
 ```
 
 ## map building

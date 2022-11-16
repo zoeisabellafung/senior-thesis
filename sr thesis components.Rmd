@@ -563,10 +563,84 @@ bluffmesa_pre_ABCO_clean <- data.frame(
   project = rep("Bluff Mesa", times = length(bluffmesa_pre_ABCO_plots)), 
   year = rep("2016", times = length(bluffmesa_pre_ABCO_plots)),
   species = rep("ABCO", times = length(bluffmesa_pre_ABCO_plots)),
-  plot_id = c(laguna_pre_PIJE_plots), ## LEFT OFF HERE
-  abundance = c(l_p_80/plot_area, l_p_81/plot_area, l_p_82/plot_area, l_p_83/plot_area, l_p_85/plot_area, l_p_86/plot_area, l_p_87/plot_area, l_p_88/plot_area, l_p_89/plot_area, l_p_90/plot_area, l_p_91/plot_area, l_p_92/plot_area, l_p_93/plot_area, l_p_97/plot_area, l_p_98/plot_area, l_p_99/plot_area, l_p_105/plot_area, l_p_106/plot_area, l_p_107/plot_area, l_p_108/plot_area, l_p_109/plot_area, l_p_110/plot_area, l_p_111/plot_area, l_p_112/plot_area, l_p_113/plot_area)
+  plot_id = c(bluffmesa_pre_ABCO_plots),
+  abundance = c(bm_a1/plot_area, bm_a2/plot_area, bm_a3/plot_area, bm_a5/plot_area, bm_a6/plot_area, bm_a8/plot_area, bm_a9/plot_area, bm_a10/plot_area, bm_a11/plot_area, bm_a12/plot_area, bm_a20/plot_area, bm_a102/plot_area, bm_a103/plot_area, bm_a104/plot_area, bm_a105/plot_area, bm_a106/plot_area)
 )
 
+#### PIJE
+
+bluffmesa_pre_PIJE_plots <- unique(bluffmesa_pre_PIJE$plot_id) # print each plot ID where PIJE is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.3m radius circular plot
+bluffmesa_pre_PIJE_2 <- filter(bluffmesa_pre_PIJE, plot_id == "2")
+bluffmesa_pre_PIJE_3 <- filter(bluffmesa_pre_PIJE, plot_id == "3")
+bluffmesa_pre_PIJE_5 <- filter(bluffmesa_pre_PIJE, plot_id == "5")
+bluffmesa_pre_PIJE_6 <- filter(bluffmesa_pre_PIJE, plot_id == "6")
+bluffmesa_pre_PIJE_8 <- filter(bluffmesa_pre_PIJE, plot_id == "8")
+bluffmesa_pre_PIJE_9 <- filter(bluffmesa_pre_PIJE, plot_id == "9")
+bluffmesa_pre_PIJE_10 <- filter(bluffmesa_pre_PIJE, plot_id == "10")
+bluffmesa_pre_PIJE_11 <- filter(bluffmesa_pre_PIJE, plot_id == "11")
+bluffmesa_pre_PIJE_12 <- filter(bluffmesa_pre_PIJE, plot_id == "12")
+bluffmesa_pre_PIJE_18 <- filter(bluffmesa_pre_PIJE, plot_id == "18")
+bluffmesa_pre_PIJE_20 <- filter(bluffmesa_pre_PIJE, plot_id == "20")
+bluffmesa_pre_PIJE_23 <- filter(bluffmesa_pre_PIJE, plot_id == "23")
+bluffmesa_pre_PIJE_101 <- filter(bluffmesa_pre_PIJE, plot_id == "101")
+bluffmesa_pre_PIJE_102 <- filter(bluffmesa_pre_PIJE, plot_id == "102")
+bluffmesa_pre_PIJE_104 <- filter(bluffmesa_pre_PIJE, plot_id == "104")
+bluffmesa_pre_PIJE_105 <- filter(bluffmesa_pre_PIJE, plot_id == "105")
+bluffmesa_pre_PIJE_106 <- filter(bluffmesa_pre_PIJE, plot_id == "106")
+
+# create vectors of the sum of each species' area per plot
+bm_p2 <- sum(bluffmesa_pre_PIJE_2$tree_area)
+bm_p3 <- sum(bluffmesa_pre_PIJE_3$tree_area)
+bm_p5 <- sum(bluffmesa_pre_PIJE_5$tree_area)
+bm_p6 <- sum(bluffmesa_pre_PIJE_6$tree_area)
+bm_p8 <- sum(bluffmesa_pre_PIJE_8$tree_area)
+bm_p9 <- sum(bluffmesa_pre_PIJE_9$tree_area)
+bm_p10 <- sum(bluffmesa_pre_PIJE_10$tree_area)
+bm_p11 <- sum(bluffmesa_pre_PIJE_11$tree_area)
+bm_p12 <- sum(bluffmesa_pre_PIJE_12$tree_area)
+bm_p18 <- sum(bluffmesa_pre_PIJE_18$tree_area)
+bm_p20 <- sum(bluffmesa_pre_PIJE_20$tree_area)
+bm_p23 <- sum(bluffmesa_pre_PIJE_23$tree_area)
+bm_p101 <- sum(bluffmesa_pre_PIJE_101$tree_area)
+bm_p102 <- sum(bluffmesa_pre_PIJE_102$tree_area)
+bm_p104 <- sum(bluffmesa_pre_PIJE_104$tree_area)
+bm_p105 <- sum(bluffmesa_pre_PIJE_105$tree_area)
+bm_p106 <- sum(bluffmesa_pre_PIJE_106$tree_area)
+
+# create data frame: project, year, plot_id, & abundance for PIJE
+bluffmesa_pre_PIJE_clean <- data.frame(
+  project = rep("Bluff Mesa", times = length(bluffmesa_pre_PIJE_plots)), 
+  year = rep("2016", times = length(bluffmesa_pre_PIJE_plots)),
+  species = rep("PIJE", times = length(bluffmesa_pre_PIJE_plots)),
+  plot_id = c(bluffmesa_pre_PIJE_plots),
+  abundance = c(bm_p2/plot_area, bm_p3/plot_area, bm_p5/plot_area, bm_p6/plot_area, bm_p8/plot_area, bm_p9/plot_area, bm_p10/plot_area, bm_p11/plot_area, bm_p12/plot_area, bm_p18/plot_area, bm_p20/plot_area, bm_p23/plot_area, bm_p101/plot_area, bm_p102/plot_area, bm_p104/plot_area, bm_p105/plot_area, bm_p106/plot_area)
+)
+
+#### PILA
+
+bluffmesa_pre_PILA_plots <- unique(bluffmesa_pre_PILA$plot_id) # print each plot ID where PILA is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.3m radius circular plot
+bluffmesa_pre_PILA_4 <- filter(bluffmesa_pre_PILA, plot_id == "4")
+
+# create vectors of the sum of each species' area per plot
+bm_pl4 <- sum(bluffmesa_pre_PILA_4$tree_area)
+
+# create data frame: project, year, plot_id, & abundance for PILA
+bluffmesa_pre_PILA_clean <- data.frame(
+  project = rep("Bluff Mesa", times = length(bluffmesa_pre_PILA_plots)), 
+  year = rep("2016", times = length(bluffmesa_pre_PILA_plots)),
+  species = rep("PILA", times = length(bluffmesa_pre_PILA_plots)),
+  plot_id = c(bluffmesa_pre_PILA_plots),
+  abundance = c(bm_pl4/plot_area)
+)
+
+# combine all pre-fire data from laguna plots
+bluffmesa_pre_clean <- rbind(bluffmesa_pre_ABCO_clean, bluffmesa_pre_PIJE_clean, bluffmesa_pre_PILA_clean)
 ```
 
 ### post-fire data

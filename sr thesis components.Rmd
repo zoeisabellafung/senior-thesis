@@ -881,45 +881,207 @@ laguna_sla_box <-ggplot(laguna_spec_leaf_area, aes(laguna_plots, cwm_sla_laguna)
 laguna_sla_box
 
 ## bluff mesa
-# calculate ABCO mean leaf area
-ABCO_leaf_area <- (2.38 + 2.34 + 1.9 + 1.88 + 1.62 + 1.59 + 1.39 + 1.21 + 0.96 + 0.91 + 0.68 + 0.56 + 0.55 + 0.53 + 0.43 + 0.34 + 0.26 + 0.18 + 0.18 + 0.12 + 0.5)/21
 
-bluffmesa_1 <- (ABCO_leaf_area*0.033882058) # NOTE: missing PIJE data
-bluffmesa_2 <- (ABCO_leaf_area*0.122857311) # NOTE: missing PIJE data
-bluffmesa_3 <- (ABCO_leaf_area*0.065441891) # NOTE: missing PIJE data
-bluffmesa_4 <- "NA" # NOTE: missing PILA data
-bluffmesa_5 <- (ABCO_leaf_area*0.014806367) # NOTE: missing PIJE data
-bluffmesa_6 <- (ABCO_leaf_area*0.124677735) # NOTE: missing PIJE data
-bluffmesa_8 <- (ABCO_leaf_area*0.009390125) # NOTE: missing PIJE data
-bluffmesa_9 <- (ABCO_leaf_area*0.416190579) # NOTE: missing PIJE data
-bluffmesa_10 <- (ABCO_leaf_area*0.466818858) # NOTE: missing PIJE data
-bluffmesa_11 <- (ABCO_leaf_area*0.141235414) # NOTE: missing PIJE data
-bluffmesa_12 <- (ABCO_leaf_area*0.063165479) # NOTE: missing PIJE data
-bluffmesa_18 <- "NA" # NOTE: missing PIJE data
-bluffmesa_20 <- (ABCO_leaf_area*0.041526157) # NOTE: missing PIJE data
-bluffmesa_23 <- "NA" # NOTE: missing PIJE data 
-bluffmesa_101 <- "NA" # NOTE: missing PIJE data
-bluffmesa_102 <- (ABCO_leaf_area*0.251733299) # NOTE: missing PIJE data
-bluffmesa_103 <- (ABCO_leaf_area*0.098238703) 
-bluffmesa_104 <- (ABCO_leaf_area*0.109433785) # NOTE: missing PIJE data
-bluffmesa_105 <- (ABCO_leaf_area*0.003207769) # NOTE: missing PIJE data
-bluffmesa_106 <- (ABCO_leaf_area*0.078472864) # NOTE: missing PIJE data
+bluffmesa_1b <- (ABCO_spec_leaf_area*0.033882058) 
+bluffmesa_2b <- (PIJE_spec_leaf_area*0.013756363)+(ABCO_spec_leaf_area*0.122857311) 
+bluffmesa_3b <- (PIJE_spec_leaf_area*0.094853747)+(ABCO_spec_leaf_area*0.065441891) 
+bluffmesa_4b <- "NA" # NOTE: missing PILA data
+bluffmesa_5b <- (PIJE_spec_leaf_area*0.331403790)+(ABCO_spec_leaf_area*0.014806367) 
+bluffmesa_6b <- (PIJE_spec_leaf_area*0.228945297)+(ABCO_spec_leaf_area*0.124677735) 
+bluffmesa_8b <- (PIJE_spec_leaf_area*0.551092685)+(ABCO_spec_leaf_area*0.009390125)
+bluffmesa_9b <- (PIJE_spec_leaf_area*0.113851907)+(ABCO_spec_leaf_area*0.416190579) 
+bluffmesa_10b <- (PIJE_spec_leaf_area*0.342088261)+(ABCO_spec_leaf_area*0.466818858) 
+bluffmesa_11b <- (PIJE_spec_leaf_area*0.102626674)+(ABCO_spec_leaf_area*0.141235414) 
+bluffmesa_12b <- (PIJE_spec_leaf_area*0.471040410)+(ABCO_spec_leaf_area*0.063165479) 
+bluffmesa_18b <- (PIJE_spec_leaf_area*0.039417535) 
+bluffmesa_20b <- (PIJE_spec_leaf_area*0.219124246)+(ABCO_spec_leaf_area*0.041526157) 
+bluffmesa_23b <- (PIJE_spec_leaf_area*0.002634505) 
+bluffmesa_101b <- (PIJE_spec_leaf_area*0.767171666) 
+bluffmesa_102b <- (PIJE_spec_leaf_area*0.009053176)+(ABCO_spec_leaf_area*0.251733299) 
+bluffmesa_103b <- (ABCO_spec_leaf_area*0.098238703) 
+bluffmesa_104b <- (PIJE_spec_leaf_area*0.218709766)+(ABCO_spec_leaf_area*0.109433785) 
+bluffmesa_105b <- (PIJE_spec_leaf_area*0.015300533)+(ABCO_spec_leaf_area*0.003207769) 
+bluffmesa_106b <- (PIJE_spec_leaf_area*0.384255815)+(ABCO_leaf_area*0.078472864) 
 
 # community weighted mean vector
-cwm_la_bm <- c(bluffmesa_1, bluffmesa_2, bluffmesa_3, bluffmesa_4, bluffmesa_5, bluffmesa_6, bluffmesa_8, bluffmesa_9, bluffmesa_10, bluffmesa_11, bluffmesa_12, bluffmesa_18, bluffmesa_20, bluffmesa_23, bluffmesa_101, bluffmesa_102, bluffmesa_103, bluffmesa_104, bluffmesa_105, bluffmesa_106) %>%
+cwm_sla_bm <- c(bluffmesa_1b, bluffmesa_2b, bluffmesa_3b, bluffmesa_4b, bluffmesa_5b, bluffmesa_6b, bluffmesa_8b, bluffmesa_9b, bluffmesa_10b, bluffmesa_11b, bluffmesa_12b, bluffmesa_18b, bluffmesa_20b, bluffmesa_23b, bluffmesa_101b, bluffmesa_102b, bluffmesa_103b, bluffmesa_104b, bluffmesa_105b, bluffmesa_106b) %>%
   as.numeric()
 
 # data frame w/ plot ID & community weighted mean
-bluffmesa_leaf_area <- data.frame(bluffmesa_plots, cwm_la_bm)
+bluffmesa_spec_leaf_area <- data.frame(bluffmesa_plots, cwm_sla_bm)
 
 # bar plot of plot x community weighted means
-bluffmesa_la_box <-ggplot(bluffmesa_leaf_area, aes(bluffmesa_plots, cwm_la_bm)) + 
-  geom_col(fill = "darkseagreen") +
+bluffmesa_sla_box <-ggplot(bluffmesa_spec_leaf_area, aes(bluffmesa_plots, cwm_sla_bm)) + 
+  geom_col(fill = "deepskyblue") +
   xlab("Plot number") +
   ylab("Community weighted mean (cm^2)") +
   theme_bw() 
 
-bluffmesa_la_box
+bluffmesa_sla_box
+
+```
+
+#### leaf length 
+```{r}
+# recall species present in the pre/post fire data
+laguna_species 
+bluffmesa_species 
+ 
+# read in data from TRY database 
+leaf_length <- read.csv("data/Veg-data/leaf_length.csv") %>%
+  clean_names() %>%
+  select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value, unit_name) %>% 
+  filter(trait_id==c("144", "940")) # only include rows with leaf length measurements (exclude rows w/ other data measurements)
+
+unique(leaf_length$species_name) # determine the species included in the SLA data
+
+# calculate community weighted mean (trait value x species abundance)
+## laguna mountain
+laguna_plots # recall all of the plots included in the laguna mountain burn area
+
+leaf_length_QUCH <- leaf_length %>% # subset leaf length data to only include QUCH
+  filter(leaf_length$species_name == "Quercus chapmanii")
+leaf_length_QUKE <- leaf_length %>% # subset leaf length data to only include QUKE
+  filter(leaf_length$species_name == "Quercus kelloggii")
+leaf_length_ABCO <- leaf_length %>% # subset leaf length data to only include ABCO
+  filter(leaf_length$species_name == "Abies concolor")
+leaf_length_PIJE <- leaf_length %>% # subset leaf length data to only include PIJE
+  filter(leaf_length$species_name == "Pinus jeffreyi")
+leaf_length_PICO <- leaf_length %>% # subset leaf length data to only include PICO
+  filter(leaf_length$species_name == "Pinus contorta")
+leaf_length_PILA <- leaf_length %>% # subset leaf length data to only include PILA
+  filter(leaf_length$species_name == "Pinus lambertiana") 
+
+## bluff mesa
+bluffmesa_plots # recall all of the plots included in the bluff mesa burn area
+
+```
+
+##### building bar plots 
+```{r}
+### leaf length
+## laguna mountain
+# calculate QUCH mean leaf length
+QUCH_leaf_length <- (6.29 + 7.57 + 8.91 + 7)/3 # cm
+
+QUKE_leaf_length <- (6) # cm
+
+ABCO_leaf_length <- (8.609 + 7.066 + 6.023 + 5.222 + 4.367 + 3.283 + 2.837 + 2.568 + 1.711 + 1.378
+ + 1.5)/11 # cm
+
+PIJE_leaf_length <- (12 + 25)/2 # cm
+
+PICO_leaf_length <- (7) # cm
+
+PILA_leaf_length <- (10) # cm
+
+laguna_80c <-  (PIJE_leaf_length*0.237868275)+(QUCH_leaf_length*0.02188190)+(QUKE_leaf_length*0.127896664) 
+laguna_81c <- (PIJE_leaf_length*0.105031913)+(QUCH_leaf_length*0.137503524)+(QUKE_leaf_length*0.132905083) 
+laguna_82c <- (PIJE_leaf_length*0.224752721)+(QUCH_leaf_length*0.036714895)+(QUKE_leaf_length*0.204246613) 
+laguna_83c <- (PIJE_leaf_length*0.328016681)+(QUCH_leaf_length*0.030720348)+(QUKE_leaf_length*0.282228933)
+laguna_85c <- (PIJE_leaf_length*0.385574242)+(QUKE_leaf_length*0.104909155) 
+laguna_86c <- (PIJE_leaf_length*0.311199977)+(QUKE_leaf_length*0.084400697) 
+laguna_87c <- (PIJE_leaf_length*0.221507753)+(QUCH_leaf_length*0.013481479)+(QUKE_leaf_length*0.060271165) 
+laguna_88c <- (PIJE_leaf_length*0.063661211)+(QUKE_leaf_length*0.210908254) 
+laguna_89c <- (PIJE_leaf_length*0.043035477)+(PICO_leaf_length*0.145042486) 
+laguna_90c <- (PIJE_leaf_length*0.006773436)+(PICO_leaf_length*0.157932884) 
+laguna_91c <- (PIJE_leaf_length*0.005395098)+(QUKE_leaf_length*0.043702522)+(PICO_leaf_length*0.176365612) 
+laguna_92c <- (PIJE_leaf_length*0.061276921)+(QUKE_leaf_length*0.049942439) 
+laguna_93c <- (PIJE_leaf_length*0.145917065)+(QUKE_leaf_length*0.077707730)
+laguna_95c <- (QUKE_leaf_length*0.203380257) 
+laguna_97c <- (PIJE_leaf_length*0.110434842)+(QUKE_leaf_length*0.052624520) 
+laguna_98c <- (PIJE_leaf_length*0.010762981)+(QUKE_leaf_length*0.282672096) 
+laguna_99c <- (PIJE_leaf_length*0.161122053)+(QUKE_leaf_length*0.005792153) 
+laguna_105c <- (PIJE_leaf_length*0.244141475)+(QUKE_leaf_length*0.032854765) 
+laguna_106c <- (PIJE_leaf_length*0.321107174) 
+laguna_107c <- (PIJE_leaf_length*0.566741914) 
+laguna_108c <- (PIJE_leaf_length*0.341350145)+(QUKE_leaf_length*0.066777547) 
+laguna_109c <- (PIJE_leaf_length*0.329766035)+(QUKE_leaf_length*0.163879317) 
+laguna_110c <- (PIJE_leaf_length*0.309436722)+(QUCH_leaf_length*0.018574086) 
+laguna_111c <- (PIJE_leaf_length*0.071225233)+(QUKE_leaf_length*0.111012804)+(PICO_leaf_length*0.042333973) 
+laguna_112c <- (PIJE_leaf_length*0.093389655)+(QUKE_leaf_length*0.346895411)+(PICO_leaf_length*0.141405944) 
+laguna_113c <- (PIJE_leaf_length*0.043363615)+(QUKE_leaf_length*0.228543739)+(PICO_leaf_length*0.048130629) 
+laguna_114c <- (QUKE_leaf_length*0.098418239) 
+laguna_115c <- (QUKE_leaf_length*0.168117903)
+
+# community weighted mean vector
+cwm_ll_laguna <- c(laguna_80c, laguna_81c, laguna_82c, laguna_83c, laguna_85c, laguna_86c, laguna_87c, laguna_88c, laguna_89c, laguna_90c, laguna_91c, laguna_92c, laguna_93c, laguna_95c, laguna_97c, laguna_98c, laguna_99c, laguna_105c, laguna_106c, laguna_107c, laguna_108c, laguna_109c, laguna_110c, laguna_111c, laguna_112c, laguna_113c, laguna_114c, laguna_115c) %>%
+  as.numeric()
+
+# data frame w/ plot ID & community weighted mean
+laguna_leaf_length <- data.frame(laguna_plots, cwm_ll_laguna)
+
+# bar plot of plot x community weighted means
+laguna_ll_box <-ggplot(laguna_leaf_length, aes(laguna_plots, cwm_ll_laguna)) + 
+  geom_col(fill = "darkorchid") +
+  xlab("Plot number") +
+  ylab("Community weighted mean (cm^2)") +
+  theme_bw() 
+
+# laguna_leaf_area %>% mutate(laguna_plots = fct_relevel(laguna_plots, "80", "81", "82", "83", "85", "86", "87", "88", "89", "90", "91", "92", "93", "95", "97", "98", "99", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115")) %>%
+
+laguna_ll_box
+
+## bluff mesa
+
+bluffmesa_1c <- (ABCO_leaf_length*0.033882058) 
+bluffmesa_2c <- (PIJE_leaf_length*0.013756363)+(ABCO_leaf_length*0.122857311) 
+bluffmesa_3c <- (PIJE_leaf_length*0.094853747)+(ABCO_leaf_length*0.065441891) 
+bluffmesa_4c <- (PILA_leaf_length*0.200910212)
+bluffmesa_5c <- (PIJE_leaf_length*0.331403790)+(ABCO_leaf_length*0.014806367) 
+bluffmesa_6c <- (PIJE_leaf_length*0.228945297)+(ABCO_leaf_length*0.124677735) 
+bluffmesa_8c <- (PIJE_leaf_length*0.551092685)+(ABCO_leaf_length*0.009390125)
+bluffmesa_9c <- (PIJE_leaf_length*0.113851907)+(ABCO_leaf_length*0.416190579) 
+bluffmesa_10c <- (PIJE_leaf_length*0.342088261)+(ABCO_leaf_length*0.466818858) 
+bluffmesa_11c <- (PIJE_leaf_length*0.102626674)+(ABCO_leaf_length*0.141235414) 
+bluffmesa_12c <- (PIJE_leaf_length*0.471040410)+(ABCO_leaf_length*0.063165479) 
+bluffmesa_18c <- (PIJE_leaf_length*0.039417535) 
+bluffmesa_20c <- (PIJE_leaf_length*0.219124246)+(ABCO_leaf_length*0.041526157) 
+bluffmesa_23c <- (PIJE_leaf_length*0.002634505) 
+bluffmesa_101c <- (PIJE_leaf_length*0.767171666) 
+bluffmesa_102c <- (PIJE_leaf_length*0.009053176)+(ABCO_leaf_length*0.251733299) 
+bluffmesa_103c <- (ABCO_leaf_length*0.098238703) 
+bluffmesa_104c <- (PIJE_leaf_length*0.218709766)+(ABCO_leaf_length*0.109433785) 
+bluffmesa_105c <- (PIJE_leaf_length*0.015300533)+(ABCO_leaf_length*0.003207769) 
+bluffmesa_106c <- (PIJE_leaf_length*0.384255815)+(ABCO_leaf_area*0.078472864) 
+
+# community weighted mean vector
+cwm_ll_bm <- c(bluffmesa_1c, bluffmesa_2c, bluffmesa_3c, bluffmesa_4c, bluffmesa_5c, bluffmesa_6c, bluffmesa_8c, bluffmesa_9c, bluffmesa_10c, bluffmesa_11c, bluffmesa_12c, bluffmesa_18c, bluffmesa_20c, bluffmesa_23c, bluffmesa_101c, bluffmesa_102c, bluffmesa_103c, bluffmesa_104c, bluffmesa_105c, bluffmesa_106c) %>%
+  as.numeric()
+
+# data frame w/ plot ID & community weighted mean
+bluffmesa_leaf_length <- data.frame(bluffmesa_plots, cwm_ll_bm)
+
+# bar plot of plot x community weighted means
+bluffmesa_ll_box <-ggplot(bluffmesa_leaf_length, aes(bluffmesa_plots, cwm_ll_bm)) + 
+  geom_col(fill = "darkorchid") +
+  xlab("Plot number") +
+  ylab("Community weighted mean (cm^2)") +
+  theme_bw() 
+
+bluffmesa_ll_box
+
+```
+
+#### leaf dry matter content
+```{r}
+# read in data from TRY database 
+ldmc <- read.csv("data/Veg-data/ldmc.csv") %>%
+  clean_names() %>%
+  select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value, unit_name) %>% 
+  filter(trait_id==c("47")) # only include rows with leaf length measurements (exclude rows w/ other data measurements)
+
+unique(ldmc$species_name) # determine the species included in the LDMC data
+
+# calculate community weighted mean (trait value x species abundance)
+## laguna mountain
+laguna_plots # recall all of the plots included in the laguna mountain burn area
+
+ldmc_ABCO <- ldmc %>% # subset leaf length data to only include ABCO
+  filter(ldmc$species_name == "Abies concolor")
+
+## bluff mesa
+bluffmesa_plots # recall all of the plots included in the bluff mesa burn area
 
 ```
 

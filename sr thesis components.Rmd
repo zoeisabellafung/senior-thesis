@@ -19,6 +19,7 @@ library(dplyr)
 library(stringr)
 library(tidyr)
 library(forcats)
+library(ggthemes)
 ```
 
 ## data cleaning 
@@ -272,7 +273,7 @@ USDA1_postfire <- drop_na(USDA1_postfire, csh_m) %>%
 crag <- read.csv("data/USDA:USFS/2005_Crag/!FBAT_Trees_Crag_Rawdata")
 ```
 
-#### pre-fire - Nicole's data
+#### pre-fire - Nicole's data 
 ```{r}
 # load in all pre-fire data & organize
 laguna_pre <- read_csv("data/Nicole-data/LagunaMtn_pre_2016.csv") %>%
@@ -283,13 +284,39 @@ laguna_pre <- read_csv("data/Nicole-data/LagunaMtn_pre_2016.csv") %>%
 laguna_pre <- laguna_pre %>%
   mutate(tree_area = ((pi*(laguna_pre$dbh_cm^2)/4)/100)) # add column w/ area measurements for each tree
 
-bluffmesa_pre <- read_csv("data/Nicole-data/BluffMesa_pre_2016.csv") %>%
-  clean_names() %>% # standardize column names
-  select(project, date, id, treatment, tag_number, status, species, dbh_cm, height_m, heigt_to_crown_m, dbh_ft, ba_indiv_sq_ft) %>% # subset data 
-  as.data.frame() %>%
-  rename("height_to_crown_m"="heigt_to_crown_m", "plot_id"="id", "treatment_unit"="treatment", "basal_area_sq_ft_indiv"="ba_indiv_sq_ft") 
+# load in raw pre-fire bluff mesa data (2020)
+bm_24_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_24_2020_trees.csv") %>%
+  mutate(plot_id = rep(24, length = 8))
+bm_25_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_25_2020_trees.csv") %>%
+   mutate(plot_id = rep(25, length = 4))
+bm_26_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_26_2020_trees.csv") %>%
+   mutate(plot_id = rep(26, length = 3))
+bm_27_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_27_2020_trees.csv") %>%
+   mutate(plot_id = rep(27, length = 3))
+bm_33_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_33_2020_trees.csv") %>%
+   mutate(plot_id = rep(33, length = 4))
+bm_48_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_48_2020_trees.csv") %>%
+   mutate(plot_id = rep(48, length = 6))
+bm_49_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_49_2020_trees.csv") %>%
+   mutate(plot_id = rep(49, length = 10))
+bm_50_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_50_2020_trees.csv") %>% 
+   mutate(plot_id = rep(50, length = 4))
+bm_51_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_51_2020_trees.csv") %>%
+   mutate(plot_id = rep(51, length = 4))
+bm_52_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_52_2020_trees.csv") %>%
+   mutate(plot_id = rep(52, length = 3))
+bm_53_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_53_2020_trees.csv") %>%
+   mutate(plot_id = rep(53, length = 5))
+
+# combine raw pre-fire bluff mesa data into one data frame
+bluffmesa_pre <- rbind(
+  bm_24_2020_trees, bm_25_2020_trees, bm_26_2020_trees, bm_27_2020_trees, bm_33_2020_trees, bm_48_2020_trees, bm_49_2020_trees, bm_50_2020_trees, bm_51_2020_trees, bm_52_2020_trees, bm_53_2020_trees) %>%
+  clean_names() %>%
+  select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3)
+
+# old calculation for tree area measurement
 bluffmesa_pre <- bluffmesa_pre %>%
-  mutate(tree_area = ((pi*(bluffmesa_pre$dbh_cm^2)/4)/100)) # add column with area measurements for each tree
+  mutate(tree_area = ((pi*(bluffmesa_pre$dbh^2)/4)/100)) # add column with area measurements for each tree (cm^2)
 
 # since location data is organized by PLOT, find tree area per plot (subset by species)
 laguna_species <- unique(laguna_pre$species) # create list of all species present in laguna fire data
@@ -508,152 +535,89 @@ laguna_pre_PICO_clean <- data.frame(
 laguna_pre_clean <- rbind(laguna_pre_PIJE_clean, laguna_pre_QUCH_clean, laguna_pre_QUKE_clean, laguna_pre_PICO_clean)
 
 # repeat for bluff mesa
-bluffmesa_species <- unique(bluffmesa_pre$species) # create list of all species present in laguna fire data
-bluffmesa_pre <- bluffmesa_pre %>%
-  drop_na("species") # drop rows where species is not specified
+unique(bluffmesa_pre$species) # identify species present in laguna fire data
 
 bluffmesa_pre_ABCO <- filter(bluffmesa_pre, species == "ABCO") # create data frame w/ only ABCO sp.
 bluffmesa_pre_PIJE <- filter(bluffmesa_pre, species == "PIJE") # create data frame w/ only PIJE sp.
-bluffmesa_pre_PILA <- filter(bluffmesa_pre, species == "PILA") # create data frame w/ only PILA sp.
 
 #### ABCO
 
-bluffmesa_pre_ABCO_plots <- unique(bluffmesa_pre_ABCO$plot_id) # print each plot ID where ABCO is present
+unique(bluffmesa_pre_ABCO$plot_id) # print each plot ID where ABCO is present
 
 # create a data frame for each plot 
 ## NOTE: each plot is an 11.3m radius circular plot
-bluffmesa_pre_ABCO_1 <- filter(bluffmesa_pre_ABCO, plot_id == "1")
-bluffmesa_pre_ABCO_2 <- filter(bluffmesa_pre_ABCO, plot_id == "2")
-bluffmesa_pre_ABCO_3 <- filter(bluffmesa_pre_ABCO, plot_id == "3")
-bluffmesa_pre_ABCO_5 <- filter(bluffmesa_pre_ABCO, plot_id == "5")
-bluffmesa_pre_ABCO_6 <- filter(bluffmesa_pre_ABCO, plot_id == "6")
-bluffmesa_pre_ABCO_8 <- filter(bluffmesa_pre_ABCO, plot_id == "8")
-bluffmesa_pre_ABCO_9 <- filter(bluffmesa_pre_ABCO, plot_id == "9")
-bluffmesa_pre_ABCO_10 <- filter(bluffmesa_pre_ABCO, plot_id == "10")
-bluffmesa_pre_ABCO_11 <- filter(bluffmesa_pre_ABCO, plot_id == "11")
-bluffmesa_pre_ABCO_12 <- filter(bluffmesa_pre_ABCO, plot_id == "12")
-bluffmesa_pre_ABCO_20 <- filter(bluffmesa_pre_ABCO, plot_id == "20")
-bluffmesa_pre_ABCO_102 <- filter(bluffmesa_pre_ABCO, plot_id == "102")
-bluffmesa_pre_ABCO_103 <- filter(bluffmesa_pre_ABCO, plot_id == "103")
-bluffmesa_pre_ABCO_104 <- filter(bluffmesa_pre_ABCO, plot_id == "104")
-bluffmesa_pre_ABCO_105 <- filter(bluffmesa_pre_ABCO, plot_id == "105")
-bluffmesa_pre_ABCO_106 <- filter(bluffmesa_pre_ABCO, plot_id == "106")
+bluffmesa_pre_ABCO_24 <- filter(bluffmesa_pre_ABCO, plot_id == "24")
+bluffmesa_pre_ABCO_26 <- filter(bluffmesa_pre_ABCO, plot_id == "26")
+bluffmesa_pre_ABCO_33 <- filter(bluffmesa_pre_ABCO, plot_id == "33")
+bluffmesa_pre_ABCO_48 <- filter(bluffmesa_pre_ABCO, plot_id == "48")
+bluffmesa_pre_ABCO_49 <- filter(bluffmesa_pre_ABCO, plot_id == "49")
+bluffmesa_pre_ABCO_52 <- filter(bluffmesa_pre_ABCO, plot_id == "52")
 
 # calculate plot area
 plot_area <- pi*(11.3^2)
 ## plot area = 401.15m^2
 
-# create vectors of the sum of each species' area per plot
-bm_a1 <- sum(bluffmesa_pre_ABCO_1$tree_area)
-bm_a2 <- sum(bluffmesa_pre_ABCO_2$tree_area)
-bm_a3 <- sum(bluffmesa_pre_ABCO_3$tree_area)
-bm_a5 <- sum(bluffmesa_pre_ABCO_5$tree_area)
-bm_a6 <- sum(bluffmesa_pre_ABCO_6$tree_area)
-bm_a8 <- sum(bluffmesa_pre_ABCO_8$tree_area)
-bm_a9 <- sum(bluffmesa_pre_ABCO_9$tree_area)
-bm_a10 <- sum(bluffmesa_pre_ABCO_10$tree_area)
-bm_a11 <- sum(bluffmesa_pre_ABCO_11$tree_area)
-bm_a12 <- sum(bluffmesa_pre_ABCO_12$tree_area)
-bm_a20 <- sum(bluffmesa_pre_ABCO_20$tree_area)
-bm_a102 <- sum(bluffmesa_pre_ABCO_102$tree_area)
-bm_a103 <- sum(bluffmesa_pre_ABCO_103$tree_area)
-bm_a104 <- sum(bluffmesa_pre_ABCO_104$tree_area)
-bm_a105 <- sum(bluffmesa_pre_ABCO_105$tree_area)
-bm_a106 <- sum(bluffmesa_pre_ABCO_106$tree_area)
-
 # create data frame: project, year, plot_id, & abundance for ABCO
 bluffmesa_pre_ABCO_clean <- data.frame(
-  project = rep("Bluff Mesa", times = length(bluffmesa_pre_ABCO_plots)), 
-  year = rep("2016", times = length(bluffmesa_pre_ABCO_plots)),
-  species = rep("ABCO", times = length(bluffmesa_pre_ABCO_plots)),
-  plot_id = c(bluffmesa_pre_ABCO_plots),
-  abundance = c(bm_a1/plot_area, bm_a2/plot_area, bm_a3/plot_area, bm_a5/plot_area, bm_a6/plot_area, bm_a8/plot_area, bm_a9/plot_area, bm_a10/plot_area, bm_a11/plot_area, bm_a12/plot_area, bm_a20/plot_area, bm_a102/plot_area, bm_a103/plot_area, bm_a104/plot_area, bm_a105/plot_area, bm_a106/plot_area)
-)
+  project = rep("Bluff Mesa", times = length(unique(bluffmesa_pre_ABCO$plot_id))), 
+  year = rep("2020", times = length(unique(bluffmesa_pre_ABCO$plot_id))),
+  species = rep("ABCO", times = length(unique(bluffmesa_pre_ABCO$plot_id))),
+  plot_id = c(unique(bluffmesa_pre_ABCO$plot_id)),
+  abundance = c(sum(bluffmesa_pre_ABCO_24$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_26$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_33$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_48$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_49$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_52$tree_area)/plot_area)
+) # note --> no abundance data for plot 26 because there is no dbh data
 
 #### PIJE
 
-bluffmesa_pre_PIJE_plots <- unique(bluffmesa_pre_PIJE$plot_id) # print each plot ID where PIJE is present
+unique(bluffmesa_pre_PIJE$plot_id) # print each plot ID where PIJE is present
 
 # create a data frame for each plot 
 ## NOTE: each plot is an 11.3m radius circular plot
-bluffmesa_pre_PIJE_2 <- filter(bluffmesa_pre_PIJE, plot_id == "2")
-bluffmesa_pre_PIJE_3 <- filter(bluffmesa_pre_PIJE, plot_id == "3")
-bluffmesa_pre_PIJE_5 <- filter(bluffmesa_pre_PIJE, plot_id == "5")
-bluffmesa_pre_PIJE_6 <- filter(bluffmesa_pre_PIJE, plot_id == "6")
-bluffmesa_pre_PIJE_8 <- filter(bluffmesa_pre_PIJE, plot_id == "8")
-bluffmesa_pre_PIJE_9 <- filter(bluffmesa_pre_PIJE, plot_id == "9")
-bluffmesa_pre_PIJE_10 <- filter(bluffmesa_pre_PIJE, plot_id == "10")
-bluffmesa_pre_PIJE_11 <- filter(bluffmesa_pre_PIJE, plot_id == "11")
-bluffmesa_pre_PIJE_12 <- filter(bluffmesa_pre_PIJE, plot_id == "12")
-bluffmesa_pre_PIJE_18 <- filter(bluffmesa_pre_PIJE, plot_id == "18")
-bluffmesa_pre_PIJE_20 <- filter(bluffmesa_pre_PIJE, plot_id == "20")
-bluffmesa_pre_PIJE_23 <- filter(bluffmesa_pre_PIJE, plot_id == "23")
-bluffmesa_pre_PIJE_101 <- filter(bluffmesa_pre_PIJE, plot_id == "101")
-bluffmesa_pre_PIJE_102 <- filter(bluffmesa_pre_PIJE, plot_id == "102")
-bluffmesa_pre_PIJE_104 <- filter(bluffmesa_pre_PIJE, plot_id == "104")
-bluffmesa_pre_PIJE_105 <- filter(bluffmesa_pre_PIJE, plot_id == "105")
-bluffmesa_pre_PIJE_106 <- filter(bluffmesa_pre_PIJE, plot_id == "106")
-
-# create vectors of the sum of each species' area per plot
-bm_p2 <- sum(bluffmesa_pre_PIJE_2$tree_area)
-bm_p3 <- sum(bluffmesa_pre_PIJE_3$tree_area)
-bm_p5 <- sum(bluffmesa_pre_PIJE_5$tree_area)
-bm_p6 <- sum(bluffmesa_pre_PIJE_6$tree_area)
-bm_p8 <- sum(bluffmesa_pre_PIJE_8$tree_area)
-bm_p9 <- sum(bluffmesa_pre_PIJE_9$tree_area)
-bm_p10 <- sum(bluffmesa_pre_PIJE_10$tree_area)
-bm_p11 <- sum(bluffmesa_pre_PIJE_11$tree_area)
-bm_p12 <- sum(bluffmesa_pre_PIJE_12$tree_area)
-bm_p18 <- sum(bluffmesa_pre_PIJE_18$tree_area)
-bm_p20 <- sum(bluffmesa_pre_PIJE_20$tree_area)
-bm_p23 <- sum(bluffmesa_pre_PIJE_23$tree_area)
-bm_p101 <- sum(bluffmesa_pre_PIJE_101$tree_area)
-bm_p102 <- sum(bluffmesa_pre_PIJE_102$tree_area)
-bm_p104 <- sum(bluffmesa_pre_PIJE_104$tree_area)
-bm_p105 <- sum(bluffmesa_pre_PIJE_105$tree_area)
-bm_p106 <- sum(bluffmesa_pre_PIJE_106$tree_area)
+bluffmesa_pre_PIJE_24 <- filter(bluffmesa_pre_PIJE, plot_id == "24")
+bluffmesa_pre_PIJE_25 <- filter(bluffmesa_pre_PIJE, plot_id == "25")
+bluffmesa_pre_PIJE_26 <- filter(bluffmesa_pre_PIJE, plot_id == "26")
+bluffmesa_pre_PIJE_27 <- filter(bluffmesa_pre_PIJE, plot_id == "27")
+bluffmesa_pre_PIJE_33 <- filter(bluffmesa_pre_PIJE, plot_id == "33")
+bluffmesa_pre_PIJE_49 <- filter(bluffmesa_pre_PIJE, plot_id == "49")
+bluffmesa_pre_PIJE_50 <- filter(bluffmesa_pre_PIJE, plot_id == "50")
+bluffmesa_pre_PIJE_51 <- filter(bluffmesa_pre_PIJE, plot_id == "51")
+bluffmesa_pre_PIJE_52 <- filter(bluffmesa_pre_PIJE, plot_id == "52")
+bluffmesa_pre_PIJE_53 <- filter(bluffmesa_pre_PIJE, plot_id == "53")
 
 # create data frame: project, year, plot_id, & abundance for PIJE
 bluffmesa_pre_PIJE_clean <- data.frame(
-  project = rep("Bluff Mesa", times = length(bluffmesa_pre_PIJE_plots)), 
-  year = rep("2016", times = length(bluffmesa_pre_PIJE_plots)),
-  species = rep("PIJE", times = length(bluffmesa_pre_PIJE_plots)),
-  plot_id = c(bluffmesa_pre_PIJE_plots),
-  abundance = c(bm_p2/plot_area, bm_p3/plot_area, bm_p5/plot_area, bm_p6/plot_area, bm_p8/plot_area, bm_p9/plot_area, bm_p10/plot_area, bm_p11/plot_area, bm_p12/plot_area, bm_p18/plot_area, bm_p20/plot_area, bm_p23/plot_area, bm_p101/plot_area, bm_p102/plot_area, bm_p104/plot_area, bm_p105/plot_area, bm_p106/plot_area)
+  project = rep("Bluff Mesa", times = length(unique(bluffmesa_pre_PIJE$plot_id))), 
+  year = rep("2020", times = length(unique(bluffmesa_pre_PIJE$plot_id))),
+  species = rep("PIJE", times = length(unique(bluffmesa_pre_PIJE$plot_id))),
+  plot_id = c(unique(bluffmesa_pre_PIJE$plot_id)),
+  abundance = c(sum(bluffmesa_pre_PIJE_24$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_25$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_26$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_27$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_33$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_49$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_50$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_51$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_52$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_53$tree_area)/plot_area)
 )
 
-#### PILA
-
-bluffmesa_pre_PILA_plots <- unique(bluffmesa_pre_PILA$plot_id) # print each plot ID where PILA is present
-
-# create a data frame for each plot 
-## NOTE: each plot is an 11.3m radius circular plot
-bluffmesa_pre_PILA_4 <- filter(bluffmesa_pre_PILA, plot_id == "4")
-
-# create vectors of the sum of each species' area per plot
-bm_pl4 <- sum(bluffmesa_pre_PILA_4$tree_area)
-
-# create data frame: project, year, plot_id, & abundance for PILA
-bluffmesa_pre_PILA_clean <- data.frame(
-  project = rep("Bluff Mesa", times = length(bluffmesa_pre_PILA_plots)), 
-  year = rep("2016", times = length(bluffmesa_pre_PILA_plots)),
-  species = rep("PILA", times = length(bluffmesa_pre_PILA_plots)),
-  plot_id = c(bluffmesa_pre_PILA_plots),
-  abundance = c(bm_pl4/plot_area)
-)
-
-# combine all pre-fire data from laguna plots
-bluffmesa_pre_clean <- rbind(bluffmesa_pre_ABCO_clean, bluffmesa_pre_PIJE_clean, bluffmesa_pre_PILA_clean)
+# combine all pre-fire data from bluff mesa plots
+bluffmesa_pre_clean <- rbind(bluffmesa_pre_PIJE_clean, bluffmesa_pre_ABCO_clean)
 ```
 
 ### post-fire data
 #### Nicole's data
 ```{r}
-# load in all post-fire data
-laguna_post <- read_csv("data/Nicole-data/LagunaMtn_post_2017.csv")
-bluffmeas_post <- read_csv("data/Nicole-data/BluffMesa_post_2021.csv")
-thomas_post1 <- read_csv("data/Nicole-data/ThomasFire_post_2018.csv")
-thomas_post2 <- read_csv("data/Nicole-data/ThomasFire_post_2018_2.csv")
+# load in raw post-fire bluff mesa data (2021)
+bm_24_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_24_2021_trees.csv")
+bm_25_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_25_2021_trees.csv")
+bm_26_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_26_2021_trees.csv")
+bm_27_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_27_2021_trees.csv")
+bm_33_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_33_2021_trees.csv")
+bm_48_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_48_2021_trees.csv")
+bm_49_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_49_2021_trees.csv")
+bm_50_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_50_2021_trees.csv")
+bm_51_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_51_2021_trees.csv")
+bm_52_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_52_2021_trees.csv")
+bm_53_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_53_2021_trees.csv")
+
+# combine raw pre-fire bluff mesa data into one data frame
+bluffmesa_post <- rbind(
+  bm_24_2021_trees, bm_25_2021_trees, bm_26_2021_trees, bm_27_2021_trees, bm_33_2021_trees, bm_48_2021_trees, bm_49_2021_trees, bm_50_2021_trees, bm_51_2021_trees, bm_52_2021_trees, bm_53_2021_trees) %>%
+  clean_names() %>%
+  select(tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, species)
+
 ```
 
 ### leaf trait data
@@ -691,9 +655,9 @@ bluffmesa_plots <- unique(bluffmesa_pre$plot_id) %>% # list all of the plots inc
 ### leaf area
 ## laguna mountain
 # calculate QUCH mean leaf area
-QUCH_leaf_area <- (15.76 + 14.76 + 28.2 + 18.57 + 14.29 + 21.47 + 24.14 + 17 + 9.53 + 15.16 + 12.17 + 14.22 + 12.45 + 21.74 + 20.46 + 18.23 + 12.71 + 29.86 + 22.27 + 17.11 + 15.23 + 11.67 + 17.02 + 16.09 + 12.36 + 12.5 + 20.97 + 18.67 + 21.87 + 18.84 + 18.44 + 14.72 + 14.64 + 17.83 + 11.87 + 21.58 + 12.54 + 15.76 + 15.76 + 21.3747)/40 
+QUCH_leaf_area <- (15.76 + 14.76 + 28.2 + 18.57 + 14.29 + 21.47 + 24.14 + 17 + 9.53 + 15.16 + 12.17 + 14.22 + 12.45 + 21.74 + 20.46 + 18.23 +12.71 + 29.86 + 22.27 + 17.11 + 15.23 + 11.67 + 17.02 + 16.09 + 12.36 + 12.5 + 20.97 + 18.67 + 21.87 + 18.84 + 18.44 + 14.72 + 14.64 + 17.83 + 11.87 + 21.58 + 12.54 + 15.76 + 15.76 + 21.3747)/40 # cm^2
 
-QUKE_leaf_area <- 40.89
+QUKE_leaf_area <- 40.89 # cm&2
 
 laguna_80 <-  (QUCH_leaf_area*0.02188190)+(QUKE_leaf_area*0.127896664) # NOTE: doesn't account for PIJE species present in plot 80; no leaf area data for PIJE
 laguna_81 <- (QUCH_leaf_area*0.137503524)+(QUKE_leaf_area*0.132905083) # NOTE: missing PIJE data
@@ -744,31 +708,22 @@ laguna_la_box
 
 ## bluff mesa
 # calculate ABCO mean leaf area
-ABCO_leaf_area <- (2.38 + 2.34 + 1.9 + 1.88 + 1.62 + 1.59 + 1.39 + 1.21 + 0.96 + 0.91 + 0.68 + 0.56 + 0.55 + 0.53 + 0.43 + 0.34 + 0.26 + 0.18 + 0.18 + 0.12 + 0.5)/21
+ABCO_leaf_area <- (2.38 + 2.34 + 1.9 + 1.88 + 1.62 + 1.59 + 1.39 + 1.21 + 0.96 + 0.91 + 0.68 + 0.56 + 0.55 + 0.53 + 0.43 + 0.34 + 0.26 + 0.18 + 0.18 + 0.12 + 0.5)/21 # cm^2
 
-bluffmesa_1 <- (ABCO_leaf_area*0.033882058) # NOTE: missing PIJE data
-bluffmesa_2 <- (ABCO_leaf_area*0.122857311) # NOTE: missing PIJE data
-bluffmesa_3 <- (ABCO_leaf_area*0.065441891) # NOTE: missing PIJE data
-bluffmesa_4 <- "NA" # NOTE: missing PILA data
-bluffmesa_5 <- (ABCO_leaf_area*0.014806367) # NOTE: missing PIJE data
-bluffmesa_6 <- (ABCO_leaf_area*0.124677735) # NOTE: missing PIJE data
-bluffmesa_8 <- (ABCO_leaf_area*0.009390125) # NOTE: missing PIJE data
-bluffmesa_9 <- (ABCO_leaf_area*0.416190579) # NOTE: missing PIJE data
-bluffmesa_10 <- (ABCO_leaf_area*0.466818858) # NOTE: missing PIJE data
-bluffmesa_11 <- (ABCO_leaf_area*0.141235414) # NOTE: missing PIJE data
-bluffmesa_12 <- (ABCO_leaf_area*0.063165479) # NOTE: missing PIJE data
-bluffmesa_18 <- "NA" # NOTE: missing PIJE data
-bluffmesa_20 <- (ABCO_leaf_area*0.041526157) # NOTE: missing PIJE data
-bluffmesa_23 <- "NA" # NOTE: missing PIJE data 
-bluffmesa_101 <- "NA" # NOTE: missing PIJE data
-bluffmesa_102 <- (ABCO_leaf_area*0.251733299) # NOTE: missing PIJE data
-bluffmesa_103 <- (ABCO_leaf_area*0.098238703) 
-bluffmesa_104 <- (ABCO_leaf_area*0.109433785) # NOTE: missing PIJE data
-bluffmesa_105 <- (ABCO_leaf_area*0.003207769) # NOTE: missing PIJE data
-bluffmesa_106 <- (ABCO_leaf_area*0.078472864) # NOTE: missing PIJE data
+bluffmesa_24 <- (ABCO_leaf_area*0.03388088) # NOTE: missing PIJE data
+bluffmesa_25 <- "NA" # NOTE: missing PIJE data
+bluffmesa_26 <- "NA" # NOTE: missing PIJE and ABCO data
+bluffmesa_27 <- "NA" # NOTE: missing PILA data
+bluffmesa_33 <- (ABCO_leaf_area*0.12813866) # NOTE: missing PIJE data
+bluffmesa_48 <- (ABCO_leaf_area*0.14274096) 
+bluffmesa_49 <- (ABCO_leaf_area*0.88398739) # NOTE: missing PIJE data
+bluffmesa_50 <- "NA" # NOTE: missing PIJE data
+bluffmesa_51 <- "NA" # NOTE: missing PIJE data
+bluffmesa_52 <- (ABCO_leaf_area*0.03291174) # NOTE: missing PIJE data
+bluffmesa_53 <- "NA" # NOTE: missing PIJE data
 
 # community weighted mean vector
-cwm_la_bm <- c(bluffmesa_1, bluffmesa_2, bluffmesa_3, bluffmesa_4, bluffmesa_5, bluffmesa_6, bluffmesa_8, bluffmesa_9, bluffmesa_10, bluffmesa_11, bluffmesa_12, bluffmesa_18, bluffmesa_20, bluffmesa_23, bluffmesa_101, bluffmesa_102, bluffmesa_103, bluffmesa_104, bluffmesa_105, bluffmesa_106) %>%
+cwm_la_bm <- c(bluffmesa_24, bluffmesa_25, bluffmesa_26, bluffmesa_27, bluffmesa_33, bluffmesa_48, bluffmesa_49, bluffmesa_50, bluffmesa_51, bluffmesa_52, bluffmesa_53) %>%
   as.numeric()
 
 # data frame w/ plot ID & community weighted mean
@@ -776,10 +731,12 @@ bluffmesa_leaf_area <- data.frame(bluffmesa_plots, cwm_la_bm)
 
 # bar plot of plot x community weighted means
 bluffmesa_la_box <-ggplot(bluffmesa_leaf_area, aes(bluffmesa_plots, cwm_la_bm)) + 
-  geom_col(fill = "darkseagreen") +
+  geom_col(fill = "thistle3") +
   xlab("Plot number") +
   ylab("Community weighted mean (cm^2)") +
-  theme_bw() 
+  ggtitle("Average leaf area at Bluff Mesa") +
+  theme_hc(style = "darkunica") +
+  scale_colour_hc("darkunica")
 
 bluffmesa_la_box
 
@@ -882,29 +839,20 @@ laguna_sla_box
 
 ## bluff mesa
 
-bluffmesa_1b <- (ABCO_spec_leaf_area*0.033882058) 
-bluffmesa_2b <- (PIJE_spec_leaf_area*0.013756363)+(ABCO_spec_leaf_area*0.122857311) 
-bluffmesa_3b <- (PIJE_spec_leaf_area*0.094853747)+(ABCO_spec_leaf_area*0.065441891) 
-bluffmesa_4b <- "NA" # NOTE: missing PILA data
-bluffmesa_5b <- (PIJE_spec_leaf_area*0.331403790)+(ABCO_spec_leaf_area*0.014806367) 
-bluffmesa_6b <- (PIJE_spec_leaf_area*0.228945297)+(ABCO_spec_leaf_area*0.124677735) 
-bluffmesa_8b <- (PIJE_spec_leaf_area*0.551092685)+(ABCO_spec_leaf_area*0.009390125)
-bluffmesa_9b <- (PIJE_spec_leaf_area*0.113851907)+(ABCO_spec_leaf_area*0.416190579) 
-bluffmesa_10b <- (PIJE_spec_leaf_area*0.342088261)+(ABCO_spec_leaf_area*0.466818858) 
-bluffmesa_11b <- (PIJE_spec_leaf_area*0.102626674)+(ABCO_spec_leaf_area*0.141235414) 
-bluffmesa_12b <- (PIJE_spec_leaf_area*0.471040410)+(ABCO_spec_leaf_area*0.063165479) 
-bluffmesa_18b <- (PIJE_spec_leaf_area*0.039417535) 
-bluffmesa_20b <- (PIJE_spec_leaf_area*0.219124246)+(ABCO_spec_leaf_area*0.041526157) 
-bluffmesa_23b <- (PIJE_spec_leaf_area*0.002634505) 
-bluffmesa_101b <- (PIJE_spec_leaf_area*0.767171666) 
-bluffmesa_102b <- (PIJE_spec_leaf_area*0.009053176)+(ABCO_spec_leaf_area*0.251733299) 
-bluffmesa_103b <- (ABCO_spec_leaf_area*0.098238703) 
-bluffmesa_104b <- (PIJE_spec_leaf_area*0.218709766)+(ABCO_spec_leaf_area*0.109433785) 
-bluffmesa_105b <- (PIJE_spec_leaf_area*0.015300533)+(ABCO_spec_leaf_area*0.003207769) 
-bluffmesa_106b <- (PIJE_spec_leaf_area*0.384255815)+(ABCO_leaf_area*0.078472864) 
+bluffmesa_24b <- ((ABCO_spec_leaf_area*0.03388088) + (PIJE_spec_leaf_area*0.34393536))/2
+bluffmesa_25b <- (PIJE_spec_leaf_area*0.10642680) 
+bluffmesa_26b <- (PIJE_spec_leaf_area*0.11028369) # NOTE: missing ABCO data
+bluffmesa_27b <- (PIJE_spec_leaf_area*0.34306622) 
+bluffmesa_33b <- ((ABCO_leaf_area*0.12813866) + (PIJE_spec_leaf_area*0.30779671))/2 
+bluffmesa_48b <- (ABCO_leaf_area*0.14274096) 
+bluffmesa_49b <- ((ABCO_leaf_area*0.88398739) + (PIJE_spec_leaf_area*0.11517914))/2
+bluffmesa_50b <- (PIJE_spec_leaf_area*0.11687035) 
+bluffmesa_51b <- (PIJE_spec_leaf_area*0.13276554) 
+bluffmesa_52b <- ((ABCO_leaf_area*0.03291174) +(PIJE_spec_leaf_area*0.01870311))/2
+bluffmesa_53b <- (PIJE_spec_leaf_area*0.14539294) 
 
 # community weighted mean vector
-cwm_sla_bm <- c(bluffmesa_1b, bluffmesa_2b, bluffmesa_3b, bluffmesa_4b, bluffmesa_5b, bluffmesa_6b, bluffmesa_8b, bluffmesa_9b, bluffmesa_10b, bluffmesa_11b, bluffmesa_12b, bluffmesa_18b, bluffmesa_20b, bluffmesa_23b, bluffmesa_101b, bluffmesa_102b, bluffmesa_103b, bluffmesa_104b, bluffmesa_105b, bluffmesa_106b) %>%
+cwm_sla_bm <- c(bluffmesa_24b, bluffmesa_25b, bluffmesa_26b, bluffmesa_27b, bluffmesa_33b, bluffmesa_48b, bluffmesa_49b, bluffmesa_50b, bluffmesa_51b, bluffmesa_52b, bluffmesa_53b) %>%
   as.numeric()
 
 # data frame w/ plot ID & community weighted mean
@@ -912,10 +860,12 @@ bluffmesa_spec_leaf_area <- data.frame(bluffmesa_plots, cwm_sla_bm)
 
 # bar plot of plot x community weighted means
 bluffmesa_sla_box <-ggplot(bluffmesa_spec_leaf_area, aes(bluffmesa_plots, cwm_sla_bm)) + 
-  geom_col(fill = "deepskyblue") +
+  geom_col(fill = "slategray3") +
   xlab("Plot number") +
   ylab("Community weighted mean (cm^2)") +
-  theme_bw() 
+  ggtitle("Average specific leaf area at Bluff Mesa") + 
+  theme_hc(style = "darkunica") +
+  scale_colour_hc("darkunica")
 
 bluffmesa_sla_box
 

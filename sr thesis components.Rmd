@@ -15,6 +15,7 @@ library(readr)
 library(ggplot2)
 library(tibble)
 library(janitor)
+library(plyr)
 library(dplyr)
 library(stringr)
 library(tidyr)
@@ -284,6 +285,84 @@ laguna_pre <- read_csv("data/Nicole-data/LagunaMtn_pre_2016.csv") %>%
 laguna_pre <- laguna_pre %>%
   mutate(tree_area = ((pi*(laguna_pre$dbh_cm^2)/4)/100)) # add column w/ area measurements for each tree
 
+# load in raw pre-fire laguna mountain data (2020)
+
+# setwd("data/Nicole/laguna/lagunamtnpre") 
+# laguna_pre <- ldply(list.files(), read.csv, header=TRUE) # doesn't work
+
+lm_128 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_128_2020_trees.csv") %>%
+  mutate(plot_id = rep(128, length = 8))
+lm_129 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_129_2020_trees.csv") %>%
+  mutate(plot_id = rep(129, length = 12))
+lm_130 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_130_2020_trees.csv") %>%
+  mutate(plot_id = rep(130, length = 12))
+lm_131 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_131_2020_trees.csv") %>%
+  mutate(plot_id = rep(131, length = 7))
+lm_132 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_132_2020_trees.csv") %>%
+  mutate(plot_id = rep(132, length = 3))
+lm_133 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_133_2020_trees.csv") %>%
+  mutate(plot_id = rep(133, length = 6))
+lm_134 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_134_2020_trees.csv") %>%
+  mutate(plot_id = rep(134, length = 10))
+lm_135 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_135_2020_trees.csv") %>%
+  mutate(plot_id = rep(135, length = 6))
+lm_137 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_137_2020_trees.csv") %>%
+  mutate(plot_id = rep(137, length = 7))
+lm_138 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_138_2020_trees.csv") %>%
+  mutate(plot_id = rep(138, length = 7))
+lm_139 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_139_2020_trees.csv") %>%
+  mutate(plot_id = rep(139, length = 6))
+lm_140 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_140_2020_trees.csv") %>%
+  mutate(plot_id = rep(140, length = 7))
+lm_141 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_141_2020_trees.csv") %>%
+  mutate(plot_id = rep(141, length = 8))
+lm_142 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_142_2020_trees.csv") %>%
+  mutate(plot_id = rep(142, length = 8))
+lm_143 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_143_2020_trees.csv") %>%
+  mutate(plot_id = rep(143, length = 10))
+lm_144 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_144_2020_trees.csv") %>%
+  mutate(plot_id = rep(144, length = 6))
+lm_170 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_170_2021_trees.csv") %>%
+  mutate(plot_id = rep(170, length = 7))
+lm_171 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_171_2021_trees.csv") %>%
+  mutate(plot_id = rep(171, length = 8))
+lm_172 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_172_2020_trees.csv") %>%
+  mutate(plot_id = rep(172, length = 9))
+lm_173 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_173_2021_trees.csv") %>%
+  mutate(plot_id = rep(173, length = 15))
+lm_175 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_175_2021_trees.csv") %>%
+  mutate(plot_id = rep(175, length = 8))
+lm_176 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_176_2021_trees.csv") %>%
+  mutate(plot_id = rep(176, length = 7))
+lm_177 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_177_2021_trees.csv") %>%
+  mutate(plot_id = rep(177, length = 7))
+lm_179 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_179_2021_trees.csv") %>%
+  mutate(plot_id = rep(179, length = 6))
+lm_180 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_180_2021_trees.csv") %>%
+  mutate(plot_id = rep(180, length = 17))
+lm_181 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_181_2021_trees.csv") %>%
+  mutate(plot_id = rep(181, length = 19))
+lm_195 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_195_2021_trees.csv") %>%
+  mutate(plot_id = rep(195, length = 25))
+lm_196 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_196_2021_trees.csv") %>%
+  mutate(plot_id = rep(196, length = 8))
+lm_197 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_197_2021_trees.csv") %>%
+  mutate(plot_id = rep(197, length = 5))
+lm_198 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_198_2021_trees.csv") %>%
+  mutate(plot_id = rep(198, length = 7))
+lm_199 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_199_2021_trees.csv") %>%
+  mutate(plot_id = rep(199, length = 12))
+lm_200 <- read.csv("data/Nicole/laguna/lagunamtnpre/LM_200_2021_trees.csv") %>%
+  mutate(plot_id = rep(200, length = 11))
+
+# combine raw pre-fire laguna data into one data frame
+laguna_pre <- rbind(
+  lm_128, lm_129, lm_130, lm_131, lm_132, lm_133, lm_134, lm_135, lm_137, lm_138, lm_139, lm_140, lm_141, lm_142, lm_143, lm_144, lm_170, lm_171, lm_172, lm_173, lm_175, lm_176, lm_177, lm_179, lm_180, lm_181, lm_195, lm_196, lm_197, lm_198, lm_199, lm_200) %>%
+  clean_names() %>%
+  select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3) %>%
+  mutate(location = rep("Laguna", rep = 294))
+
+
 # load in raw pre-fire bluff mesa data (2020)
 bm_24_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_24_2020_trees.csv") %>%
   mutate(plot_id = rep(24, length = 8))
@@ -312,22 +391,27 @@ bm_53_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_53_2020_trees.cs
 bluffmesa_pre <- rbind(
   bm_24_2020_trees, bm_25_2020_trees, bm_26_2020_trees, bm_27_2020_trees, bm_33_2020_trees, bm_48_2020_trees, bm_49_2020_trees, bm_50_2020_trees, bm_51_2020_trees, bm_52_2020_trees, bm_53_2020_trees) %>%
   clean_names() %>%
-  select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3)
+  select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3) %>%
+  mutate(location = rep("Bluff Mesa", length = 54))
 
+prefire_whole <- rbind(
+  laguna_pre, bluffmesa_pre
+)
+```
+
+
+```{r}
 # old calculation for tree area measurement
+laguna_pre <- laguna_pre %>%
+  mutate(tree_area = ((pi*(laguna_pre$dbh^2)/4)/100))
 bluffmesa_pre <- bluffmesa_pre %>%
   mutate(tree_area = ((pi*(bluffmesa_pre$dbh^2)/4)/100)) # add column with area measurements for each tree (cm^2)
 
 # since location data is organized by PLOT, find tree area per plot (subset by species)
 laguna_species <- unique(laguna_pre$species) # create list of all species present in laguna fire data
-laguna_pre <- laguna_pre %>%
-  drop_na("species") # drop rows where species is not specified
 
 laguna_pre_PIJE <- filter(laguna_pre, species == "PIJE") # create data frame w/ only PIJE sp.
-laguna_pre_QUCH <- filter(laguna_pre, species == "QUCH") # create data frame w/ only QUCH sp.
 laguna_pre_QUKE <- filter(laguna_pre, species == "QUKE") # create data frame w/ only QUKE sp.
-laguna_pre_PICO <- filter(laguna_pre, species == "PICO") # create data frame w/ only PICO sp.
-laguna_pre_CADE <- filter(laguna_pre, species == "CADE") # create data frame w/ only CADE sp. --> I did not end up including this species in my leaf trait data since it wasn't listed as a species in the TRY database
 
 #### PIJE
 
@@ -335,102 +419,81 @@ laguna_pre_PIJE_plots <- unique(laguna_pre_PIJE$plot_id) # print each plot ID wh
 
 # create a data frame for each plot 
 ## NOTE: each plot is an 11.3m radius circular plot
-laguna_pre_PIJE_80 <- filter(laguna_pre_PIJE, plot_id == "80")
-laguna_pre_PIJE_81 <- filter(laguna_pre_PIJE, plot_id == "81")
-laguna_pre_PIJE_82 <- filter(laguna_pre_PIJE, plot_id == "82")
-laguna_pre_PIJE_83 <- filter(laguna_pre_PIJE, plot_id == "83")
-laguna_pre_PIJE_85 <- filter(laguna_pre_PIJE, plot_id == "85")
-laguna_pre_PIJE_86 <- filter(laguna_pre_PIJE, plot_id == "86")
-laguna_pre_PIJE_87 <- filter(laguna_pre_PIJE, plot_id == "87")
-laguna_pre_PIJE_88 <- filter(laguna_pre_PIJE, plot_id == "88")
-laguna_pre_PIJE_89 <- filter(laguna_pre_PIJE, plot_id == "89")
-laguna_pre_PIJE_90 <- filter(laguna_pre_PIJE, plot_id == "90")
-laguna_pre_PIJE_91 <- filter(laguna_pre_PIJE, plot_id == "91")
-laguna_pre_PIJE_92 <- filter(laguna_pre_PIJE, plot_id == "92")
-laguna_pre_PIJE_93 <- filter(laguna_pre_PIJE, plot_id == "93")
-laguna_pre_PIJE_97 <- filter(laguna_pre_PIJE, plot_id == "97")
-laguna_pre_PIJE_98 <- filter(laguna_pre_PIJE, plot_id == "98")
-laguna_pre_PIJE_99 <- filter(laguna_pre_PIJE, plot_id == "99")
-laguna_pre_PIJE_105 <- filter(laguna_pre_PIJE, plot_id == "105")
-laguna_pre_PIJE_106 <- filter(laguna_pre_PIJE, plot_id == "106")
-laguna_pre_PIJE_107 <- filter(laguna_pre_PIJE, plot_id == "107")
-laguna_pre_PIJE_108 <- filter(laguna_pre_PIJE, plot_id == "108")
-laguna_pre_PIJE_109 <- filter(laguna_pre_PIJE, plot_id == "109")
-laguna_pre_PIJE_110 <- filter(laguna_pre_PIJE, plot_id == "110")
-laguna_pre_PIJE_111 <- filter(laguna_pre_PIJE, plot_id == "111")
-laguna_pre_PIJE_112 <- filter(laguna_pre_PIJE, plot_id == "112")
-laguna_pre_PIJE_113 <- filter(laguna_pre_PIJE, plot_id == "113")
+laguna_pre_PIJE_128 <- filter(laguna_pre_PIJE, plot_id == "128")
+laguna_pre_PIJE_129 <- filter(laguna_pre_PIJE, plot_id == "129")
+laguna_pre_PIJE_130 <- filter(laguna_pre_PIJE, plot_id == "130")
+laguna_pre_PIJE_131 <- filter(laguna_pre_PIJE, plot_id == "131")
+laguna_pre_PIJE_132 <- filter(laguna_pre_PIJE, plot_id == "132")
+laguna_pre_PIJE_133 <- filter(laguna_pre_PIJE, plot_id == "133")
+laguna_pre_PIJE_134 <- filter(laguna_pre_PIJE, plot_id == "134")
+laguna_pre_PIJE_135 <- filter(laguna_pre_PIJE, plot_id == "135")
+laguna_pre_PIJE_137 <- filter(laguna_pre_PIJE, plot_id == "137")
+laguna_pre_PIJE_138 <- filter(laguna_pre_PIJE, plot_id == "138")
+laguna_pre_PIJE_139 <- filter(laguna_pre_PIJE, plot_id == "139")
+laguna_pre_PIJE_140 <- filter(laguna_pre_PIJE, plot_id == "140")
+laguna_pre_PIJE_141 <- filter(laguna_pre_PIJE, plot_id == "141")
+laguna_pre_PIJE_142 <- filter(laguna_pre_PIJE, plot_id == "142")
+laguna_pre_PIJE_143 <- filter(laguna_pre_PIJE, plot_id == "143")
+laguna_pre_PIJE_144 <- filter(laguna_pre_PIJE, plot_id == "144")
+laguna_pre_PIJE_170 <- filter(laguna_pre_PIJE, plot_id == "170")
+laguna_pre_PIJE_171 <- filter(laguna_pre_PIJE, plot_id == "171")
+laguna_pre_PIJE_172 <- filter(laguna_pre_PIJE, plot_id == "172")
+laguna_pre_PIJE_173 <- filter(laguna_pre_PIJE, plot_id == "173")
+laguna_pre_PIJE_175 <- filter(laguna_pre_PIJE, plot_id == "175")
+laguna_pre_PIJE_176 <- filter(laguna_pre_PIJE, plot_id == "176")
+laguna_pre_PIJE_177 <- filter(laguna_pre_PIJE, plot_id == "177")
+laguna_pre_PIJE_179 <- filter(laguna_pre_PIJE, plot_id == "179")
+laguna_pre_PIJE_180 <- filter(laguna_pre_PIJE, plot_id == "180")
+laguna_pre_PIJE_181 <- filter(laguna_pre_PIJE, plot_id == "181")
+laguna_pre_PIJE_195 <- filter(laguna_pre_PIJE, plot_id == "195")
+laguna_pre_PIJE_197 <- filter(laguna_pre_PIJE, plot_id == "197")
+laguna_pre_PIJE_198 <- filter(laguna_pre_PIJE, plot_id == "198")
+laguna_pre_PIJE_199 <- filter(laguna_pre_PIJE, plot_id == "199")
+laguna_pre_PIJE_200 <- filter(laguna_pre_PIJE, plot_id == "200")
 
 # calculate plot area
 plot_area <- pi*(11.3^2)
 ## plot area = 401.15m^2
 
 # create vectors of the sum of each species' area per plot
-l_p_80 <- sum(laguna_pre_PIJE_80$tree_area)
-l_p_81 <- sum(laguna_pre_PIJE_81$tree_area)
-l_p_82 <- sum(laguna_pre_PIJE_82$tree_area)
-l_p_83 <- sum(laguna_pre_PIJE_83$tree_area)
-l_p_85 <- sum(laguna_pre_PIJE_85$tree_area)
-l_p_86 <- sum(laguna_pre_PIJE_86$tree_area)
-l_p_87 <- sum(laguna_pre_PIJE_87$tree_area)
-l_p_88 <- sum(laguna_pre_PIJE_88$tree_area)
-l_p_89 <- sum(laguna_pre_PIJE_89$tree_area)
-l_p_90 <- sum(laguna_pre_PIJE_90$tree_area)
-l_p_91 <- sum(laguna_pre_PIJE_91$tree_area)
-l_p_92 <- sum(laguna_pre_PIJE_92$tree_area)
-l_p_93 <- sum(laguna_pre_PIJE_93$tree_area)
-l_p_97 <- sum(laguna_pre_PIJE_97$tree_area)
-l_p_98 <- sum(laguna_pre_PIJE_98$tree_area)
-l_p_99 <- sum(laguna_pre_PIJE_99$tree_area)
-l_p_105 <- sum(laguna_pre_PIJE_105$tree_area)
-l_p_106 <- sum(laguna_pre_PIJE_106$tree_area)
-l_p_107 <- sum(laguna_pre_PIJE_107$tree_area)
-l_p_108 <- sum(laguna_pre_PIJE_108$tree_area)
-l_p_109 <- sum(laguna_pre_PIJE_109$tree_area)
-l_p_110 <- sum(laguna_pre_PIJE_110$tree_area)
-l_p_111 <- sum(laguna_pre_PIJE_111$tree_area)
-l_p_112 <- sum(laguna_pre_PIJE_112$tree_area)
-l_p_113 <- sum(laguna_pre_PIJE_113$tree_area)
+l_p_128 <- sum(laguna_pre_PIJE_128$tree_area)
+l_p_129 <- sum(laguna_pre_PIJE_129$tree_area)
+l_p_130 <- sum(laguna_pre_PIJE_130$tree_area)
+l_p_131 <- sum(laguna_pre_PIJE_131$tree_area)
+l_p_132 <- sum(laguna_pre_PIJE_132$tree_area)
+l_p_133 <- sum(laguna_pre_PIJE_133$tree_area)
+l_p_134 <- sum(laguna_pre_PIJE_134$tree_area)
+l_p_135 <- sum(laguna_pre_PIJE_135$tree_area)
+l_p_137 <- sum(laguna_pre_PIJE_137$tree_area)
+l_p_138 <- sum(laguna_pre_PIJE_138$tree_area)
+l_p_139 <- sum(laguna_pre_PIJE_139$tree_area)
+l_p_140 <- sum(laguna_pre_PIJE_140$tree_area)
+l_p_141 <- sum(laguna_pre_PIJE_141$tree_area)
+l_p_142 <- sum(laguna_pre_PIJE_142$tree_area)
+l_p_143 <- sum(laguna_pre_PIJE_143$tree_area)
+l_p_144 <- sum(laguna_pre_PIJE_144$tree_area)
+l_p_170 <- sum(laguna_pre_PIJE_170$tree_area)
+l_p_171 <- sum(laguna_pre_PIJE_171$tree_area)
+l_p_172 <- sum(laguna_pre_PIJE_172$tree_area)
+l_p_173 <- sum(laguna_pre_PIJE_173$tree_area)
+l_p_175 <- sum(laguna_pre_PIJE_175$tree_area)
+l_p_176 <- sum(laguna_pre_PIJE_176$tree_area)
+l_p_177 <- sum(laguna_pre_PIJE_177$tree_area)
+l_p_179 <- sum(laguna_pre_PIJE_179$tree_area)
+l_p_180 <- sum(laguna_pre_PIJE_180$tree_area)
+l_p_181 <- sum(laguna_pre_PIJE_181$tree_area)
+l_p_195 <- sum(laguna_pre_PIJE_195$tree_area)
+l_p_197 <- sum(laguna_pre_PIJE_197$tree_area)
+l_p_198 <- sum(laguna_pre_PIJE_198$tree_area)
+l_p_199 <- sum(laguna_pre_PIJE_199$tree_area)
+l_p_200 <- sum(laguna_pre_PIJE_200$tree_area)
 
 # create data frame: project, year, plot_id, & abundance for PIJE
 laguna_pre_PIJE_clean <- data.frame(
   project = rep("Laguna Mtn.", times = length(laguna_pre_PIJE_plots)), 
-  year = rep("2016", times = length(laguna_pre_PIJE_plots)),
   species = rep("PIJE", times = length(laguna_pre_PIJE_plots)),
   plot_id = c(laguna_pre_PIJE_plots),
-  abundance = c(l_p_80/plot_area, l_p_81/plot_area, l_p_82/plot_area, l_p_83/plot_area, l_p_85/plot_area, l_p_86/plot_area, l_p_87/plot_area, l_p_88/plot_area, l_p_89/plot_area, l_p_90/plot_area, l_p_91/plot_area, l_p_92/plot_area, l_p_93/plot_area, l_p_97/plot_area, l_p_98/plot_area, l_p_99/plot_area, l_p_105/plot_area, l_p_106/plot_area, l_p_107/plot_area, l_p_108/plot_area, l_p_109/plot_area, l_p_110/plot_area, l_p_111/plot_area, l_p_112/plot_area, l_p_113/plot_area)
-)
-
-#### QUCH
-
-laguna_pre_QUCH_plots <- unique(laguna_pre_QUCH$plot_id) # print each plot ID where QUCH is present
-
-# create a data frame for each plot 
-## NOTE: each plot is an 11.3m radius circular plot
-laguna_pre_QUCH_80 <- filter(laguna_pre_QUCH, plot_id == "80")
-laguna_pre_QUCH_81 <- filter(laguna_pre_QUCH, plot_id == "81")
-laguna_pre_QUCH_82 <- filter(laguna_pre_QUCH, plot_id == "82")
-laguna_pre_QUCH_83 <- filter(laguna_pre_QUCH, plot_id == "83")
-laguna_pre_QUCH_87 <- filter(laguna_pre_QUCH, plot_id == "87")
-laguna_pre_QUCH_110 <- filter(laguna_pre_QUCH, plot_id == "110")
-
-## plot area = 401.15m^2
-
-# create vectors of the sum of each species' area per plot
-l_qc_80 <- sum(laguna_pre_QUCH_80$tree_area)
-l_qc_81 <- sum(laguna_pre_QUCH_81$tree_area)
-l_qc_82 <- sum(laguna_pre_QUCH_82$tree_area)
-l_qc_83 <- sum(laguna_pre_QUCH_83$tree_area)
-l_qc_87 <- sum(laguna_pre_QUCH_87$tree_area)
-l_qc_110 <- sum(laguna_pre_QUCH_110$tree_area)
-
-# create data frame: project, year, plot_id, & abundance for PIJE
-laguna_pre_QUCH_clean <- data.frame(
-  project = rep("Laguna Mtn.", times = length(laguna_pre_QUCH_plots)), # how do i get the length to match the vector length rather than having to manually type in a length?
-  year = rep("2016", times = length(laguna_pre_QUCH_plots)),
-  species = rep("QUCH", times = length(laguna_pre_QUCH_plots)),
-  plot_id = c(laguna_pre_QUCH_plots),
-  abundance = c(l_qc_80/plot_area, l_qc_81/plot_area, l_qc_82/plot_area, l_qc_83/plot_area, l_qc_87/plot_area, l_qc_110/plot_area)
+  abundance = c(l_p_128/plot_area, l_p_129/plot_area, l_p_130/plot_area, l_p_131/plot_area, l_p_132/plot_area, l_p_133/plot_area, l_p_134/plot_area, l_p_135/plot_area, l_p_137/plot_area, l_p_138/plot_area, l_p_139/plot_area, l_p_140/plot_area, l_p_141/plot_area, l_p_142/plot_area, l_p_143/plot_area, l_p_144/plot_area, l_p_170/plot_area, l_p_171/plot_area, l_p_172/plot_area, l_p_173/plot_area, l_p_175/plot_area, l_p_176/plot_area, l_p_177/plot_area, l_p_179/plot_area, l_p_180/plot_area, l_p_181/plot_area, l_p_195/plot_area, l_p_197/plot_area, l_p_198/plot_area, l_p_199/plot_area, l_p_200/plot_area)
 )
 
 #### QUKE
@@ -439,103 +502,85 @@ laguna_pre_QUKE_plots <- unique(laguna_pre_QUKE$plot_id) # print each plot ID wh
 
 # create a data frame for each plot 
 ## NOTE: each plot is an 11.3m radius circular plot
-laguna_pre_QUKE_80 <- filter(laguna_pre_QUKE, plot_id == "80")
-laguna_pre_QUKE_81 <- filter(laguna_pre_QUKE, plot_id == "81")
-laguna_pre_QUKE_82 <- filter(laguna_pre_QUKE, plot_id == "82")
-laguna_pre_QUKE_83 <- filter(laguna_pre_QUKE, plot_id == "83")
-laguna_pre_QUKE_85 <- filter(laguna_pre_QUKE, plot_id == "85")
-laguna_pre_QUKE_86 <- filter(laguna_pre_QUKE, plot_id == "86")
-laguna_pre_QUKE_87 <- filter(laguna_pre_QUKE, plot_id == "87")
-laguna_pre_QUKE_88 <- filter(laguna_pre_QUKE, plot_id == "88")
-laguna_pre_QUKE_91 <- filter(laguna_pre_QUKE, plot_id == "91")
-laguna_pre_QUKE_92 <- filter(laguna_pre_QUKE, plot_id == "92")
-laguna_pre_QUKE_93 <- filter(laguna_pre_QUKE, plot_id == "93")
-laguna_pre_QUKE_95 <- filter(laguna_pre_QUKE, plot_id == "95")
-laguna_pre_QUKE_97 <- filter(laguna_pre_QUKE, plot_id == "97")
-laguna_pre_QUKE_98 <- filter(laguna_pre_QUKE, plot_id == "98")
-laguna_pre_QUKE_99 <- filter(laguna_pre_QUKE, plot_id == "99")
-laguna_pre_QUKE_105 <- filter(laguna_pre_QUKE, plot_id == "105")
-laguna_pre_QUKE_108 <- filter(laguna_pre_QUKE, plot_id == "108")
-laguna_pre_QUKE_109 <- filter(laguna_pre_QUKE, plot_id == "109")
-laguna_pre_QUKE_111 <- filter(laguna_pre_QUKE, plot_id == "111")
-laguna_pre_QUKE_112 <- filter(laguna_pre_QUKE, plot_id == "112")
-laguna_pre_QUKE_113 <- filter(laguna_pre_QUKE, plot_id == "113")
-laguna_pre_QUKE_114 <- filter(laguna_pre_QUKE, plot_id == "114")
-laguna_pre_QUKE_115 <- filter(laguna_pre_QUKE, plot_id == "115")
+laguna_pre_QUKE_128 <- filter(laguna_pre_QUKE, plot_id == "128")
+laguna_pre_QUKE_129 <- filter(laguna_pre_QUKE, plot_id == "129")
+laguna_pre_QUKE_130 <- filter(laguna_pre_QUKE, plot_id == "130")
+laguna_pre_QUKE_131 <- filter(laguna_pre_QUKE, plot_id == "131")
+laguna_pre_QUKE_133 <- filter(laguna_pre_QUKE, plot_id == "133")
+laguna_pre_QUKE_134 <- filter(laguna_pre_QUKE, plot_id == "134")
+laguna_pre_QUKE_135 <- filter(laguna_pre_QUKE, plot_id == "135")
+laguna_pre_QUKE_137 <- filter(laguna_pre_QUKE, plot_id == "137")
+laguna_pre_QUKE_138 <- filter(laguna_pre_QUKE, plot_id == "138")
+laguna_pre_QUKE_139 <- filter(laguna_pre_QUKE, plot_id == "139")
+laguna_pre_QUKE_140 <- filter(laguna_pre_QUKE, plot_id == "140")
+laguna_pre_QUKE_141 <- filter(laguna_pre_QUKE, plot_id == "141")
+laguna_pre_QUKE_142 <- filter(laguna_pre_QUKE, plot_id == "142")
+laguna_pre_QUKE_143 <- filter(laguna_pre_QUKE, plot_id == "143")
+laguna_pre_QUKE_144 <- filter(laguna_pre_QUKE, plot_id == "144")
+laguna_pre_QUKE_170 <- filter(laguna_pre_QUKE, plot_id == "170")
+laguna_pre_QUKE_171 <- filter(laguna_pre_QUKE, plot_id == "171")
+laguna_pre_QUKE_172 <- filter(laguna_pre_QUKE, plot_id == "172")
+laguna_pre_QUKE_173 <- filter(laguna_pre_QUKE, plot_id == "173")
+laguna_pre_QUKE_175 <- filter(laguna_pre_QUKE, plot_id == "175")
+laguna_pre_QUKE_176 <- filter(laguna_pre_QUKE, plot_id == "176")
+laguna_pre_QUKE_177 <- filter(laguna_pre_QUKE, plot_id == "177")
+laguna_pre_QUKE_179 <- filter(laguna_pre_QUKE, plot_id == "179")
+laguna_pre_QUKE_180 <- filter(laguna_pre_QUKE, plot_id == "180")
+laguna_pre_QUKE_181 <- filter(laguna_pre_QUKE, plot_id == "181")
+laguna_pre_QUKE_195 <- filter(laguna_pre_QUKE, plot_id == "195")
+laguna_pre_QUKE_197 <- filter(laguna_pre_QUKE, plot_id == "197")
+laguna_pre_QUKE_198 <- filter(laguna_pre_QUKE, plot_id == "198")
+laguna_pre_QUKE_199 <- filter(laguna_pre_QUKE, plot_id == "199")
+laguna_pre_QUKE_200 <- filter(laguna_pre_QUKE, plot_id == "200")
 
+# calculate plot area
+plot_area <- pi*(11.3^2)
 ## plot area = 401.15m^2
 
 # create vectors of the sum of each species' area per plot
-l_qk_80 <- sum(laguna_pre_QUKE_80$tree_area)
-l_qk_81 <- sum(laguna_pre_QUKE_81$tree_area)
-l_qk_82 <- sum(laguna_pre_QUKE_82$tree_area)
-l_qk_83 <- sum(laguna_pre_QUKE_83$tree_area)
-l_qk_85 <- sum(laguna_pre_QUKE_85$tree_area)
-l_qk_86 <- sum(laguna_pre_QUKE_86$tree_area)
-l_qk_87 <- sum(laguna_pre_QUKE_87$tree_area)
-l_qk_88 <- sum(laguna_pre_QUKE_88$tree_area)
-l_qk_91 <- sum(laguna_pre_QUKE_91$tree_area)
-l_qk_92 <- sum(laguna_pre_QUKE_92$tree_area)
-l_qk_93 <- sum(laguna_pre_QUKE_93$tree_area)
-l_qk_95 <- sum(laguna_pre_QUKE_95$tree_area)
-l_qk_97 <- sum(laguna_pre_QUKE_97$tree_area)
-l_qk_98 <- sum(laguna_pre_QUKE_98$tree_area)
-l_qk_99 <- sum(laguna_pre_QUKE_99$tree_area)
-l_qk_105 <- sum(laguna_pre_QUKE_105$tree_area)
-l_qk_108 <- sum(laguna_pre_QUKE_108$tree_area)
-l_qk_109 <- sum(laguna_pre_QUKE_109$tree_area)
-l_qk_111 <- sum(laguna_pre_QUKE_111$tree_area)
-l_qk_112 <- sum(laguna_pre_QUKE_112$tree_area)
-l_qk_113 <- sum(laguna_pre_QUKE_113$tree_area)
-l_qk_114 <- sum(laguna_pre_QUKE_114$tree_area)
-l_qk_115 <- sum(laguna_pre_QUKE_115$tree_area)
+l_q_128 <- sum(laguna_pre_QUKE_128$tree_area)
+l_q_129 <- sum(laguna_pre_QUKE_129$tree_area)
+l_q_130 <- sum(laguna_pre_QUKE_130$tree_area)
+l_q_131 <- sum(laguna_pre_QUKE_131$tree_area)
+l_q_133 <- sum(laguna_pre_QUKE_133$tree_area)
+l_q_134 <- sum(laguna_pre_QUKE_134$tree_area)
+l_q_135 <- sum(laguna_pre_QUKE_135$tree_area)
+l_q_137 <- sum(laguna_pre_QUKE_137$tree_area)
+l_q_138 <- sum(laguna_pre_QUKE_138$tree_area)
+l_q_139 <- sum(laguna_pre_QUKE_139$tree_area)
+l_q_140 <- sum(laguna_pre_QUKE_140$tree_area)
+l_q_141 <- sum(laguna_pre_QUKE_141$tree_area)
+l_q_142 <- sum(laguna_pre_QUKE_142$tree_area)
+l_q_143 <- sum(laguna_pre_QUKE_143$tree_area)
+l_q_144 <- sum(laguna_pre_QUKE_144$tree_area)
+l_q_170 <- sum(laguna_pre_QUKE_170$tree_area)
+l_q_171 <- sum(laguna_pre_QUKE_171$tree_area)
+l_q_172 <- sum(laguna_pre_QUKE_172$tree_area)
+l_q_173 <- sum(laguna_pre_QUKE_173$tree_area)
+l_q_175 <- sum(laguna_pre_QUKE_175$tree_area)
+l_q_176 <- sum(laguna_pre_QUKE_176$tree_area)
+l_q_177 <- sum(laguna_pre_QUKE_177$tree_area)
+l_q_179 <- sum(laguna_pre_QUKE_179$tree_area)
+l_q_180 <- sum(laguna_pre_QUKE_180$tree_area)
+l_q_181 <- sum(laguna_pre_QUKE_181$tree_area)
+l_q_195 <- sum(laguna_pre_QUKE_195$tree_area)
+l_q_197 <- sum(laguna_pre_QUKE_197$tree_area)
+l_q_198 <- sum(laguna_pre_QUKE_198$tree_area)
+l_q_199 <- sum(laguna_pre_QUKE_199$tree_area)
+l_q_200 <- sum(laguna_pre_QUKE_200$tree_area)
 
-# create data frame: project, year, plot_id, & abundance for PIJE
+# create data frame: project, year, plot_id, & abundance for QUKE
 laguna_pre_QUKE_clean <- data.frame(
   project = rep("Laguna Mtn.", times = length(laguna_pre_QUKE_plots)), 
-  year = rep("2016", times = length(laguna_pre_QUKE_plots)),
   species = rep("QUKE", times = length(laguna_pre_QUKE_plots)),
   plot_id = c(laguna_pre_QUKE_plots),
-  abundance = c(l_qk_80/plot_area, l_qk_81/plot_area, l_qk_82/plot_area, l_qk_83/plot_area, l_qk_85/plot_area, l_qk_86/plot_area, l_qk_87/plot_area, l_qk_88/plot_area, l_qk_91/plot_area, l_qk_92/plot_area, l_qk_93/plot_area, l_qk_95/plot_area, l_qk_97/plot_area, l_qk_98/plot_area, l_qk_99/plot_area, l_qk_105/plot_area, l_qk_108/plot_area, l_qk_109/plot_area, l_qk_111/plot_area, l_qk_112/plot_area, l_qk_113/plot_area, l_qk_114/plot_area, l_qk_115/plot_area)
+  abundance = c(l_q_128/plot_area, l_q_129/plot_area, l_q_130/plot_area, l_q_131/plot_area, l_q_133/plot_area, l_q_134/plot_area, l_q_135/plot_area, l_q_137/plot_area, l_q_138/plot_area, l_q_139/plot_area, l_q_140/plot_area, l_q_141/plot_area, l_q_142/plot_area, l_q_143/plot_area, l_q_144/plot_area, l_q_170/plot_area, l_q_171/plot_area, l_q_172/plot_area, l_q_173/plot_area, l_q_175/plot_area, l_q_176/plot_area, l_q_177/plot_area, l_q_179/plot_area, l_q_180/plot_area, l_q_181/plot_area, l_q_195/plot_area, l_q_197/plot_area, l_q_198/plot_area, l_q_199/plot_area, l_q_200/plot_area)
 )
 
-#### PICO
-
-laguna_pre_PICO_plots <- unique(laguna_pre_PICO$plot_id) # print each plot ID where PICO is present
-
-# create a data frame for each plot 
-## NOTE: each plot is an 11.3m radius circular plot
-laguna_pre_PICO_89 <- filter(laguna_pre_PICO, plot_id == "89")
-laguna_pre_PICO_90 <- filter(laguna_pre_PICO, plot_id == "90")
-laguna_pre_PICO_91 <- filter(laguna_pre_PICO, plot_id == "91")
-laguna_pre_PICO_111 <- filter(laguna_pre_PICO, plot_id == "111")
-laguna_pre_PICO_112 <- filter(laguna_pre_PICO, plot_id == "112")
-laguna_pre_PICO_113 <- filter(laguna_pre_PICO, plot_id == "113")
-
-## plot area = 401.15m^2
-
-# create vectors of the sum of each species' area per plot
-l_pc_89 <- sum(laguna_pre_PICO_89$tree_area)
-l_pc_90 <- sum(laguna_pre_PICO_90$tree_area)
-l_pc_91 <- sum(laguna_pre_PICO_91$tree_area)
-l_pc_111 <- sum(laguna_pre_PICO_111$tree_area)
-l_pc_112 <- sum(laguna_pre_PICO_112$tree_area)
-l_pc_113 <- sum(laguna_pre_PICO_113$tree_area)
-
-# create data frame: project, year, plot_id, & abundance for PICO
-laguna_pre_PICO_clean <- data.frame(
-  project = rep("Laguna Mtn.", times = length(laguna_pre_PICO_plots)), 
-  year = rep("2016", times = length(laguna_pre_PICO_plots)),
-  species = rep("PICO", times = length(laguna_pre_PICO_plots)),
-  plot_id = c(laguna_pre_PICO_plots),
-  abundance = c(l_pc_89/plot_area, l_pc_90/plot_area, l_pc_91/plot_area, l_pc_111/plot_area, l_pc_112/plot_area, l_pc_113/plot_area)
-)
-
-# combine all pre-fire data from laguna plots
-laguna_pre_clean <- rbind(laguna_pre_PIJE_clean, laguna_pre_QUCH_clean, laguna_pre_QUKE_clean, laguna_pre_PICO_clean)
+l_abundance <- rbind(laguna_pre_PIJE_clean, laguna_pre_QUKE_clean)
 
 # repeat for bluff mesa
-unique(bluffmesa_pre$species) # identify species present in laguna fire data
+unique(bluffmesa_pre$species) # identify species present in bluff mesa fire data
 
 bluffmesa_pre_ABCO <- filter(bluffmesa_pre, species == "ABCO") # create data frame w/ only ABCO sp.
 bluffmesa_pre_PIJE <- filter(bluffmesa_pre, species == "PIJE") # create data frame w/ only PIJE sp.
@@ -560,7 +605,6 @@ plot_area <- pi*(11.3^2)
 # create data frame: project, year, plot_id, & abundance for ABCO
 bluffmesa_pre_ABCO_clean <- data.frame(
   project = rep("Bluff Mesa", times = length(unique(bluffmesa_pre_ABCO$plot_id))), 
-  year = rep("2020", times = length(unique(bluffmesa_pre_ABCO$plot_id))),
   species = rep("ABCO", times = length(unique(bluffmesa_pre_ABCO$plot_id))),
   plot_id = c(unique(bluffmesa_pre_ABCO$plot_id)),
   abundance = c(sum(bluffmesa_pre_ABCO_24$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_26$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_33$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_48$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_49$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_52$tree_area)/plot_area)
@@ -586,14 +630,16 @@ bluffmesa_pre_PIJE_53 <- filter(bluffmesa_pre_PIJE, plot_id == "53")
 # create data frame: project, year, plot_id, & abundance for PIJE
 bluffmesa_pre_PIJE_clean <- data.frame(
   project = rep("Bluff Mesa", times = length(unique(bluffmesa_pre_PIJE$plot_id))), 
-  year = rep("2020", times = length(unique(bluffmesa_pre_PIJE$plot_id))),
   species = rep("PIJE", times = length(unique(bluffmesa_pre_PIJE$plot_id))),
   plot_id = c(unique(bluffmesa_pre_PIJE$plot_id)),
   abundance = c(sum(bluffmesa_pre_PIJE_24$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_25$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_26$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_27$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_33$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_49$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_50$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_51$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_52$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_53$tree_area)/plot_area)
 )
 
 # combine all pre-fire data from bluff mesa plots
-bluffmesa_pre_clean <- rbind(bluffmesa_pre_PIJE_clean, bluffmesa_pre_ABCO_clean)
+bm_abundance <- rbind(bluffmesa_pre_PIJE_clean, bluffmesa_pre_ABCO_clean)
+
+abundance_whole <- rbind(l_abundance, bm_abundance)
+# note: BM 26 ABCO = NA b/c no dbh data recorded
 ```
 
 ### post-fire data

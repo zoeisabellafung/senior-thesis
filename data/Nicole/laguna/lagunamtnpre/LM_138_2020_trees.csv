@@ -1,0 +1,8 @@
+SubFrac,TagNo,Status,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Species
+1,781,D,36.5,3.6,,,,5,FALSE,,,,,,,,,,,,,,,,0,,,,,,,,,,,,,,,,,PIJE
+1,782,L,24.2,7.6,1.3,I,1.45,,FALSE,,90,,,,,,,,,,,,,,0,,,,,,,,,,,,,QUKE_TSE,3,0.3,,PIJE
+1,784,L,145.5,20.4,0.7,D,7,,FALSE,,70,,,,,,,,,,,,,,0,,,,,,,,,,,,,PIJE_TSE,2.5,0.8,,QUKE
+1,785,L,24.9,6.8,0.5,I,1,,FALSE,,90,,,,,,,,,,,,,,0,,,,,,,,,,,,,PIJE_TSE,1,0,,PIJE
+1,786,L,25.6,7.6,1.8,C,1.5,,FALSE,,90,,,,,,,,,,,,,,0,,,,,,,,,,,,,ROCA_SM,1.2,2.1,,PIJE
+1,787,L,26.6,8.6,2.2,C,1.45,,FALSE,,100,,,,,,,,,,,,,,0,,,,,,,,,,,,,PIJE_TSE,0.2,0.8,,PIJE
+1,788,L,25.5,8.6,1.3,C,1.25,,FALSE,,100,,,,,,,,,,,,,,0,,,,,,,,,,,,,CEBE_SM,1,0.5,,PIJE

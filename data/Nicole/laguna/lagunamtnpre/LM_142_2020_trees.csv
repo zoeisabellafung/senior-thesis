@@ -1,0 +1,9 @@
+SubFrac,TagNo,Status,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Species
+1,570,L,7.65,5.9,0.4,S,1.25,,FALSE,,100,,,,,,,,,,,,,,0,,,,,,,,,,,,,QUKE_TSA,0.4,1.5,,QUKE
+1,571,L,47.9,10.8,1.4,I,2,,FALSE,,90,,,,,,,,,,,,,,0,,,,,,,,,,,,,QUKE_TSA,0.5,0,,QUKE
+1,574,L,18.05,8,4.2,S,1.2,,FALSE,,20,,,,,,,,,,,,,,2,,,,,,,,,,,,,ROCA_SL,0.2,0.6,,PIJE
+1,575,L,72.75,27.4,12.2,C,3.25,,FALSE,,90,,,,,,,,,,,,,,4,,,,,,,,,,,,,ROCA_SL,0.2,3,,PIJE
+1,576,L,9.6,6.4,0.6,I,1.55,,FALSE,,100,,,,,,,,,,,,,,0,,,,,,,,,,,,,ROCA_SL,0.4,3.5,,QUKE
+1,577,L,23.75,11.2,4.2,I,1.1,,FALSE,,80,,,,,,,,,,,,,,1,,,,,,,,,,,,,PIJE_TOV,0.8,4,,PIJE
+1,582,L,28.9,8.8,4,S,1.6,,FALSE,,80,,,,,,,,,,,,,,2,,,,,,,,,,,,,PIJE_TOV,0.3,4,,PIJE
+1,583,L,56.05,19.9,8.8,C,2.5,,FALSE,,90,,,,,,,,,,,,,,2,,,,,,,,,,,,,PIJE_TOV,0.3,4.8,,PIJE

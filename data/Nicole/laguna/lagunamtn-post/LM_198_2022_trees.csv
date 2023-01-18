@@ -1,0 +1,8 @@
+SubFrac,TagNo,Status,Spp_GUID,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,Index,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Index,Species
+1,189,D,a7bf19df-35ed-4691-8ca5-4e4e2a426665,,,,,,,-2147483648,False,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Fell over due to fire.,,,,-2147483648,QUKE
+1,190,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,48.45,18.6,10.6,D,3.25,,-2147483647,False,,90,,,,,,,,,,,,,,7.8,10.3,15,,,,,,,,,,,,,,,-2147483647,PIJE
+1,192,D,a7bf19df-35ed-4691-8ca5-4e4e2a426665,9.6,5.8,,,,1,-2147483646,False,,,,,,,,,,,,,,,,0.94,5.8,95,,,,,,,,,,,,,,,-2147483646,QUKE
+1,193,D,a7bf19df-35ed-4691-8ca5-4e4e2a426665,7.75,5.2,,,,1,-2147483645,False,,,,,,,,,,,,,,,,0,5.2,95,,,,,,,,,,,,,,,-2147483645,QUKE
+1,194,D,a7bf19df-35ed-4691-8ca5-4e4e2a426665,50.65,10.1,,,,1,-2147483644,False,,,,,,,,,,,,,,,,3.6,10.1,90,,,,,,,,,,,,,,,-2147483644,QUKE
+1,195,D,a7bf19df-35ed-4691-8ca5-4e4e2a426665,38.3,12,,,,1,-2147483643,False,,,,,,,,,,,,,,,,4.6,12,90,,,,,,,,,,,,,,,-2147483643,QUKE
+1,197,D,50b2af91-9399-4dda-82e5-6eb0f20b7b96,,,,,,,-2147483642,False,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Fell over due to fire.,,,,-2147483642,PIJE

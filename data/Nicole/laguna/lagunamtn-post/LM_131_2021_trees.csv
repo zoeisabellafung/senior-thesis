@@ -1,0 +1,8 @@
+SubFrac,TagNo,Status,Spp_GUID,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,Index,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Index,Species
+1,674,D,a7bf19df-35ed-4691-8ca5-4e4e2a426665,36.5,14,,,,1,-2147483648,False,,,,,,,,,,,,,,,,3,14,40,,,,,,,,,,,,,,,-2147483648,QUKE
+1,675,D,a7bf19df-35ed-4691-8ca5-4e4e2a426665,42.3,15,,,,1,-2147483647,False,,,,,,,,,,,,,,,,5,0,0,,,,,,,,,,,,,,,-2147483647,QUKE
+1,676,D,50b2af91-9399-4dda-82e5-6eb0f20b7b96,,,,,,,-2147483646,False,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"Fallen, cut-down.",,,,-2147483646,PIJE
+1,677,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,37.3,14.2,10.4,I,0.25,,-2147483645,False,,5,,,,,,,,,,,,,,9.2,10.2,97,,,,,,,,,,,New tag 965,,,,-2147483645,PIJE
+1,678,D,50b2af91-9399-4dda-82e5-6eb0f20b7b96,19.8,8.8,,,,1,-2147483644,False,,,,,,,,,,,,,,,,4,8.8,100,,,,,,,,,,,New tag 966,,,,-2147483644,PIJE
+1,679,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,61,23,18,C,2,,-2147483643,False,,10,,,,,,,,,,,,,,12.6,21.2,90,,,,,,,,,,,New tag967,,,,-2147483643,PIJE
+1,680,L,a7bf19df-35ed-4691-8ca5-4e4e2a426665,41.3,12,10,I,0.5,,-2147483642,False,,5,,,,,,,,,,,,,,3.8,10,90,,,,,,,,,,,,,,,-2147483642,QUKE

@@ -1,0 +1,9 @@
+SubFrac,TagNo,Status,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Species
+1,51,D,58.35,2.5,,,,5,FALSE,,,,,,,,,,,,,,,,0.9,,,,,,,,,,,,,,,,,QUKE
+1,52,L,58.7,16.4,0.7,C,5.5,,FALSE,,100,,,,,,,,,,,,,,1.2,,,,,,,,,,,,,,,,,QUKE
+1,53,L,13.1,6.9,1,I,2.8,,FALSE,,100,,,,,,,,,,,,,,0,,,,,,,,,,,,,,,,,QUKE
+1,56,L,44.7,10.2,0.8,I,4,,FALSE,,100,,,,,,,,,,,,,,0,,,,,,,,,,,,,,,,,QUKE
+1,59,L,39.9,13,2,C,4.5,,FALSE,,100,,,,,,,,,,,,,,0,,,,,,,,,,,,,,,,,QUKE
+1,60,L,44.4,12.2,1,C,4,,FALSE,,100,,,,,,,,,,,,,,0,,,,,,,,,,,,,,,,,QUKE
+1,61,L,21.05,7.5,0.7,I,1.6,,FALSE,,100,,,,,,,,,,,,,,0,,,,,,,,,,,,,,,,,PIJE
+1,62,L,13.1,6.5,1.4,S,1,,FALSE,,100,,,,,,,,,,,,,,0,,,,,,,,,,,,,,,,,PIJE

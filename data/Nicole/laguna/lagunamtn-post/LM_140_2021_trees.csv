@@ -1,0 +1,8 @@
+SubFrac,TagNo,Status,Spp_GUID,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,Index,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Index,Species
+1,514,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,28.8,12.4,5,I,2.1,,-2147483648,False,,80,,,,,,,,,,,,,,1.5,4.2,20,,,,,,,,,,,,,,,-2147483648,PIJE
+1,515,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,12.2,5.6,0.8,I,1.5,,-2147483647,False,,80,,,,,,,,,,,,,,0.15,1,2,,,,,,,,,,,,,,,-2147483647,PIJE
+1,516,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,52.5,19,9.6,C,2.75,,-2147483646,False,,80,,,,,,,,,,,,,,1.2,0,0,,,,,,,,,,,,,,,-2147483646,PIJE
+1,517,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,11.55,5.5,2.5,S,1,,-2147483645,False,,40,,,,,,,,,,,,,,0.5,3.2,30,,,,,,,,,,,,,,,-2147483645,PIJE
+1,518,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,19,9.9,3.6,I,1.55,,-2147483644,False,,95,,,,,,,,,,,,,,0.3,1.5,0.5,,,,,,,,,,,,,,,-2147483644,PIJE
+1,519,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,45.6,19,7.5,C,2.25,,-2147483643,False,,80,,,,,,,,,,,,,,2.4,7,5,,,,,,,,,,,,,,,-2147483643,PIJE
+1,520,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,19.45,12.4,6,I,1.75,,-2147483642,False,,70,,,,,,,,,,,,,,1.4,0,0,,,,,,,,,,,,,,,-2147483642,PIJE

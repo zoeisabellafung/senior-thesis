@@ -1,0 +1,4 @@
+IsVerified,QTR,SubFrac,TagNo,Spp_GUID,Status,DBH,Ht,CrwnRto,CrwnCl,LiCrBHt,CrFuBHt,CrwnRad,Age,GrwthRt,Mort,DecayCl,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Species
+FALSE,,1,230,11814be3-77a6-47b6-8deb-de4bea486b09,L,77.3,20.2,50.5,C,10,,3.75,,,,,,,,,,,,,,0.75,12,0.5,,,,,,,,,,,,,,0,PIJE
+FALSE,,1,231,11814be3-77a6-47b6-8deb-de4bea486b09,L,78,22.6,36.3,C,14.4,,4.5,,,,,,,,,,,,,,0.05,0,0,,,,,,,,,,,,,,0,PIJE
+FALSE,,1,232,11814be3-77a6-47b6-8deb-de4bea486b09,L,70.55,20,33,C,13.4,,4.05,,,,,,,,,,,,,,0,0,0,,,,,,,,,,,,,,0,PIJE

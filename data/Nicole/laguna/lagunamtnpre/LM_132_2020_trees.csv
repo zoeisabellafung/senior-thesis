@@ -1,0 +1,4 @@
+SubFrac,TagNo,Status,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Species
+1,626,L,17.6,8.5,2.1,S,1.75,,FALSE,,90,,,,,,,,,,,,,,0,,,,,,,,,,,,,PIJE_TSA,0.1,4.5,,PIJE
+1,628,L,72.8,29.6,8,C,4.75,,FALSE,,80,,,,,,,,,,,,,,0,,,,,,,,,,,,,ROCA_SM,0,5.1,,PIJE
+1,630,L,72.4,32,12.8,C,4,,FALSE,,90,,,,,,,,,,,,,,0,,,,,,,,,,,,,ROCA_SM,0,1.1,,PIJE

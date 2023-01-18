@@ -1,0 +1,11 @@
+IsVerified,QTR,SubFrac,TagNo,Spp_GUID,Status,DBH,Ht,CrwnRto,CrwnCl,LiCrBHt,CrFuBHt,CrwnRad,Age,GrwthRt,Mort,DecayCl,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Species
+FALSE,,1,417,35344058-051f-4a17-a61e-06c1db5a823c,L,72.7,20.2,77.2,C,4.6,,3.25,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,ABCO
+FALSE,,1,418,35344058-051f-4a17-a61e-06c1db5a823c,L,34.7,7.8,76.9,I,1.8,,2.4,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,ABCO
+FALSE,,1,419,35344058-051f-4a17-a61e-06c1db5a823c,D,110.5,15.8,,,,,,,,,2,,,,,,,,,,,,,,,,,,,,,,,,,,,ABCO
+FALSE,,1,420,35344058-051f-4a17-a61e-06c1db5a823c,L,50.9,19,73.7,C,5,,3,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,ABCO
+FALSE,,1,421,35344058-051f-4a17-a61e-06c1db5a823c,L,72.6,22.4,63.4,C,8.2,,3.6,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,ABCO
+FALSE,,1,422,35344058-051f-4a17-a61e-06c1db5a823c,D,99,8.2,,,,,,,,,2,,,,,,,,,,,,,,,,,,,,,,,,,,,ABCO
+FALSE,,1,423,35344058-051f-4a17-a61e-06c1db5a823c,D,72.9,21.2,,,,,,,,,1,,,,,,,,,,,,,,,,,,,,,,,,,,,ABCO
+FALSE,,1,424,11814be3-77a6-47b6-8deb-de4bea486b09,L,76.7,24,34.2,C,15.8,,4,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,PIJE
+FALSE,,1,425,35344058-051f-4a17-a61e-06c1db5a823c,D,44.8,15.2,,,,,,,,,1,,,,,,,,,,,,,,,,,,,,,,,,,,,ABCO
+FALSE,,1,426,35344058-051f-4a17-a61e-06c1db5a823c,L,38.3,15.8,84.2,I,2.5,,1.9,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,ABCO

@@ -277,7 +277,7 @@ crag <- read.csv("data/USDA:USFS/2005_Crag/!FBAT_Trees_Crag_Rawdata")
 #### pre-fire - Nicole's data 
 ```{r}
 # load in all pre-fire data & organize
-laguna_pre <- read_csv("data/Nicole-data/LagunaMtn_pre_2016.csv") %>%
+laguna_pre <- read_csv("data/Nicole/LagunaMtn_pre_2016.csv") %>%
   clean_names() %>% # standardize column names
   select(project, date, id, treatment, tag_number, status, species, dbh_cm, height_m, heigt_to_crown_m, dbh_ft, basal_area_sq_ft_indiv) %>% # subset data 
   as.data.frame() %>%
@@ -364,27 +364,27 @@ laguna_pre <- rbind(
 
 
 # load in raw pre-fire bluff mesa data (2020)
-bm_24_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_24_2020_trees.csv") %>%
+bm_24_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_24_2020_trees.csv") %>%
   mutate(plot_id = rep(24, length = 8))
-bm_25_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_25_2020_trees.csv") %>%
+bm_25_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_25_2020_trees.csv") %>%
    mutate(plot_id = rep(25, length = 4))
-bm_26_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_26_2020_trees.csv") %>%
+bm_26_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_26_2020_trees.csv") %>%
    mutate(plot_id = rep(26, length = 3))
-bm_27_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_27_2020_trees.csv") %>%
+bm_27_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_27_2020_trees.csv") %>%
    mutate(plot_id = rep(27, length = 3))
-bm_33_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_33_2020_trees.csv") %>%
+bm_33_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_33_2020_trees.csv") %>%
    mutate(plot_id = rep(33, length = 4))
-bm_48_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_48_2020_trees.csv") %>%
+bm_48_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_48_2020_trees.csv") %>%
    mutate(plot_id = rep(48, length = 6))
-bm_49_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_49_2020_trees.csv") %>%
+bm_49_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_49_2020_trees.csv") %>%
    mutate(plot_id = rep(49, length = 10))
-bm_50_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_50_2020_trees.csv") %>% 
+bm_50_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_50_2020_trees.csv") %>% 
    mutate(plot_id = rep(50, length = 4))
-bm_51_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_51_2020_trees.csv") %>%
+bm_51_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_51_2020_trees.csv") %>%
    mutate(plot_id = rep(51, length = 4))
-bm_52_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_52_2020_trees.csv") %>%
+bm_52_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_52_2020_trees.csv") %>%
    mutate(plot_id = rep(52, length = 3))
-bm_53_2020_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_53_2020_trees.csv") %>%
+bm_53_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_53_2020_trees.csv") %>%
    mutate(plot_id = rep(53, length = 5))
 
 # combine raw pre-fire bluff mesa data into one data frame
@@ -399,9 +399,26 @@ prefire_whole <- rbind(
 )
 ```
 
-
+#### coordinate data
 ```{r}
-# old calculation for tree area measurement
+# laguna mtn coordinates
+LM_coord <- read.csv("data/Nicole/laguna/LM_coordinates.csv") %>%
+  clean_names() %>%
+  select(site_year, plot_id, easting, northing) %>%
+  filter(plot_id > 127) %>%
+  filter(!duplicated(plot_id))
+
+# bluff mesa coordinates
+BM_coord <- read.csv("data/Nicole/bluffmesa/BM_coordinates.csv") %>%
+  clean_names() %>%
+  select(site_year, plot_id, easting, northing) %>%
+  filter(plot_id > 23) %>%
+  filter(plot_id < 54) %>%
+  slice(-(1:3)) %>%
+  filter(!duplicated(plot_id))
+```
+```{r}
+# calculation for tree area measurement
 laguna_pre <- laguna_pre %>%
   mutate(tree_area = ((pi*(laguna_pre$dbh^2)/4)/100))
 bluffmesa_pre <- bluffmesa_pre %>%
@@ -488,12 +505,50 @@ l_p_198 <- sum(laguna_pre_PIJE_198$tree_area)
 l_p_199 <- sum(laguna_pre_PIJE_199$tree_area)
 l_p_200 <- sum(laguna_pre_PIJE_200$tree_area)
 
+# create vectors of average height of each species per plot
+h_128 <- mean(laguna_pre_PIJE_128$ht)
+h_129 <- mean(laguna_pre_PIJE_129$ht)
+h_130 <- mean(laguna_pre_PIJE_130$ht)
+h_131 <- mean(laguna_pre_PIJE_131$ht)
+h_132 <- mean(laguna_pre_PIJE_132$ht)
+h_133 <- mean(laguna_pre_PIJE_133$ht)
+h_134 <- mean(laguna_pre_PIJE_134$ht)
+h_135 <- mean(laguna_pre_PIJE_135$ht)
+h_137 <- mean(laguna_pre_PIJE_137$ht)
+h_138 <- mean(laguna_pre_PIJE_138$ht)
+h_139 <- mean(laguna_pre_PIJE_139$ht)
+h_140 <- mean(laguna_pre_PIJE_140$ht)
+h_141 <- mean(laguna_pre_PIJE_141$ht)
+h_142 <- mean(laguna_pre_PIJE_142$ht)
+h_143 <- mean(laguna_pre_PIJE_143$ht)
+h_144 <- mean(laguna_pre_PIJE_144$ht)
+h_170 <- mean(laguna_pre_PIJE_170$ht)
+h_171 <- mean(laguna_pre_PIJE_171$ht)
+h_172 <- mean(laguna_pre_PIJE_172$ht)
+h_173 <- mean(laguna_pre_PIJE_173$ht)
+h_175 <- mean(laguna_pre_PIJE_175$ht)
+h_176 <- mean(laguna_pre_PIJE_176$ht)
+h_177 <- mean(laguna_pre_PIJE_177$ht)
+h_179 <- mean(laguna_pre_PIJE_179$ht)
+h_180 <- mean(laguna_pre_PIJE_180$ht)
+h_181 <- mean(laguna_pre_PIJE_181$ht)
+h_195 <- mean(laguna_pre_PIJE_195$ht)
+h_197 <- mean(laguna_pre_PIJE_197$ht)
+h_198 <- mean(laguna_pre_PIJE_198$ht)
+h_199 <- mean(laguna_pre_PIJE_199$ht)
+h_200 <- mean(laguna_pre_PIJE_200$ht)
+
+unique(laguna_pre_PIJE_clean$plot_id) # view plots with PIJE in laguna mtn.
+
 # create data frame: project, year, plot_id, & abundance for PIJE
 laguna_pre_PIJE_clean <- data.frame(
   project = rep("Laguna Mtn.", times = length(laguna_pre_PIJE_plots)), 
   species = rep("PIJE", times = length(laguna_pre_PIJE_plots)),
   plot_id = c(laguna_pre_PIJE_plots),
-  abundance = c(l_p_128/plot_area, l_p_129/plot_area, l_p_130/plot_area, l_p_131/plot_area, l_p_132/plot_area, l_p_133/plot_area, l_p_134/plot_area, l_p_135/plot_area, l_p_137/plot_area, l_p_138/plot_area, l_p_139/plot_area, l_p_140/plot_area, l_p_141/plot_area, l_p_142/plot_area, l_p_143/plot_area, l_p_144/plot_area, l_p_170/plot_area, l_p_171/plot_area, l_p_172/plot_area, l_p_173/plot_area, l_p_175/plot_area, l_p_176/plot_area, l_p_177/plot_area, l_p_179/plot_area, l_p_180/plot_area, l_p_181/plot_area, l_p_195/plot_area, l_p_197/plot_area, l_p_198/plot_area, l_p_199/plot_area, l_p_200/plot_area)
+  abundance = c(l_p_128/plot_area, l_p_129/plot_area, l_p_130/plot_area, l_p_131/plot_area, l_p_132/plot_area, l_p_133/plot_area, l_p_134/plot_area, l_p_135/plot_area, l_p_137/plot_area, l_p_138/plot_area, l_p_139/plot_area, l_p_140/plot_area, l_p_141/plot_area, l_p_142/plot_area, l_p_143/plot_area, l_p_144/plot_area, l_p_170/plot_area, l_p_171/plot_area, l_p_172/plot_area, l_p_173/plot_area, l_p_175/plot_area, l_p_176/plot_area, l_p_177/plot_area, l_p_179/plot_area, l_p_180/plot_area, l_p_181/plot_area, l_p_195/plot_area, l_p_197/plot_area, l_p_198/plot_area, l_p_199/plot_area, l_p_200/plot_area),
+  avg_ht = c(h_128, h_129, h_130, h_131, h_132, h_133, h_134, h_135, h_137, h_138, h_139, h_140, h_141, h_142, h_143, h_144, h_170, h_171, h_172, h_173, h_175, h_176, h_177, h_179, h_180, h_181, h_195, h_197, h_198, h_199, h_200),
+  easting = c(552604, 552907, 552703, 552825, 552934, 552930, 552944, 553054, 552809, 552825, 552701, 552968, 552953, 552964, 552871, 552990, 553555, 553650, 553694, 553741, 553748, 553722, 553810, 553733, 553796, 553745, 553844, 553803, 553697, 553634, 553638),
+  northing = c(3635674, 3635674, 3635674, 3635674, 3635625, 3635689, 3635441, 3635389, 3635340, 3635401, 3635401, 3635072, 3634891, 3636126, 3635065, 3635000, 3635917, 3635822, 3636045, 3636012, 3635916, 3635733, 3635775, 3635619, 3635629, 3635589, 3635701, 3635729, 3635950, 3635975, 3635910)
 )
 
 #### QUKE
@@ -569,12 +624,49 @@ l_q_198 <- sum(laguna_pre_QUKE_198$tree_area)
 l_q_199 <- sum(laguna_pre_QUKE_199$tree_area)
 l_q_200 <- sum(laguna_pre_QUKE_200$tree_area)
 
+# create vectors of the average height of each species per plot
+h_q_128 <- mean(laguna_pre_QUKE_128$ht)
+h_q_129 <- mean(laguna_pre_QUKE_129$ht)
+h_q_130 <- mean(laguna_pre_QUKE_130$ht)
+h_q_131 <- mean(laguna_pre_QUKE_131$ht)
+h_q_133 <- mean(laguna_pre_QUKE_133$ht)
+h_q_134 <- mean(laguna_pre_QUKE_134$ht)
+h_q_135 <- mean(laguna_pre_QUKE_135$ht)
+h_q_137 <- mean(laguna_pre_QUKE_137$ht)
+h_q_138 <- mean(laguna_pre_QUKE_138$ht)
+h_q_139 <- mean(laguna_pre_QUKE_139$ht)
+h_q_140 <- mean(laguna_pre_QUKE_140$ht)
+h_q_141 <- mean(laguna_pre_QUKE_141$ht)
+h_q_142 <- mean(laguna_pre_QUKE_142$ht)
+h_q_143 <- mean(laguna_pre_QUKE_143$ht)
+h_q_144 <- mean(laguna_pre_QUKE_144$ht)
+h_q_170 <- mean(laguna_pre_QUKE_170$ht)
+h_q_171 <- mean(laguna_pre_QUKE_171$ht)
+h_q_172 <- mean(laguna_pre_QUKE_172$ht)
+h_q_173 <- mean(laguna_pre_QUKE_173$ht)
+h_q_175 <- mean(laguna_pre_QUKE_175$ht)
+h_q_176 <- mean(laguna_pre_QUKE_176$ht)
+h_q_177 <- mean(laguna_pre_QUKE_177$ht)
+h_q_179 <- mean(laguna_pre_QUKE_179$ht)
+h_q_180 <- mean(laguna_pre_QUKE_180$ht)
+h_q_181 <- mean(laguna_pre_QUKE_181$ht)
+h_q_195 <- mean(laguna_pre_QUKE_195$ht)
+h_q_197 <- mean(laguna_pre_QUKE_197$ht)
+h_q_198 <- mean(laguna_pre_QUKE_198$ht)
+h_q_199 <- mean(laguna_pre_QUKE_199$ht)
+h_q_200 <- mean(laguna_pre_QUKE_200$ht)
+
+unique(laguna_pre_QUKE_clean$plot_id)
+
 # create data frame: project, year, plot_id, & abundance for QUKE
 laguna_pre_QUKE_clean <- data.frame(
   project = rep("Laguna Mtn.", times = length(laguna_pre_QUKE_plots)), 
   species = rep("QUKE", times = length(laguna_pre_QUKE_plots)),
   plot_id = c(laguna_pre_QUKE_plots),
-  abundance = c(l_q_128/plot_area, l_q_129/plot_area, l_q_130/plot_area, l_q_131/plot_area, l_q_133/plot_area, l_q_134/plot_area, l_q_135/plot_area, l_q_137/plot_area, l_q_138/plot_area, l_q_139/plot_area, l_q_140/plot_area, l_q_141/plot_area, l_q_142/plot_area, l_q_143/plot_area, l_q_144/plot_area, l_q_170/plot_area, l_q_171/plot_area, l_q_172/plot_area, l_q_173/plot_area, l_q_175/plot_area, l_q_176/plot_area, l_q_177/plot_area, l_q_179/plot_area, l_q_180/plot_area, l_q_181/plot_area, l_q_195/plot_area, l_q_197/plot_area, l_q_198/plot_area, l_q_199/plot_area, l_q_200/plot_area)
+  abundance = c(l_q_128/plot_area, l_q_129/plot_area, l_q_130/plot_area, l_q_131/plot_area, l_q_133/plot_area, l_q_134/plot_area, l_q_135/plot_area, l_q_137/plot_area, l_q_138/plot_area, l_q_139/plot_area, l_q_140/plot_area, l_q_141/plot_area, l_q_142/plot_area, l_q_143/plot_area, l_q_144/plot_area, l_q_170/plot_area, l_q_171/plot_area, l_q_172/plot_area, l_q_173/plot_area, l_q_175/plot_area, l_q_176/plot_area, l_q_177/plot_area, l_q_179/plot_area, l_q_180/plot_area, l_q_181/plot_area, l_q_195/plot_area, l_q_197/plot_area, l_q_198/plot_area, l_q_199/plot_area, l_q_200/plot_area),
+  avg_ht = c(h_q_128, h_q_129, h_q_130, h_q_131, h_q_133, h_q_134, h_q_135, h_q_137, h_q_138, h_q_139, h_q_140, h_q_141, h_q_142, h_q_143, h_q_144, h_q_170, h_q_171, h_q_172, h_q_173, h_q_175, h_q_176, h_q_177, h_q_179, h_q_180, h_q_181, h_q_195, h_q_197, h_q_198, h_q_199, h_q_200),
+  easting = c(552604, 552907, 552703, 552825, 552930, 552944, 553054, 552809, 552825, 552701, 552953, 552964, 552871, 552990, 553555, 553650, 553694, 553741, 553748, 553722, 553810, 553733, 553796, 553745, 553844, 553738, 553803, 553697, 553634, 553638),
+  northing = c(3635674, 3635518, 3635561, 3635690, 3635689, 3635441, 3635389, 3635340, 3635401, 3635401, 3634891, 3636126, 3635065, 3635000, 3635917, 3635822, 3636045, 3636012, 3635916, 3635733, 3635775, 3635619, 3635629, 3635589, 3635701, 3635675, 3635729, 3635950, 3635975, 3635910)
 )
 
 l_abundance <- rbind(laguna_pre_PIJE_clean, laguna_pre_QUKE_clean)
@@ -607,7 +699,10 @@ bluffmesa_pre_ABCO_clean <- data.frame(
   project = rep("Bluff Mesa", times = length(unique(bluffmesa_pre_ABCO$plot_id))), 
   species = rep("ABCO", times = length(unique(bluffmesa_pre_ABCO$plot_id))),
   plot_id = c(unique(bluffmesa_pre_ABCO$plot_id)),
-  abundance = c(sum(bluffmesa_pre_ABCO_24$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_26$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_33$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_48$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_49$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_52$tree_area)/plot_area)
+  abundance = c(sum(bluffmesa_pre_ABCO_24$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_26$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_33$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_48$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_49$tree_area)/plot_area, sum(bluffmesa_pre_ABCO_52$tree_area)/plot_area),
+  avg_ht = c(mean(bluffmesa_pre_ABCO_24$ht), mean(bluffmesa_pre_ABCO_26$ht), mean(bluffmesa_pre_ABCO_33$ht), mean(bluffmesa_pre_ABCO_48$ht), mean(bluffmesa_pre_ABCO_49$ht), mean(bluffmesa_pre_ABCO_52$ht)),
+  easting = c(502045, 502155, 502518, 502663, 502600, 503370),
+  northing = c(3786845, 3786746, 3786610, 3787038, 3787201, 3786975)
 ) # note --> no abundance data for plot 26 because there is no dbh data
 
 #### PIJE
@@ -632,7 +727,10 @@ bluffmesa_pre_PIJE_clean <- data.frame(
   project = rep("Bluff Mesa", times = length(unique(bluffmesa_pre_PIJE$plot_id))), 
   species = rep("PIJE", times = length(unique(bluffmesa_pre_PIJE$plot_id))),
   plot_id = c(unique(bluffmesa_pre_PIJE$plot_id)),
-  abundance = c(sum(bluffmesa_pre_PIJE_24$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_25$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_26$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_27$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_33$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_49$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_50$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_51$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_52$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_53$tree_area)/plot_area)
+  abundance = c(sum(bluffmesa_pre_PIJE_24$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_25$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_26$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_27$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_33$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_49$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_50$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_51$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_52$tree_area)/plot_area, sum(bluffmesa_pre_PIJE_53$tree_area)/plot_area),
+  avg_ht = c(mean(bluffmesa_pre_PIJE_24$ht), mean(bluffmesa_pre_PIJE_25$ht), mean(bluffmesa_pre_PIJE_26$ht), mean(bluffmesa_pre_PIJE_27$ht), mean(bluffmesa_pre_PIJE_33$ht), mean(bluffmesa_pre_PIJE_49$ht), mean(bluffmesa_pre_PIJE_50$ht), mean(bluffmesa_pre_PIJE_51$ht), mean(bluffmesa_pre_PIJE_52$ht), mean(bluffmesa_pre_PIJE_53$ht)),
+  easting = c(502045, 502018, 502155, 502360, 502518, 502600, 502811, 503248, 503370, 502980),
+  northing = c(3786845, 3786660, 3786746, 3786721, 3786610, 3787201, 3787146, 3787101, 3786975, 3787237)
 )
 
 # combine all pre-fire data from bluff mesa plots
@@ -641,6 +739,7 @@ bm_abundance <- rbind(bluffmesa_pre_PIJE_clean, bluffmesa_pre_ABCO_clean)
 abundance_whole <- rbind(l_abundance, bm_abundance)
 # note: BM 26 ABCO = NA b/c no dbh data recorded
 ```
+
 
 ### post-fire data
 #### Nicole's data

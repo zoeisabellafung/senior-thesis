@@ -1,8 +1,8 @@
-SubFrac,TagNo,Status,Spp_GUID,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,Index,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Index,Species
-1,975,L,a7bf19df-35ed-4691-8ca5-4e4e2a426665,51.7,9.8,2.5,I,2.25,,-2147483648,False,,40,,,,,,,,,,,,,,0,2.5,10,,,,,,,,,,,,,,,-2147483648,QUKE
-1,976,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,37.3,17.4,7.5,C,3,,-2147483647,False,,70,,,,,,,,,,,,,,7,4.8,30,,,,,,,,,,,,,,,-2147483647,PIJE
-1,977,D,a7bf19df-35ed-4691-8ca5-4e4e2a426665,41.85,6.5,,,,1,-2147483646,False,,,,,,,,,,,,,,,,3,6.5,100,,,,,,,,,,,,,,,-2147483646,QUKE
-1,978,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,11.05,5.8,2,S,1,,-2147483645,False,,90,,,,,,,,,,,,,,0.2,2.2,5,,,,,,,,,,,,,,,-2147483645,PIJE
-1,979,L,a7bf19df-35ed-4691-8ca5-4e4e2a426665,57,16.4,1.5,C,5,,-2147483644,False,,90,,,,,,,,,,,,,,0,4.1,5,,,,,,,,,,,,,,,-2147483644,QUKE
-1,980,L,a7bf19df-35ed-4691-8ca5-4e4e2a426665,72.4,16.5,0.8,C,5.5,,-2147483643,False,,100,,,,,,,,,,,,,,0,2.8,2,,,,,,,,,,,,,,,-2147483643,QUKE
-1,981,L,a7bf19df-35ed-4691-8ca5-4e4e2a426665,85.75,16.6,1.4,C,6.5,,-2147483642,False,,100,,,,,,,,,,,,,,0,4,2,,,,,,,,,,,,,,,-2147483642,QUKE
+SubFrac,TagNo,Status,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Species
+1,975,L,51.7,9.8,2.5,I,2.25,,FALSE,,40,,,,,,,,,,,,,,0,2.5,10,,,,,,,,,,,,,,,QUKE
+1,976,L,37.3,17.4,7.5,C,3,,FALSE,,70,,,,,,,,,,,,,,7,4.8,30,,,,,,,,,,,,,,,PIJE
+1,977,D,41.85,6.5,,,,1,FALSE,,,,,,,,,,,,,,,,3,6.5,100,,,,,,,,,,,,,,,QUKE
+1,978,L,11.05,5.8,2,S,1,,FALSE,,90,,,,,,,,,,,,,,0.2,2.2,5,,,,,,,,,,,,,,,PIJE
+1,979,L,57,16.4,1.5,C,5,,FALSE,,90,,,,,,,,,,,,,,0,4.1,5,,,,,,,,,,,,,,,QUKE
+1,980,L,72.4,16.5,0.8,C,5.5,,FALSE,,100,,,,,,,,,,,,,,0,2.8,2,,,,,,,,,,,,,,,QUKE
+1,981,L,85.75,16.6,1.4,C,6.5,,FALSE,,100,,,,,,,,,,,,,,0,4,2,,,,,,,,,,,,,,,QUKE

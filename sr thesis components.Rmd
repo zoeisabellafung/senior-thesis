@@ -744,18 +744,59 @@ abundance_whole <- rbind(l_abundance, bm_abundance)
 ### post-fire data
 #### Nicole's data
 ```{r}
+# load in raw post-fire laguna mountain data (2021 & 2022)
+lm_128_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_128_2021_trees.csv")
+lm_129_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_129_2021_trees.csv")
+lm_130_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_130_2021_trees.csv")
+lm_131_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_131_2021_trees.csv")
+lm_132_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_132_2021_trees.csv")
+lm_133_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_133_2021_trees.csv")
+lm_134_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_134_2021_trees.csv")
+lm_135_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_135_2021_trees.csv")
+lm_137_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_137_2021_trees.csv")
+lm_138_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_138_2021_trees.csv")
+lm_139_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_139_2021_trees.csv")
+lm_140_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_140_2021_trees.csv")
+lm_141_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_141_2021_trees.csv")
+lm_142_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_142_2021_trees.csv")
+lm_143_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_143_2021_trees.csv")
+lm_144_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_144_2021_trees.csv")
+lm_145_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_145_2021_trees.csv")
+lm_170_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_170_2022_trees.csv")
+lm_171_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_171_2022_trees.csv")
+lm_172_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_172_2022_trees.csv")
+lm_173_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_173_2022_trees.csv")
+lm_175_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_175_2022_trees.csv")
+lm_176_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_176_2022_trees.csv")
+lm_177_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_177_2022_trees.csv")
+lm_179_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_179_2022_trees.csv")
+lm_180_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_180_2022_trees.csv")
+lm_181_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_181_2022_trees.csv")
+lm_195_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_195_2022_trees.csv")
+lm_196_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_196_2022_trees.csv")
+lm_197_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_197_2022_trees.csv")
+lm_198_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_198_2022_trees.csv")
+lm_199_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_199_2022_trees.csv")
+lm_200_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_200_2022_trees.csv")
+
+laguna_post <- rbind(
+  lm_128_2021_trees, lm_129_2021_trees, lm_130_2021_trees, lm_132_2021_trees, lm_133_2021_trees, lm_134_2021_trees, lm_135_2021_trees, lm_137_2021_trees, lm_138_2021_trees, lm_139_2021_trees, lm_140_2021_trees, lm_141_2021_trees, lm_142_2021_trees, lm_143_2021_trees, lm_144_2021_trees, lm_145_2021_trees, lm_170_2022_trees, lm_171_2022_trees, lm_172_2022_trees, lm_173_2022_trees, lm_175_2022_trees, lm_176_2022_trees, lm_177_2022_trees, lm_179_2022_trees, lm_180_2022_trees, lm_181_2022_trees, lm_195_2022_trees, lm_196_2022_trees, lm_197_2022_trees, lm_198_2022_trees, lm_199_2022_trees, lm_200_2022_trees
+) %>%
+  clean_names() %>%
+  select(tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, species)
+
 # load in raw post-fire bluff mesa data (2021)
-bm_24_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_24_2021_trees.csv")
-bm_25_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_25_2021_trees.csv")
-bm_26_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_26_2021_trees.csv")
-bm_27_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_27_2021_trees.csv")
-bm_33_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_33_2021_trees.csv")
-bm_48_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_48_2021_trees.csv")
-bm_49_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_49_2021_trees.csv")
-bm_50_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_50_2021_trees.csv")
-bm_51_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_51_2021_trees.csv")
-bm_52_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_52_2021_trees.csv")
-bm_53_2021_trees <- read.csv("data/Nicole-data/bluffmesadata/BM_53_2021_trees.csv")
+bm_24_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_24_2021_trees.csv")
+bm_25_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_25_2021_trees.csv")
+bm_26_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_26_2021_trees.csv")
+bm_27_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_27_2021_trees.csv")
+bm_33_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_33_2021_trees.csv")
+bm_48_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_48_2021_trees.csv")
+bm_49_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_49_2021_trees.csv")
+bm_50_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_50_2021_trees.csv")
+bm_51_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_51_2021_trees.csv")
+bm_52_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_52_2021_trees.csv")
+bm_53_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_53_2021_trees.csv")
 
 # combine raw pre-fire bluff mesa data into one data frame
 bluffmesa_post <- rbind(
@@ -763,6 +804,10 @@ bluffmesa_post <- rbind(
   clean_names() %>%
   select(tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, species)
 
+# create 1 data frame for all post-fire data
+postfire_whole <- rbind(
+  laguna_post, bluffmesa_post
+)
 ```
 
 ### leaf trait data

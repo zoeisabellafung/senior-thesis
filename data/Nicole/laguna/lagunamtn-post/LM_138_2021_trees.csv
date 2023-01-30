@@ -1,8 +1,8 @@
-SubFrac,TagNo,Status,Spp_GUID,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,Index,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Index,Species
-1,781,D,50b2af91-9399-4dda-82e5-6eb0f20b7b96,,,,,,,-2147483648,False,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,-2147483648,PIJE
-1,782,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,24.05,7.8,6.2,I,0.55,,-2147483647,False,,30,,,,,,,,,,,,,,2.6,6.4,65,,,,,,,,,,,,,,,-2147483647,PIJE
-1,784,L,a7bf19df-35ed-4691-8ca5-4e4e2a426665,146.5,22.6,4.4,D,6,,-2147483646,False,,30,,,,,,,,,,,,,,0,0,0,,,,,,,,,,,,,,,-2147483646,QUKE
-1,785,D,50b2af91-9399-4dda-82e5-6eb0f20b7b96,23.65,6,,,,1,-2147483645,False,,,,,,,,,,,,,,,,3,6,100,,,,,,,,,,,New Tag 169,,,,-2147483645,PIJE
-1,786,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,25.7,8.2,6.4,I,1,,-2147483644,False,,10,,,,,,,,,,,,,,4.6,6.4,88,,,,,,,,,,,,,,,-2147483644,PIJE
-1,787,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,26.75,10,8,I,1,,-2147483643,False,,10,,,,,,,,,,,,,,4,8.8,85,,,,,,,,,,,,,,,-2147483643,PIJE
-1,788,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,25.5,9.6,8,I,1.1,,-2147483642,False,,10,,,,,,,,,,,,,,5,9.2,89,,,,,,,,,,,,,,,-2147483642,PIJE
+SubFrac,TagNo,Status,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Species
+1,781,D,,,,,,,FALSE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,PIJE
+1,782,L,24.05,7.8,6.2,I,0.55,,FALSE,,30,,,,,,,,,,,,,,2.6,6.4,65,,,,,,,,,,,,,,,PIJE
+1,784,L,146.5,22.6,4.4,D,6,,FALSE,,30,,,,,,,,,,,,,,0,0,0,,,,,,,,,,,,,,,QUKE
+1,785,D,23.65,6,,,,1,FALSE,,,,,,,,,,,,,,,,3,6,100,,,,,,,,,,,New Tag 169,,,,PIJE
+1,786,L,25.7,8.2,6.4,I,1,,FALSE,,10,,,,,,,,,,,,,,4.6,6.4,88,,,,,,,,,,,,,,,PIJE
+1,787,L,26.75,10,8,I,1,,FALSE,,10,,,,,,,,,,,,,,4,8.8,85,,,,,,,,,,,,,,,PIJE
+1,788,L,25.5,9.6,8,I,1.1,,FALSE,,10,,,,,,,,,,,,,,5,9.2,89,,,,,,,,,,,,,,,PIJE

@@ -1,9 +1,9 @@
-SubFrac,TagNo,Status,Spp_GUID,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,Index,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Index,Species
-1,652,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,63.9,22.8,13.8,C,2.5,,-2147483648,False,,70,,,,,,,,,,,,,,3,13.8,30,,,,,,,,,,,,,,,-2147483648,PIJE
-1,653,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,53.35,22.6,13.8,C,2.45,,-2147483647,False,,80,,,,,,,,,,,,,,4,13.8,20,,,,,,,,,,,,,,,-2147483647,PIJE
-1,655,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,39.4,21.6,14.2,C,1.4,,-2147483646,False,,70,,,,,,,,,,,,,,10,13,25,,,,,,,,,,,,,,,-2147483646,PIJE
-1,657,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,63.1,21,15.4,C,3,,-2147483645,False,,70,,,,,,,,,,,,,,9.4,15.4,25,,,,,,,,,,,,,,,-2147483645,PIJE
-1,663,D,a7bf19df-35ed-4691-8ca5-4e4e2a426665,,,,,,,-2147483644,False,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Tree is gone,,,,-2147483644,QUKE
-1,664,D,a7bf19df-35ed-4691-8ca5-4e4e2a426665,,,,,,,-2147483643,False,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Tree is gone,,,,-2147483643,QUKE
-1,668,L,50b2af91-9399-4dda-82e5-6eb0f20b7b96,43.7,18.6,11.3,C,0.5,,-2147483642,False,,80,,,,,,,,,,,,,,2.8,2.8,25,,,,,,,,,,,,,,,-2147483642,PIJE
-1,670,D,50b2af91-9399-4dda-82e5-6eb0f20b7b96,10.75,6.2,,,,1,-2147483641,False,,,,,,,,,,,,,,,,,4,100,,,,,,,,,,,,,,,-2147483641,PIJE
+SubFrac,TagNo,Status,DBH,Ht,LiCrBHt,CrwnCl,CrwnRad,DecayCl,IsVerified,QTR,CrwnRto,CrFuBHt,Age,GrwthRt,Mort,LaddBaseHt,LaddMaxHt,DRC,NuLiStems,NuDeStems,EqDia,XCoord,YCoord,CKR,CharHt,ScorchHt,CrScPct,DamCd1,DamSev1,DamCd2,DamSev2,DamCd3,DamSev3,DamCd4,DamSev4,DamCd5,DamSev5,Comment,UV1,UV2,UV3,Species
+1,652,L,63.9,22.8,13.8,C,2.5,,FALSE,,70,,,,,,,,,,,,,,3,13.8,30,,,,,,,,,,,,,,,PIJE
+1,653,L,53.35,22.6,13.8,C,2.45,,FALSE,,80,,,,,,,,,,,,,,4,13.8,20,,,,,,,,,,,,,,,PIJE
+1,655,L,39.4,21.6,14.2,C,1.4,,FALSE,,70,,,,,,,,,,,,,,10,13,25,,,,,,,,,,,,,,,PIJE
+1,657,L,63.1,21,15.4,C,3,,FALSE,,70,,,,,,,,,,,,,,9.4,15.4,25,,,,,,,,,,,,,,,PIJE
+1,663,D,,,,,,,FALSE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Tree is gone,,,,QUKE
+1,664,D,,,,,,,FALSE,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Tree is gone,,,,QUKE
+1,668,L,43.7,18.6,11.3,C,0.5,,FALSE,,80,,,,,,,,,,,,,,2.8,2.8,25,,,,,,,,,,,,,,,PIJE
+1,670,D,10.75,6.2,,,,1,FALSE,,,,,,,,,,,,,,,,,4,100,,,,,,,,,,,,,,,PIJE

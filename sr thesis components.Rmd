@@ -396,7 +396,8 @@ bluffmesa_pre <- rbind(
 
 prefire_whole <- rbind(
   laguna_pre, bluffmesa_pre
-)
+) %>%
+  mutate(category = rep("pre", length = 348))
 ```
 
 #### coordinate data
@@ -417,6 +418,7 @@ BM_coord <- read.csv("data/Nicole/bluffmesa/BM_coordinates.csv") %>%
   slice(-(1:3)) %>%
   filter(!duplicated(plot_id))
 ```
+
 ```{r}
 # calculation for tree area measurement
 laguna_pre <- laguna_pre %>%
@@ -738,76 +740,168 @@ bm_abundance <- rbind(bluffmesa_pre_PIJE_clean, bluffmesa_pre_ABCO_clean)
 
 abundance_whole <- rbind(l_abundance, bm_abundance)
 # note: BM 26 ABCO = NA b/c no dbh data recorded
+
+# export to csv
+write.csv(abundance_whole, "data/Nicole/abundance_whole.csv", row.names=FALSE)
+```
+
+### fuels data
+```{r}
+# load in laguna mountain fuels data
+lm_fuels <- read.csv("data/Nicole/laguna/LM_coordinates.csv") %>%
+  clean_names() %>%
+  filter(plot_id > 127) %>%
+  filter(plot_id < 201) %>%
+  select(site_year, plot_id, easting, northing, fuel_loading_tons_per_acre, x_19, x_20, x_21, x_22, x_23, fuel_height_in, x_24, x_25, x_26, distance_to_crown_ft) %>%
+  rename(fine_fuels = fuel_loading_tons_per_acre, hr_1 = x_19, hr_10 = x_20, hr_100 = x_21, cwd = x_22, total = x_23, duff = fuel_height_in, litter = x_24, duff_litter = x_25, fuel = x_26)
+
+# load in bluff mesa fuels data
+bm_fuels <- read.csv("data/Nicole/bluffmesa/BM_coordinates.csv") %>%
+  clean_names() %>%
+  filter(plot_id > 23) %>%
+  filter(plot_id < 54) %>%
+  select(site_year, plot_id, easting, northing, fuels_tons_per_acre, x_16, x_17, x_18, x_19, fuel_height_in, x_20, distance_to_crown_ft) %>%
+  rename(hr_1 = fuels_tons_per_acre, hr_10 = x_16, hr_100 = x_17, cwd = x_18, total = x_19, duff_litter = fuel_height_in, fuel = x_20) %>%
+  mutate(fine_fuels = rep("NA", length = 40)) %>%
+  mutate(duff = rep("NA", length = 40)) %>%
+  mutate(litter = rep("NA", length = 40))
+
+fuels_whole <- rbind(
+  lm_fuels, bm_fuels
+)
+
+# export as csv
+write.csv(fuels_whole, "data/Nicole/fuels_whole.csv", row.names=FALSE)
 ```
 
 
 ### post-fire data
 #### Nicole's data
 ```{r}
+
 # load in raw post-fire laguna mountain data (2021 & 2022)
-lm_128_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_128_2021_trees.csv")
-lm_129_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_129_2021_trees.csv")
-lm_130_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_130_2021_trees.csv")
-lm_131_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_131_2021_trees.csv")
-lm_132_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_132_2021_trees.csv")
-lm_133_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_133_2021_trees.csv")
-lm_134_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_134_2021_trees.csv")
-lm_135_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_135_2021_trees.csv")
-lm_137_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_137_2021_trees.csv")
-lm_138_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_138_2021_trees.csv")
-lm_139_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_139_2021_trees.csv")
-lm_140_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_140_2021_trees.csv")
-lm_141_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_141_2021_trees.csv")
-lm_142_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_142_2021_trees.csv")
-lm_143_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_143_2021_trees.csv")
-lm_144_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_144_2021_trees.csv")
-lm_145_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_145_2021_trees.csv")
-lm_170_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_170_2022_trees.csv")
-lm_171_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_171_2022_trees.csv")
-lm_172_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_172_2022_trees.csv")
-lm_173_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_173_2022_trees.csv")
-lm_175_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_175_2022_trees.csv")
-lm_176_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_176_2022_trees.csv")
-lm_177_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_177_2022_trees.csv")
-lm_179_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_179_2022_trees.csv")
-lm_180_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_180_2022_trees.csv")
-lm_181_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_181_2022_trees.csv")
-lm_195_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_195_2022_trees.csv")
-lm_196_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_196_2022_trees.csv")
-lm_197_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_197_2022_trees.csv")
-lm_198_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_198_2022_trees.csv")
-lm_199_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_199_2022_trees.csv")
-lm_200_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_200_2022_trees.csv")
+lm_128_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_128_2021_trees.csv") %>%
+  mutate(plot_id = rep(128, length = 8))
+lm_129_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_129_2021_trees.csv") %>%
+  mutate(plot_id = rep(129, length = 12))
+lm_130_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_130_2021_trees.csv") %>%
+  mutate(plot_id = rep(130, length = 12))
+lm_131_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_131_2021_trees.csv") %>%
+  mutate(plot_id = rep(131, length = 7))
+lm_132_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_132_2021_trees.csv") %>%
+  mutate(plot_id = rep(132, length = 3))
+lm_133_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_133_2021_trees.csv") %>%
+  mutate(plot_id = rep(133, length = 6))
+lm_134_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_134_2021_trees.csv") %>%
+  mutate(plot_id = rep(134, length = 10))
+lm_135_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_135_2021_trees.csv") %>%
+  mutate(plot_id = rep(135, length = 6))
+lm_137_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_137_2021_trees.csv") %>%
+  mutate(plot_id = rep(137, length = 7))
+lm_138_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_138_2021_trees.csv") %>%
+  mutate(plot_id = rep(138, length = 7))
+lm_139_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_139_2021_trees.csv") %>%
+  mutate(plot_id = rep(139, length = 6))
+lm_140_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_140_2021_trees.csv") %>%
+  mutate(plot_id = rep(140, length = 7))
+lm_141_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_141_2021_trees.csv") %>%
+  mutate(plot_id = rep(141, length = 8))
+lm_142_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_142_2021_trees.csv") %>%
+  mutate(plot_id = rep(142, length = 8))
+lm_143_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_143_2021_trees.csv") %>%
+  mutate(plot_id = rep(143, length = 10))
+lm_144_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_144_2021_trees.csv") %>%
+  mutate(plot_id = rep(144, length = 6))
+lm_145_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_145_2021_trees.csv") %>%
+  mutate(plot_id = rep(145, length = 12))
+lm_170_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_170_2022_trees.csv") %>%
+  mutate(plot_id = rep(170, length = 7))
+lm_171_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_171_2022_trees.csv") %>%
+  mutate(plot_id = rep(171, length = 8))
+lm_172_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_172_2022_trees.csv") %>%
+  mutate(plot_id = rep(172, length = 9))
+lm_173_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_173_2022_trees.csv") %>%
+  mutate(plot_id = rep(173, length = 15))
+lm_175_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_175_2022_trees.csv") %>%
+  mutate(plot_id = rep(175, length = 8))
+lm_176_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_176_2022_trees.csv") %>%
+  mutate(plot_id = rep(176, length = 7))
+lm_177_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_177_2022_trees.csv") %>%
+  mutate(plot_id = rep(177, length = 7))
+lm_179_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_179_2022_trees.csv") %>%
+  mutate(plot_id = rep(179, length = 6))
+lm_180_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_180_2022_trees.csv") %>%
+  mutate(plot_id = rep(180, length = 17))
+lm_181_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_181_2022_trees.csv") %>%
+  mutate(plot_id = rep(181, length = 19))
+lm_195_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_195_2022_trees.csv") %>%
+  mutate(plot_id = rep(195, length = 25))
+lm_196_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_196_2022_trees.csv") %>%
+  mutate(plot_id = rep(196, length = 8))
+lm_197_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_197_2022_trees.csv") %>%
+  mutate(plot_id = rep(197, length = 5))
+lm_198_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_198_2022_trees.csv") %>%
+  mutate(plot_id = rep(198, length = 7))
+lm_199_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_199_2022_trees.csv") %>%
+  mutate(plot_id = rep(199, length = 12))
+lm_200_2022_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_200_2022_trees.csv") %>%
+  mutate(plot_id = rep(200, length = 11))
 
 laguna_post <- rbind(
   lm_128_2021_trees, lm_129_2021_trees, lm_130_2021_trees, lm_132_2021_trees, lm_133_2021_trees, lm_134_2021_trees, lm_135_2021_trees, lm_137_2021_trees, lm_138_2021_trees, lm_139_2021_trees, lm_140_2021_trees, lm_141_2021_trees, lm_142_2021_trees, lm_143_2021_trees, lm_144_2021_trees, lm_145_2021_trees, lm_170_2022_trees, lm_171_2022_trees, lm_172_2022_trees, lm_173_2022_trees, lm_175_2022_trees, lm_176_2022_trees, lm_177_2022_trees, lm_179_2022_trees, lm_180_2022_trees, lm_181_2022_trees, lm_195_2022_trees, lm_196_2022_trees, lm_197_2022_trees, lm_198_2022_trees, lm_199_2022_trees, lm_200_2022_trees
 ) %>%
   clean_names() %>%
-  select(tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, species)
+  mutate(location = rep("Laguna Mountain", length = 299)) %>%
+  mutate(tree_area = ((pi*(laguna_post$dbh^2)/4)/100)) %>%
+  select(location, plot_id, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, species, tree_area)
 
 # load in raw post-fire bluff mesa data (2021)
-bm_24_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_24_2021_trees.csv")
-bm_25_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_25_2021_trees.csv")
-bm_26_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_26_2021_trees.csv")
-bm_27_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_27_2021_trees.csv")
-bm_33_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_33_2021_trees.csv")
-bm_48_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_48_2021_trees.csv")
-bm_49_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_49_2021_trees.csv")
-bm_50_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_50_2021_trees.csv")
-bm_51_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_51_2021_trees.csv")
-bm_52_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_52_2021_trees.csv")
-bm_53_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_53_2021_trees.csv")
+bm_24_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_24_2021_trees.csv") %>%
+  mutate(plot_id = rep(24, length = 8))
+bm_25_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_25_2021_trees.csv") %>%
+  mutate(plot_id = rep(25, length = 4))
+bm_26_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_26_2021_trees.csv") %>%
+  mutate(plot_id = rep(26, length = 3))
+bm_27_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_27_2021_trees.csv") %>%
+  mutate(plot_id = rep(27, length = 3))
+bm_33_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_33_2021_trees.csv") %>%
+  mutate(plot_id = rep(33, length = 4))
+bm_48_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_48_2021_trees.csv") %>%
+  mutate(plot_id = rep(48, length = 6))
+bm_49_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_49_2021_trees.csv") %>%
+  mutate(plot_id = rep(49, length = 10))
+bm_50_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_50_2021_trees.csv") %>%
+  mutate(plot_id = rep(50, length = 4))
+bm_51_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_51_2021_trees.csv") %>%
+  mutate(plot_id = rep(51, length = 4))
+bm_52_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_52_2021_trees.csv") %>%
+  mutate(plot_id = rep(52, length = 3))
+bm_53_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_53_2021_trees.csv") %>%
+  mutate(plot_id = rep(53, length = 5))
 
 # combine raw pre-fire bluff mesa data into one data frame
 bluffmesa_post <- rbind(
   bm_24_2021_trees, bm_25_2021_trees, bm_26_2021_trees, bm_27_2021_trees, bm_33_2021_trees, bm_48_2021_trees, bm_49_2021_trees, bm_50_2021_trees, bm_51_2021_trees, bm_52_2021_trees, bm_53_2021_trees) %>%
   clean_names() %>%
-  select(tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, species)
+  mutate(location = rep("Bluff Mesa", length = 54)) %>%
+  mutate(tree_area = ((pi*(bluffmesa_post$dbh^2)/4)/100)) %>%
+  select(location, plot_id, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, species, tree_area)
 
 # create 1 data frame for all post-fire data
 postfire_whole <- rbind(
   laguna_post, bluffmesa_post
+) %>%
+  mutate(category = rep("post", length = 353))
+```
+
+```{r}
+# combine pre-fire and post-fire data into one dataframe
+pre_post_whole <- rbind(
+  prefire_whole, postfire_whole
 )
+
+# export to csv
+write.csv(pre_post_whole, "data/Nicole/pre_post_whole.csv", row.names=FALSE)
 ```
 
 ### leaf trait data

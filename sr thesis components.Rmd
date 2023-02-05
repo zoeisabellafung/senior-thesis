@@ -117,7 +117,6 @@ laguna_pre <- rbind(
 ```
 
 #### bluff mesa
-
 ```{r}
 # read in raw pre-fire bluff mesa data (2020)
 bm_24_2020_trees <- read.csv("data/Nicole/bluffmesa/BM_24_2020_trees.csv") %>%
@@ -158,7 +157,7 @@ thomas1 <- read.csv("data/Nicole/thomas/TF_postfire_2018.csv") %>%
   clean_names() %>%
   slice_head(n = 67) %>%
   as.data.frame() %>%
-  mutate(plot_id = rep("NA", length = 67)) %>% # need to replace these values with actual plot ID
+  mutate(plot_id = c("PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-2", "PIPO-2", "PIPO-2", "PIPO-2", "PIPO-2", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1")) %>%
   mutate(uv1 = rep("NA", length = 67)) %>%
   mutate(uv2 = rep("NA", length = 67)) %>%
   mutate(uv3 = rep("NA", length = 67)) %>%
@@ -226,22 +225,17 @@ thomas3 <- thomas3 %>%
   select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, location, tree_area, category) 
 
 # combine all thomas fire data
-thomas_pre <- rbind(
+thomas_post <- rbind(
   thomas1, thomas2, thomas3)
 ```
 
 #### combine all pre-fire data
 ```{r}
 # combine laguna mountain and bluff mesa data into one sheet
-pre_fire_whole <- rbind(
+prefire_whole <- rbind(
   laguna_pre, bluffmesa_pre
 ) %>%
   mutate(category = rep("pre", length = 348))
-
-# add thomas fire data
-prefire_whole <- rbind(
-  pre_fire_whole, thomas_pre
-)
 ```
 
 #### coordinate data
@@ -261,8 +255,15 @@ BM_coord <- read.csv("data/Nicole/bluffmesa/BM_coordinates.csv") %>%
   filter(plot_id < 54) %>%
   slice(-(1:3)) %>%
   filter(!duplicated(plot_id))
+
+# thomas fire coordinates
+TF_coord <- read.csv("data/Nicole/thomas/TF_coord.csv") %>%
+  clean_names() %>%
+  select(site_year, plot_id, easting, northing) %>%
+  slice(-(1))
 ```
 
+# laguna mountain abundance
 ```{r}
 # calculation for tree area measurement
 laguna_pre <- laguna_pre %>%
@@ -435,7 +436,7 @@ laguna_pre_QUKE_199 <- filter(laguna_pre_QUKE, plot_id == "199")
 laguna_pre_QUKE_200 <- filter(laguna_pre_QUKE, plot_id == "200")
 
 # calculate plot area
-plot_area <- pi*(11.3^2)
+plot_area <- pi*(11.35^2)
 ## plot area = 401.15m^2
 
 # create vectors of the sum of each species' area per plot
@@ -516,7 +517,10 @@ laguna_pre_QUKE_clean <- data.frame(
 )
 
 l_abundance <- rbind(laguna_pre_PIJE_clean, laguna_pre_QUKE_clean)
+```
 
+#### bluff mesa abundance
+```{r}
 # repeat for bluff mesa
 unique(bluffmesa_pre$species) # identify species present in bluff mesa fire data
 
@@ -537,7 +541,7 @@ bluffmesa_pre_ABCO_49 <- filter(bluffmesa_pre_ABCO, plot_id == "49")
 bluffmesa_pre_ABCO_52 <- filter(bluffmesa_pre_ABCO, plot_id == "52")
 
 # calculate plot area
-plot_area <- pi*(11.3^2)
+plot_area <- pi*(11.35^2)
 ## plot area = 401.15m^2
 
 # create data frame: project, year, plot_id, & abundance for ABCO
@@ -581,8 +585,164 @@ bluffmesa_pre_PIJE_clean <- data.frame(
 
 # combine all pre-fire data from bluff mesa plots
 bm_abundance <- rbind(bluffmesa_pre_PIJE_clean, bluffmesa_pre_ABCO_clean)
+```
 
-abundance_whole <- rbind(l_abundance, bm_abundance)
+#### thomas fire abundance
+```{r}
+# plot size: 11.35 m radius (405 m^2)
+unique(thomas_post$species) # identify species present in bluff mesa fire data
+
+thomas_post_PIPO <- filter(thomas_post, species == "PIPO") # create data frame w/ only PIPO sp.
+thomas_post_QUWI <- filter(thomas_post, species == "QUWI") # create data frame w/ only QUWI sp.
+thomas_post_QUCH <- filter(thomas_post, species == "QUCH") # create data frame w/ only QUCH sp.
+thomas_post_PSMA <- filter(thomas_post, species == "PSMA") # create data frame w/ only PSMA sp.
+thomas_post_UMCA <- filter(thomas_post, species == "UMCA") # create data frame w/ only UMCA sp.
+
+#### PIPO
+
+unique(thomas_post_PIPO$plot_id) # print each plot ID where PIPO is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.3m radius circular plot
+thomas_post_PIPO_1 <- filter(thomas_post_PIPO, plot_id == "PIPO-1")
+thomas_post_PIPO_2 <- filter(thomas_post_PIPO, plot_id == "PIPO-2")
+thomas_post_PIPO_3 <- filter(thomas_post_PIPO, plot_id == "PIPO-3")
+
+# calculate plot area
+plot_area <- pi*(11.35^2)
+## plot area = 405 m^2
+
+# create data frame: project, year, plot_id, & abundance for PIPO
+thomas_post_PIPO_clean <- data.frame(
+  project = rep("Thomas", times = length(unique(thomas_post_PIPO$plot_id))), 
+  species = rep("PIPO", times = length(unique(thomas_post_PIPO$plot_id))),
+  plot_id = c(unique(thomas_post_PIPO$plot_id)),
+  abundance = c(sum(thomas_post_PIPO_1$tree_area)/plot_area, sum(thomas_post_PIPO_2$tree_area)/plot_area, sum(thomas_post_PIPO_3$tree_area)/plot_area),
+  avg_ht = c(mean(thomas_post_PIPO_1$ht), mean(thomas_post_PIPO_2$ht), mean(thomas_post_PIPO_3$ht)),
+  easting = c(292063, 291414, 291304),
+  northing = c(3824903, 3824672, 3824663)
+)
+
+#### QUWI
+
+unique(thomas_post_QUWI$plot_id) # print each plot ID where QUWI is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.3m radius circular plot
+thomas_post_QUWI_1 <- filter(thomas_post_QUWI, plot_id == "PIPO-2")
+thomas_post_QUWI_2 <- filter(thomas_post_QUWI, plot_id == "BC12")
+
+# calculate plot area
+plot_area <- pi*(11.35^2)
+## plot area = 405 m^2
+
+# create data frame: project, year, plot_id, & abundance for QUWI
+thomas_post_QUWI_clean <- data.frame(
+  project = rep("Thomas", times = length(unique(thomas_post_QUWI$plot_id))), 
+  species = rep("QUWI", times = length(unique(thomas_post_QUWI$plot_id))),
+  plot_id = c(unique(thomas_post_QUWI$plot_id)),
+  abundance = c(sum(thomas_post_QUWI_1$tree_area)/plot_area, sum(thomas_post_QUWI_2$tree_area)/plot_area),
+  avg_ht = c(mean(thomas_post_QUWI_1$ht), mean(thomas_post_QUWI_2$ht)),
+  easting = c(291414, 270783),
+  northing = c(3824672, 3818567)
+)
+
+#### QUCH
+
+unique(thomas_post_QUCH$plot_id) # print each plot ID where QUCH is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.35m radius circular plot
+thomas_post_QUCH_1 <- filter(thomas_post_QUCH, plot_id == "BC1")
+thomas_post_QUCH_2 <- filter(thomas_post_QUCH, plot_id == "BC10")
+thomas_post_QUCH_3 <- filter(thomas_post_QUCH, plot_id == "BC11")
+thomas_post_QUCH_4 <- filter(thomas_post_QUCH, plot_id == "BC12")
+thomas_post_QUCH_5 <- filter(thomas_post_QUCH, plot_id == "BC2")
+thomas_post_QUCH_6 <- filter(thomas_post_QUCH, plot_id == "BC3")
+thomas_post_QUCH_7 <- filter(thomas_post_QUCH, plot_id == "BC4")
+thomas_post_QUCH_8 <- filter(thomas_post_QUCH, plot_id == "BC5")
+thomas_post_QUCH_9 <- filter(thomas_post_QUCH, plot_id == "BC6")
+thomas_post_QUCH_10 <- filter(thomas_post_QUCH, plot_id == "BC7")
+
+# calculate plot area
+plot_area <- pi*(11.35^2)
+## plot area = 405 m^2
+
+# create data frame: project, year, plot_id, & abundance for QUCH
+thomas_post_QUCH_clean <- data.frame(
+  project = rep("Thomas", times = length(unique(thomas_post_QUCH$plot_id))), 
+  species = rep("QUCH", times = length(unique(thomas_post_QUCH$plot_id))),
+  plot_id = c(unique(thomas_post_QUCH$plot_id)),
+  abundance = c(sum(thomas_post_QUCH_1$tree_area)/plot_area, sum(thomas_post_QUCH_2$tree_area)/plot_area, sum(thomas_post_QUCH_3$tree_area)/plot_area, sum(thomas_post_QUCH_4$tree_area)/plot_area, sum(thomas_post_QUCH_5$tree_area)/plot_area, sum(thomas_post_QUCH_6$tree_area)/plot_area, sum(thomas_post_QUCH_7$tree_area)/plot_area, sum(thomas_post_QUCH_8$tree_area)/plot_area, sum(thomas_post_QUCH_9$tree_area)/plot_area, sum(thomas_post_QUCH_10$tree_area)/plot_area),
+  avg_ht = c(mean(thomas_post_QUCH_1$ht), mean(thomas_post_QUCH_2$ht), mean(thomas_post_QUCH_3$ht), mean(thomas_post_QUCH_4$ht), mean(thomas_post_QUCH_5$ht), mean(thomas_post_QUCH_6$ht), mean(thomas_post_QUCH_7$ht), mean(thomas_post_QUCH_8$ht), mean(thomas_post_QUCH_9$ht), mean(thomas_post_QUCH_10$ht)),
+  easting = c(298424, 292126, 291790, 270783, 298262, 298407, 298752, 299952, 300114, 298189),
+  northing = c(3822263, 3825085, 3824989, 3818567, 3822354, 3822698, 3821985, 3821912, 3821966, 3822595)
+)
+
+#### PSMA
+
+unique(thomas_post_PSMA$plot_id) # print each plot ID where PSMA is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.35m radius circular plot
+thomas_post_PSMA_1 <- filter(thomas_post_PSMA, plot_id == "BC1")
+thomas_post_PSMA_2 <- filter(thomas_post_PSMA, plot_id == "BC10")
+thomas_post_PSMA_3 <- filter(thomas_post_PSMA, plot_id == "BC11")
+thomas_post_PSMA_4 <- filter(thomas_post_PSMA, plot_id == "BC12")
+thomas_post_PSMA_5 <- filter(thomas_post_PSMA, plot_id == "BC2")
+thomas_post_PSMA_6 <- filter(thomas_post_PSMA, plot_id == "BC3")
+thomas_post_PSMA_7 <- filter(thomas_post_PSMA, plot_id == "BC4")
+thomas_post_PSMA_8 <- filter(thomas_post_PSMA, plot_id == "BC5")
+thomas_post_PSMA_9 <- filter(thomas_post_PSMA, plot_id == "BC6")
+thomas_post_PSMA_10 <- filter(thomas_post_PSMA, plot_id == "BC7")
+thomas_post_PSMA_11 <- filter(thomas_post_PSMA, plot_id == "BC8")
+thomas_post_PSMA_12 <- filter(thomas_post_PSMA, plot_id == "BC9")
+
+# calculate plot area
+plot_area <- pi*(11.35^2)
+## plot area = 405 m^2
+
+# create data frame: project, year, plot_id, & abundance for PSMA
+thomas_post_PSMA_clean <- data.frame(
+  project = rep("Thomas", times = length(unique(thomas_post_PSMA$plot_id))), 
+  species = rep("PSMA", times = length(unique(thomas_post_PSMA$plot_id))),
+  plot_id = c(unique(thomas_post_PSMA$plot_id)),
+  abundance = c(sum(thomas_post_PSMA_1$tree_area)/plot_area, sum(thomas_post_PSMA_2$tree_area)/plot_area, sum(thomas_post_PSMA_3$tree_area)/plot_area, sum(thomas_post_PSMA_4$tree_area)/plot_area, sum(thomas_post_PSMA_5$tree_area)/plot_area, sum(thomas_post_PSMA_6$tree_area)/plot_area, sum(thomas_post_PSMA_7$tree_area)/plot_area, sum(thomas_post_PSMA_8$tree_area)/plot_area, sum(thomas_post_PSMA_9$tree_area)/plot_area, sum(thomas_post_PSMA_10$tree_area)/plot_area, sum(thomas_post_PSMA_11$tree_area)/plot_area, sum(thomas_post_PSMA_12$tree_area)/plot_area),
+  avg_ht = c(mean(thomas_post_PSMA_1$ht), mean(thomas_post_PSMA_2$ht), mean(thomas_post_PSMA_3$ht), mean(thomas_post_PSMA_4$ht), mean(thomas_post_PSMA_5$ht), mean(thomas_post_PSMA_6$ht), mean(thomas_post_PSMA_7$ht), mean(thomas_post_PSMA_8$ht), mean(thomas_post_PSMA_9$ht), mean(thomas_post_PSMA_10$ht), mean(thomas_post_PSMA_11$ht), mean(thomas_post_PSMA_12$ht)),
+  easting = c(298424, 292126, 291790, 270783, 298262, 298407, 298752, 299952, 300114, 298189, 300302, 292336),
+  northing = c(3822263, 3825085, 3824989, 3818567, 3822354, 3822698, 3821985, 3821912, 3821966, 3822595, 3823239, 3825104)
+)
+
+#### UMCA
+
+unique(thomas_post_UMCA$plot_id) # print each plot ID where UMCA is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.35m radius circular plot
+thomas_post_UMCA_1 <- filter(thomas_post_UMCA, plot_id == "BC12")
+
+# calculate plot area
+plot_area <- pi*(11.35^2)
+## plot area = 405 m^2
+
+# create data frame: project, year, plot_id, & abundance for UMCA
+thomas_post_UMCA_clean <- data.frame(
+  project = rep("Thomas", times = length(unique(thomas_post_UMCA$plot_id))), 
+  species = rep("UMCA", times = length(unique(thomas_post_UMCA$plot_id))),
+  plot_id = c(unique(thomas_post_UMCA$plot_id)),
+  abundance = c(sum(thomas_post_UMCA_1$tree_area)/plot_area),
+  avg_ht = c(mean(thomas_post_UMCA_1$ht)),
+  easting = c(270783),
+  northing = c(3818567)
+)
+
+# combine all pre-fire data from thomas fire plots
+tf_abundance <- rbind(thomas_post_PIPO_clean, thomas_post_PSMA_clean, thomas_post_QUCH_clean, thomas_post_QUWI_clean, thomas_post_UMCA_clean)
+```
+
+#### combine all abundance data
+```{r}
+abundance_whole <- rbind(l_abundance, bm_abundance, tf_abundance)
 # note: BM 26 ABCO = NA b/c no dbh data recorded
 
 # export to csv
@@ -610,8 +770,18 @@ bm_fuels <- read.csv("data/Nicole/bluffmesa/BM_coordinates.csv") %>%
   mutate(duff = rep("NA", length = 40)) %>%
   mutate(litter = rep("NA", length = 40))
 
+# load in thomas fire fuels data
+tf_fuels <- read.csv("data/Nicole/thomas/TF_coord.csv") %>%
+  clean_names() %>%
+  slice(-(1)) %>%
+  select(site_year, plot_id, easting, northing, fuels_tons_per_acre, x_16, x_17, x_18, x_19, fuel_height_in, x_20, distance_to_crown_ft) %>%
+  rename(hr_1 = fuels_tons_per_acre, hr_10 = x_16, hr_100 = x_17, cwd = x_18, total = x_19, duff_litter = fuel_height_in, fuel = x_20) %>%
+  mutate(fine_fuels = rep("NA", length = 15)) %>%
+  mutate(duff = rep("NA", length = 15)) %>%
+  mutate(litter = rep("NA", length = 15))
+
 fuels_whole <- rbind(
-  lm_fuels, bm_fuels
+  lm_fuels, bm_fuels, tf_fuels
 )
 
 # export as csv
@@ -620,9 +790,8 @@ write.csv(fuels_whole, "data/Nicole/fuels_whole.csv", row.names=FALSE)
 
 
 ### post-fire data
-#### Nicole's data
+#### laguna mountain post-fire
 ```{r}
-
 # load in raw post-fire laguna mountain data (2021 & 2022)
 lm_128_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_128_2021_trees.csv") %>%
   mutate(plot_id = rep(128, length = 8))
@@ -698,7 +867,10 @@ laguna_post <- rbind(
   mutate(location = rep("Laguna Mountain", length = 299)) %>%
   mutate(tree_area = ((pi*(laguna_post$dbh^2)/4)/100)) %>%
   select(location, plot_id, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, species, tree_area)
+```
 
+#### bluff mesa post-fire
+```{r}
 # load in raw post-fire bluff mesa data (2021)
 bm_24_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_24_2021_trees.csv") %>%
   mutate(plot_id = rep(24, length = 8))
@@ -741,7 +913,7 @@ postfire_whole <- rbind(
 ```{r}
 # combine pre-fire and post-fire data into one dataframe
 pre_post_whole <- rbind(
-  prefire_whole, postfire_whole
+  prefire_whole, postfire_whole, thomas_post
 )
 
 # export to csv

@@ -263,7 +263,8 @@ TF_coord <- read.csv("data/Nicole/thomas/TF_coord.csv") %>%
   slice(-(1))
 ```
 
-# laguna mountain abundance
+### abundance
+#### laguna mountain
 ```{r}
 # calculation for tree area measurement
 laguna_pre <- laguna_pre %>%
@@ -753,11 +754,23 @@ write.csv(abundance_whole, "data/Nicole/abundance_whole.csv", row.names=FALSE)
 ```{r}
 # load in laguna mountain fuels data
 lm_fuels <- read.csv("data/Nicole/laguna/LM_coordinates.csv") %>%
+  as.data.frame() %>%
   clean_names() %>%
   filter(plot_id > 127) %>%
   filter(plot_id < 201) %>%
   select(site_year, plot_id, easting, northing, fuel_loading_tons_per_acre, x_19, x_20, x_21, x_22, x_23, fuel_height_in, x_24, x_25, x_26, distance_to_crown_ft) %>%
-  rename(fine_fuels = fuel_loading_tons_per_acre, hr_1 = x_19, hr_10 = x_20, hr_100 = x_21, cwd = x_22, total = x_23, duff = fuel_height_in, litter = x_24, duff_litter = x_25, fuel = x_26)
+  rename(fine_fuels = fuel_loading_tons_per_acre, hr_1 = x_19, hr_10 = x_20, hr_100 = x_21, cwd = x_22, total = x_23, duff = fuel_height_in, litter = x_24, duff_litter = x_25, fuel = x_26) %>%
+  mutate(fine_fuels = as.numeric(fine_fuels)) %>%
+  mutate(hr_1 = as.numeric(hr_1)) %>%
+  mutate(hr_10 = as.numeric(hr_10)) %>%
+  mutate(hr_100 = as.numeric(hr_100)) %>%
+  mutate(duff_litter = as.numeric(duff_litter)) %>%
+  mutate(distance_to_crown_ft = as.numeric(distance_to_crown_ft)) %>%
+  mutate(total = as.numeric(total)) %>%
+  mutate(plot_id = as.character(plot_id)) %>%
+  na_if("") %>%
+  na_if("N/A") %>%
+  slice_head(n = 30)
 
 # load in bluff mesa fuels data
 bm_fuels <- read.csv("data/Nicole/bluffmesa/BM_coordinates.csv") %>%
@@ -768,7 +781,8 @@ bm_fuels <- read.csv("data/Nicole/bluffmesa/BM_coordinates.csv") %>%
   rename(hr_1 = fuels_tons_per_acre, hr_10 = x_16, hr_100 = x_17, cwd = x_18, total = x_19, duff_litter = fuel_height_in, fuel = x_20) %>%
   mutate(fine_fuels = rep("NA", length = 40)) %>%
   mutate(duff = rep("NA", length = 40)) %>%
-  mutate(litter = rep("NA", length = 40))
+  mutate(litter = rep("NA", length = 40)) %>%
+  na_if("NA")
 
 # load in thomas fire fuels data
 tf_fuels <- read.csv("data/Nicole/thomas/TF_coord.csv") %>%
@@ -778,7 +792,9 @@ tf_fuels <- read.csv("data/Nicole/thomas/TF_coord.csv") %>%
   rename(hr_1 = fuels_tons_per_acre, hr_10 = x_16, hr_100 = x_17, cwd = x_18, total = x_19, duff_litter = fuel_height_in, fuel = x_20) %>%
   mutate(fine_fuels = rep("NA", length = 15)) %>%
   mutate(duff = rep("NA", length = 15)) %>%
-  mutate(litter = rep("NA", length = 15))
+  mutate(litter = rep("NA", length = 15)) %>%
+  na_if("NA") %>%
+  na_if("n/a")
 
 fuels_whole <- rbind(
   lm_fuels, bm_fuels, tf_fuels
@@ -787,7 +803,6 @@ fuels_whole <- rbind(
 # export as csv
 write.csv(fuels_whole, "data/Nicole/fuels_whole.csv", row.names=FALSE)
 ```
-
 
 ### post-fire data
 #### laguna mountain post-fire
@@ -949,8 +964,8 @@ bluffmesa_plots <- unique(bluffmesa_pre$plot_id) %>% # list all of the plots inc
   as.character()
 ```
 
-
-##### building bar plots
+### building bar plots
+#### laguna mountain leaf area
 ```{r}
 ### leaf area
 ## laguna mountain
@@ -1005,7 +1020,10 @@ laguna_la_box <-ggplot(laguna_leaf_area, aes(laguna_plots, cwm_la_laguna)) +
 # laguna_leaf_area %>% mutate(laguna_plots = fct_relevel(laguna_plots, "80", "81", "82", "83", "85", "86", "87", "88", "89", "90", "91", "92", "93", "95", "97", "98", "99", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115")) %>%
 
 laguna_la_box
+```
 
+#### bluff mesa leaf area
+```{r}
 ## bluff mesa
 # calculate ABCO mean leaf area
 ABCO_leaf_area <- (2.38 + 2.34 + 1.9 + 1.88 + 1.62 + 1.59 + 1.39 + 1.21 + 0.96 + 0.91 + 0.68 + 0.56 + 0.55 + 0.53 + 0.43 + 0.34 + 0.26 + 0.18 + 0.18 + 0.12 + 0.5)/21 # cm^2
@@ -1334,3 +1352,65 @@ ldmc_ABCO <- ldmc %>% # subset leaf length data to only include ABCO
 bluffmesa_plots # recall all of the plots included in the bluff mesa burn area
 
 ```
+
+### fuels bar plots
+#### laguna mountain 
+```{r}
+# bar plot of fuel distribution in laguna mountain (tons per acre)
+# save fuels as numeric
+fine_fuels_num <- as.numeric(lm_fuels$fine_fuels)
+hr_1_num <- as.numeric(lm_fuels$hr_1)
+hr_10_num <- as.numeric(lm_fuels$hr_10)
+hr_100_num <- as.numeric(lm_fuels$hr_100)
+duff_litter_num <- as.numeric(lm_fuels$duff_litter)
+dist_crown_num <- as.numeric(lm_fuels$distance_to_crown_ft) %>%
+  na.omit()
+
+# create vector of fine fuels sum
+fine_fuels <- sum(fine_fuels_num)
+hr_1 <- sum(hr_1_num)
+hr_10 <- sum(hr_10_num)
+hr_100 <- sum(hr_100_num)
+duff_litter <- sum(duff_litter_num)
+dist_crown <- sum(dist_crown_num)
+
+# create data frame for summary of fuels across laguna mountain
+lm_fuelsummary <- data.frame(
+  category = c("fine fuels", "1 hr", "10 hr", "100 hr", "duff/litter", "distance to crown"), 
+  value = c(fine_fuels, hr_1, hr_10, hr_100, duff_litter, dist_crown)
+)
+
+# fuels summary bar plot ### FIX THIS TO MAKE MORE SENSE/BE AESTHETIC
+ggplot(lm_fuelsummary, aes(x=category, y=value)) + 
+  geom_bar(stat = "identity")
+
+## NEED TITLE AND AXES LABELS
+# fine fuels per plot
+ggplot(lm_fuels, aes(x=plot_id, y=fine_fuels)) + 
+  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+
+# 1 HR fuels per plot
+ggplot(lm_fuels, aes(x=plot_id, y=hr_1)) + 
+  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+
+# 10 HR fuels per plot
+ggplot(lm_fuels, aes(x=plot_id, y=hr_10)) + 
+  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+
+# 100 HR fuels per plot
+ggplot(lm_fuels, aes(x=plot_id, y=hr_100)) + 
+  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+
+# duff & litter per plot
+ggplot(lm_fuels, aes(x=plot_id, y=duff_litter)) + 
+  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+
+# distance to crown per plot
+ggplot(lm_fuels, aes(x=plot_id, y=distance_to_crown_ft)) + 
+  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity") # missing values --> no data for that plot
+
+# total fuels per plot
+ggplot(lm_fuels, aes(x=plot_id, y=total)) + 
+  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+```
+

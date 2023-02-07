@@ -1376,41 +1376,221 @@ dist_crown <- sum(dist_crown_num)
 
 # create data frame for summary of fuels across laguna mountain
 lm_fuelsummary <- data.frame(
-  category = c("fine fuels", "1 hr", "10 hr", "100 hr", "duff/litter", "distance to crown"), 
-  value = c(fine_fuels, hr_1, hr_10, hr_100, duff_litter, dist_crown)
+  category = c("fine fuels", "1 hr", "10 hr", "100 hr", "duff/litter"), 
+  value = c(fine_fuels, hr_1, hr_10, hr_100, duff_litter)
 )
 
-# fuels summary bar plot ### FIX THIS TO MAKE MORE SENSE/BE AESTHETIC
-ggplot(lm_fuelsummary, aes(x=category, y=value)) + 
-  geom_bar(stat = "identity")
+# fuels summary bar plot
+lm_summaryplot <- ggplot(lm_fuelsummary, aes(x=category, y=value)) + 
+  geom_bar(col = "darkseagreen", fill = "darkseagreen", stat = "identity") +
+  ggtitle("Summary of fuels and distance to crown at Laguna Mountain") +
+  labs(y = "Fuel loading (tons/acre)", x = "Fuel category") 
 
-## NEED TITLE AND AXES LABELS
 # fine fuels per plot
-ggplot(lm_fuels, aes(x=plot_id, y=fine_fuels)) + 
-  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+lm_fineplot <- ggplot(lm_fuels, aes(x=plot_id, y=fine_fuels)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of fine fuels at Laguna Mountain") +
+  labs(y = "Fine fuels (tons/acre)", x = "Plot ID")
 
 # 1 HR fuels per plot
-ggplot(lm_fuels, aes(x=plot_id, y=hr_1)) + 
-  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+lm_1hrplot <- ggplot(lm_fuels, aes(x=plot_id, y=hr_1)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of 1 hour fuels at Laguna Mountain") +
+  labs(y = "1 hour fuels (tons/acre)", x = "Plot ID")
 
 # 10 HR fuels per plot
-ggplot(lm_fuels, aes(x=plot_id, y=hr_10)) + 
-  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+lm_10hrplot <- ggplot(lm_fuels, aes(x=plot_id, y=hr_10)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of 10 hour fuels at Laguna Mountain") +
+  labs(y = "10 hour fuels (tons/acre)", x = "Plot ID")
 
 # 100 HR fuels per plot
-ggplot(lm_fuels, aes(x=plot_id, y=hr_100)) + 
-  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+lm_100hrplot <- ggplot(lm_fuels, aes(x=plot_id, y=hr_100)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of 100 hour fuels at Laguna Mountain") +
+  labs(y = "100 hour fuels (tons/acre)", x = "Plot ID")
 
 # duff & litter per plot
-ggplot(lm_fuels, aes(x=plot_id, y=duff_litter)) + 
-  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+lm_dufflitterplot <- ggplot(lm_fuels, aes(x=plot_id, y=duff_litter)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of duff and litter at Laguna Mountain") +
+  labs(y = "Duff and litter (tons/acre)", x = "Plot ID")
 
 # distance to crown per plot
-ggplot(lm_fuels, aes(x=plot_id, y=distance_to_crown_ft)) + 
-  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity") # missing values --> no data for that plot
+lm_distplot <- ggplot(lm_fuels, aes(x=plot_id, y=distance_to_crown_ft)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of distance to crown (ft) at Laguna Mountain")  +
+  labs(y = "Distance to crown (ft)", x = "Plot ID")# missing values --> no data for that plot
 
 # total fuels per plot
-ggplot(lm_fuels, aes(x=plot_id, y=total)) + 
-  geom_bar(color = "darkorchid", fill = "darkorchid", stat = "identity")
+lm_totalfuelsplot <- ggplot(lm_fuels, aes(x=plot_id, y=total)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of total fuels at Laguna Mountain") +
+  labs(y = "Total fuels (tons/acre)", x = "Plot ID")
+
+lm_summaryplot
+lm_fineplot
+lm_1hrplot
+lm_10hrplot
+lm_100hrplot
+lm_dufflitterplot
+lm_distplot
+lm_totalfuelsplot
+```
+
+#### bluff mesa
+```{r}
+# bar plot of fuel distribution in bluff mesa (tons per acre)
+# save fuels as numeric
+bhr_1_num <- as.numeric(bm_fuels$hr_1)
+bhr_10_num <- as.numeric(bm_fuels$hr_10)
+bhr_100_num <- as.numeric(bm_fuels$hr_100)
+bduff_litter_num <- as.numeric(bm_fuels$duff_litter)
+bdist_crown_num <- as.numeric(bm_fuels$distance_to_crown_ft) %>%
+  na.omit()
+
+# create vector of fine fuels sum
+hr_1 <- sum(bhr_1_num)
+hr_10 <- sum(bhr_10_num)
+hr_100 <- sum(bhr_100_num)
+duff_litter <- sum(bduff_litter_num)
+dist_crown <- sum(bdist_crown_num)
+
+# create data frame for summary of fuels across bluff mesa
+bm_fuelsummary <- data.frame(
+  category = c("1 hr", "10 hr", "100 hr", "duff/litter"), 
+  value = c(hr_1, hr_10, hr_100, duff_litter)
+)
+
+# fuels summary bar plot
+bm_summaryplot <- ggplot(bm_fuelsummary, aes(x=category, y=value)) + 
+  geom_bar(col = "darkslateblue", fill = "darkslateblue", stat = "identity") +
+  ggtitle("Summary of fuels and distance to crown at Bluff Mesa") +
+  labs(y = "Fuel loading (tons/acre)", x = "Fuel category") 
+
+# 1 HR fuels per plot
+bm_1hrplot <- ggplot(bm_fuels, aes(x=plot_id, y=hr_1)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of 1 hour fuels at Bluff Mesa") +
+  labs(y = "1 hour fuels (tons/acre)", x = "Plot ID")
+
+# 10 HR fuels per plot
+bm_10hrplot <- ggplot(bm_fuels, aes(x=plot_id, y=hr_10)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of 10 hour fuels at Bluff Mesa") +
+  labs(y = "10 hour fuels (tons/acre)", x = "Plot ID")
+
+# 100 HR fuels per plot
+bm_100hrplot <- ggplot(bm_fuels, aes(x=plot_id, y=hr_100)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of 100 hour fuels at Bluff Mesa") +
+  labs(y = "100 hour fuels (tons/acre)", x = "Plot ID")
+
+# duff & litter per plot
+bm_dufflitterplot <- ggplot(bm_fuels, aes(x=plot_id, y=duff_litter)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of duff and litter at Bluff Mesa") +
+  labs(y = "Duff and litter (tons/acre)", x = "Plot ID")
+
+# distance to crown per plot
+bm_distplot <- ggplot(bm_fuels, aes(x=plot_id, y=distance_to_crown_ft)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of distance to crown (ft) at Bluff Mesa")  +
+  labs(y = "Distance to crown (ft)", x = "Plot ID")# missing values --> no data for that plot
+
+# total fuels per plot
+bm_totalfuelsplot <- ggplot(bm_fuels, aes(x=plot_id, y=total)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of total fuels at Bluff Mesa") +
+  labs(y = "Total fuels (tons/acre)", x = "Plot ID")
+
+bm_summaryplot
+bm_fineplot
+bm_1hrplot
+bm_10hrplot
+bm_100hrplot
+bm_dufflitterplot
+bm_distplot
+bm_totalfuelsplot
+```
+
+#### thomas fire
+```{r}
+# bar plot of fuel distribution in thomas fire (tons per acre)
+# save fuels as numeric
+thr_1_num <- as.numeric(tf_fuels$hr_1) %>%
+  na.omit()
+thr_10_num <- as.numeric(tf_fuels$hr_10) %>%
+  na.omit()
+thr_100_num <- as.numeric(tf_fuels$hr_100) %>%
+  na.omit()
+tduff_litter_num <- as.numeric(tf_fuels$duff_litter) %>%
+  na.omit()
+tdist_crown_num <- as.numeric(tf_fuels$distance_to_crown_ft) %>%
+  na.omit()
+
+# create vector of fine fuels sum
+hr_1 <- sum(thr_1_num)
+hr_10 <- sum(thr_10_num)
+hr_100 <- sum(thr_100_num)
+duff_litter <- sum(tduff_litter_num)
+dist_crown <- sum(tdist_crown_num)
+
+# create data frame for summary of fuels across Thomas Fire
+tf_fuelsummary <- data.frame(
+  category = c("1 hr", "10 hr", "100 hr", "duff/litter"), 
+  value = c(hr_1, hr_10, hr_100, duff_litter)
+)
+
+# fuels summary bar plot
+tf_summaryplot <- ggplot(tf_fuelsummary, aes(x=category, y=value)) + 
+  geom_bar(col = "plum4", fill = "plum4", stat = "identity") +
+  ggtitle("Summary of fuels and distance to crown at Thomas Fire") +
+  labs(y = "Fuel loading (tons/acre)", x = "Fuel category") 
+
+# 1 HR fuels per plot
+tf_1hrplot <- ggplot(tf_fuels, aes(x=plot_id, y=hr_1)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of 1 hour fuels at Thomas Fire") +
+  labs(y = "1 hour fuels (tons/acre)", x = "Plot ID")
+
+# 10 HR fuels per plot
+tf_10hrplot <- ggplot(tf_fuels, aes(x=plot_id, y=hr_10)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of 10 hour fuels at Thomas Fire") +
+  labs(y = "10 hour fuels (tons/acre)", x = "Plot ID")
+
+# 100 HR fuels per plot
+tf_100hrplot <- ggplot(tf_fuels, aes(x=plot_id, y=hr_100)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of 100 hour fuels at Thomas Fire") +
+  labs(y = "100 hour fuels (tons/acre)", x = "Plot ID")
+
+# duff & litter per plot
+tf_dufflitterplot <- ggplot(tf_fuels, aes(x=plot_id, y=duff_litter)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of duff and litter at Thomas Fire") +
+  labs(y = "Duff and litter (tons/acre)", x = "Plot ID")
+
+# distance to crown per plot
+tf_distplot <- ggplot(tf_fuels, aes(x=plot_id, y=distance_to_crown_ft)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of distance to crown (ft) at Thomas Fire")  +
+  labs(y = "Distance to crown (ft)", x = "Plot ID")# missing values --> no data for that plot
+
+# total fuels per plot
+tf_totalfuelsplot <- ggplot(tf_fuels, aes(x=plot_id, y=total)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of total fuels at Thomas Fire") +
+  labs(y = "Total fuels (tons/acre)", x = "Plot ID")
+
+tf_summaryplot
+tf_fineplot
+tf_1hrplot
+tf_10hrplot
+tf_100hrplot
+tf_dufflitterplot
+tf_distplot
+tf_totalfuelsplot
 ```
 

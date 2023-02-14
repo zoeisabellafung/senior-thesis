@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# packages
 ```{r}
 # load required packages
 library(readr)
@@ -23,9 +24,9 @@ library(forcats)
 library(ggthemes)
 ```
 
-## data cleaning 
+# data cleaning 
 
-### pre-fire 
+## pre-fire 
 
 #### laguna mountain
 ```{r}
@@ -263,7 +264,7 @@ TF_coord <- read.csv("data/Nicole/thomas/TF_coord.csv") %>%
   slice(-(1))
 ```
 
-### abundance
+## abundance
 #### laguna mountain
 ```{r}
 # calculation for tree area measurement
@@ -750,7 +751,7 @@ abundance_whole <- rbind(l_abundance, bm_abundance, tf_abundance)
 write.csv(abundance_whole, "data/Nicole/abundance_whole.csv", row.names=FALSE)
 ```
 
-### fuels data
+## fuels data
 ```{r}
 # load in laguna mountain fuels data
 lm_fuels <- read.csv("data/Nicole/laguna/LM_coordinates.csv") %>%
@@ -804,7 +805,7 @@ fuels_whole <- rbind(
 write.csv(fuels_whole, "data/Nicole/fuels_whole.csv", row.names=FALSE)
 ```
 
-### post-fire data
+## post-fire data
 #### laguna mountain post-fire
 ```{r}
 # load in raw post-fire laguna mountain data (2021 & 2022)
@@ -879,7 +880,8 @@ laguna_post <- rbind(
   lm_128_2021_trees, lm_129_2021_trees, lm_130_2021_trees, lm_132_2021_trees, lm_133_2021_trees, lm_134_2021_trees, lm_135_2021_trees, lm_137_2021_trees, lm_138_2021_trees, lm_139_2021_trees, lm_140_2021_trees, lm_141_2021_trees, lm_142_2021_trees, lm_143_2021_trees, lm_144_2021_trees, lm_145_2021_trees, lm_170_2022_trees, lm_171_2022_trees, lm_172_2022_trees, lm_173_2022_trees, lm_175_2022_trees, lm_176_2022_trees, lm_177_2022_trees, lm_179_2022_trees, lm_180_2022_trees, lm_181_2022_trees, lm_195_2022_trees, lm_196_2022_trees, lm_197_2022_trees, lm_198_2022_trees, lm_199_2022_trees, lm_200_2022_trees
 ) %>%
   clean_names() %>%
-  mutate(location = rep("Laguna Mountain", length = 299)) %>%
+  mutate(location = rep("Laguna Mountain", length = 299))
+laguna_post <- laguna_post %>%
   mutate(tree_area = ((pi*(laguna_post$dbh^2)/4)/100)) %>%
   select(location, plot_id, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, species, tree_area)
 ```
@@ -914,7 +916,9 @@ bm_53_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_53_2021_trees.csv") %>%
 bluffmesa_post <- rbind(
   bm_24_2021_trees, bm_25_2021_trees, bm_26_2021_trees, bm_27_2021_trees, bm_33_2021_trees, bm_48_2021_trees, bm_49_2021_trees, bm_50_2021_trees, bm_51_2021_trees, bm_52_2021_trees, bm_53_2021_trees) %>%
   clean_names() %>%
-  mutate(location = rep("Bluff Mesa", length = 54)) %>%
+  mutate(location = rep("Bluff Mesa", length = 54)) 
+
+bluffmesa_post <- bluffmesa_post %>%
   mutate(tree_area = ((pi*(bluffmesa_post$dbh^2)/4)/100)) %>%
   select(location, plot_id, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, species, tree_area)
 
@@ -935,7 +939,7 @@ pre_post_whole <- rbind(
 write.csv(pre_post_whole, "data/Nicole/pre_post_whole.csv", row.names=FALSE)
 ```
 
-### leaf trait data
+## leaf trait data
 #### leaf area
 ```{r}
 # determine the species present in the pre/post fire data
@@ -964,7 +968,7 @@ bluffmesa_plots <- unique(bluffmesa_pre$plot_id) %>% # list all of the plots inc
   as.character()
 ```
 
-### building bar plots
+## leaf trait bar plots
 #### laguna mountain leaf area
 ```{r}
 ### leaf area
@@ -1351,6 +1355,79 @@ ldmc_ABCO <- ldmc %>% # subset leaf length data to only include ABCO
 ## bluff mesa
 bluffmesa_plots # recall all of the plots included in the bluff mesa burn area
 
+```
+
+### fire severity box plots
+#### laguna mountain
+```{r}
+laguna_post <- laguna_post %>%
+  mutate(plot_id = as.character(plot_id))
+
+# char height across plots at laguna
+lm_char_plot <- ggplot(laguna_post, aes(plot_id, char_ht)) +
+  geom_boxplot(fill = "darkseagreen3")
+
+lm_char_plot
+
+# scorch height across plots at laguna
+lm_scorch_plot <- ggplot(laguna_post, aes(plot_id, scorch_ht)) +
+  geom_boxplot(fill = "darkseagreen3")
+
+lm_scorch_plot
+
+# crown scorch percent across plots at laguna
+lm_crscpct_plot <- ggplot(laguna_post, aes(plot_id, cr_sc_pct)) +
+  geom_boxplot(fill = "darkseagreen3")
+
+lm_crscpct_plot
+```
+
+#### bluff mesa
+```{r}
+bluffmesa_post <- bluffmesa_post %>%
+  mutate(plot_id = as.character(plot_id))
+
+# char height across plots at laguna
+bm_char_plot <- ggplot(bluffmesa_post, aes(plot_id, char_ht)) +
+  geom_boxplot(fill = "slateblue")
+
+bm_char_plot
+
+# scorch height across plots at laguna
+bm_scorch_plot <- ggplot(bluffmesa_post, aes(plot_id, scorch_ht)) +
+  geom_boxplot(fill = "slateblue")
+
+bm_scorch_plot
+
+# crown scorch percent across plots at laguna
+bm_crscpct_plot <- ggplot(bluffmesa_post, aes(plot_id, cr_sc_pct)) +
+  geom_boxplot(fill = "slateblue")
+
+bm_crscpct_plot
+```
+
+#### thomas fire
+```{r}
+thomas_post <- thomas_post %>%
+  mutate(plot_id = as.character(plot_id))
+
+# char height across plots at laguna
+tf_char_plot <- ggplot(thomas_post, aes(plot_id, char_ht)) +
+  geom_boxplot(fill = "plum3")
+
+tf_char_plot
+
+# scorch height across plots at laguna
+tf_scorch_plot <- ggplot(thomas_post, aes(plot_id, scorch_ht)) +
+  geom_boxplot(fill = "plum3")
+
+tf_scorch_plot
+
+# crown scorch percent across plots at laguna
+tf_crscpct_plot <- ggplot(thomas_post, aes(plot_id, cr_sc_pct)) +
+  geom_boxplot(fill = "plum3")
+
+tf_crscpct_plot
 ```
 
 ### fuels bar plots

@@ -30,15 +30,6 @@ library(ggthemes)
 
 #### laguna mountain
 ```{r}
-# read in laguna mountain data
-laguna_pre <- read_csv("data/Nicole/LagunaMtn_pre_2016.csv") %>%
-  clean_names() %>% # standardize column names
-  select(project, date, id, treatment, tag_number, status, species, dbh_cm, height_m, heigt_to_crown_m, dbh_ft, basal_area_sq_ft_indiv) %>% # subset data 
-  as.data.frame() %>%
-  rename("height_to_crown_m"="heigt_to_crown_m", "plot_id"="id", "treatment_unit"="treatment")
-laguna_pre <- laguna_pre %>%
-  mutate(tree_area = ((pi*(laguna_pre$dbh_cm^2)/4)/100)) # add column w/ area measurements for each tree
-
 # load in raw pre-fire laguna mountain data (2020)
 
 # setwd("data/Nicole/laguna/lagunamtnpre") 
@@ -114,7 +105,8 @@ laguna_pre <- rbind(
   lm_128, lm_129, lm_130, lm_131, lm_132, lm_133, lm_134, lm_135, lm_137, lm_138, lm_139, lm_140, lm_141, lm_142, lm_143, lm_144, lm_170, lm_171, lm_172, lm_173, lm_175, lm_176, lm_177, lm_179, lm_180, lm_181, lm_195, lm_196, lm_197, lm_198, lm_199, lm_200) %>%
   clean_names() %>%
   select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3) %>%
-  mutate(location = rep("Laguna", rep = 294))
+  mutate(location = rep("Laguna", rep = 294)) %>%
+  mutate(tree_area = ((pi*(dbh^2)/4)/100)) # add column w/ area measurements for each tree
 ```
 
 #### bluff mesa
@@ -148,7 +140,8 @@ bluffmesa_pre <- rbind(
   bm_24_2020_trees, bm_25_2020_trees, bm_26_2020_trees, bm_27_2020_trees, bm_33_2020_trees, bm_48_2020_trees, bm_49_2020_trees, bm_50_2020_trees, bm_51_2020_trees, bm_52_2020_trees, bm_53_2020_trees) %>%
   clean_names() %>%
   select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3) %>%
-  mutate(location = rep("Bluff Mesa", length = 54))
+  mutate(location = rep("Bluff Mesa", length = 54)) %>%
+  mutate(tree_area = ((pi*(dbh^2)/4)/100)) # add column w/ area measurements for each tree
 ```
 
 #### thomas fire
@@ -387,8 +380,6 @@ h_198 <- mean(laguna_pre_PIJE_198$ht)
 h_199 <- mean(laguna_pre_PIJE_199$ht)
 h_200 <- mean(laguna_pre_PIJE_200$ht)
 
-unique(laguna_pre_PIJE_clean$plot_id) # view plots with PIJE in laguna mtn.
-
 # create data frame: project, year, plot_id, & abundance for PIJE
 laguna_pre_PIJE_clean <- data.frame(
   project = rep("Laguna Mtn.", times = length(laguna_pre_PIJE_plots)), 
@@ -504,8 +495,6 @@ h_q_197 <- mean(laguna_pre_QUKE_197$ht)
 h_q_198 <- mean(laguna_pre_QUKE_198$ht)
 h_q_199 <- mean(laguna_pre_QUKE_199$ht)
 h_q_200 <- mean(laguna_pre_QUKE_200$ht)
-
-unique(laguna_pre_QUKE_clean$plot_id)
 
 # create data frame: project, year, plot_id, & abundance for QUKE
 laguna_pre_QUKE_clean <- data.frame(
@@ -969,6 +958,13 @@ bluffmesa_plots <- unique(bluffmesa_pre$plot_id) %>% # list all of the plots inc
 ```
 
 ## leaf trait bar plots
+```{r}
+unique(pre_post_whole$species)
+# species IDs: 42135, 45408, 39, 42168, 45504, 45342, 44566, 55485
+# traits: dispersal syndrome, specific leaf area (undefined petiole), leaf compoundness, leaf length (excluding petiole), leaf N content per leaf dry mass, leaf phenology type, leaf width, photosynthesis pathway, plant growth form, plant height vegetative, plant lifespan, plant N fixation capacity, plant woodiness, species tolerance to drought
+# trait IDs: 28, 3117, 17, 940, 14, 37, 145, 22, 42, 3106, 59, 8, 38, 30
+```
+
 #### laguna mountain leaf area
 ```{r}
 ### leaf area
@@ -1357,27 +1353,35 @@ bluffmesa_plots # recall all of the plots included in the bluff mesa burn area
 
 ```
 
-### fire severity box plots
-#### laguna mountain
+## box plots
+### fire severity
+##### laguna mountain
 ```{r}
 laguna_post <- laguna_post %>%
   mutate(plot_id = as.character(plot_id))
 
 # char height across plots at laguna
-lm_char_plot <- ggplot(laguna_post, aes(plot_id, char_ht)) +
-  geom_boxplot(fill = "darkseagreen3")
+lm_char_plot <- ggplot(laguna_post, aes(x = reorder(plot_id, char_ht, na.rm = TRUE), char_ht)) +
+  geom_boxplot(fill = "darkseagreen3") +
+  ggtitle("Char height across plots at Laguna Mountain") +
+  labs(y = "Char height (ft)", x = "Plot") 
+
 
 lm_char_plot
 
 # scorch height across plots at laguna
-lm_scorch_plot <- ggplot(laguna_post, aes(plot_id, scorch_ht)) +
-  geom_boxplot(fill = "darkseagreen3")
+lm_scorch_plot <- ggplot(laguna_post, aes(x = reorder(plot_id, scorch_ht, na.rm = TRUE), scorch_ht)) +
+  geom_boxplot(fill = "darkseagreen3") +
+  ggtitle("Scorch height across plots at Laguna Mountain") +
+  labs(y = "Scorch height (ft)", x = "Plot") 
 
 lm_scorch_plot
 
 # crown scorch percent across plots at laguna
-lm_crscpct_plot <- ggplot(laguna_post, aes(plot_id, cr_sc_pct)) +
-  geom_boxplot(fill = "darkseagreen3")
+lm_crscpct_plot <- ggplot(laguna_post, aes(x = reorder(plot_id, cr_sc_pct, na.rm = TRUE), cr_sc_pct)) +
+  geom_boxplot(fill = "darkseagreen3") +
+  ggtitle("Crown scorch percent across plots at Laguna Mountain") +
+  labs(y = "Crown scorch percent (%)", x = "Plot") 
 
 lm_crscpct_plot
 ```
@@ -1387,21 +1391,27 @@ lm_crscpct_plot
 bluffmesa_post <- bluffmesa_post %>%
   mutate(plot_id = as.character(plot_id))
 
-# char height across plots at laguna
-bm_char_plot <- ggplot(bluffmesa_post, aes(plot_id, char_ht)) +
-  geom_boxplot(fill = "slateblue")
+# char height across plots at bluff mesa
+bm_char_plot <- ggplot(bluffmesa_post, aes(x = reorder(plot_id, char_ht, na.rm = TRUE), char_ht)) +
+  geom_boxplot(fill = "slateblue") +
+  ggtitle("Char height across plots at Bluff Mesa") +
+  labs(y = "Char height (ft)", x = "Plot") 
 
 bm_char_plot
 
-# scorch height across plots at laguna
-bm_scorch_plot <- ggplot(bluffmesa_post, aes(plot_id, scorch_ht)) +
-  geom_boxplot(fill = "slateblue")
+# scorch height across plots at bluff mesa
+bm_scorch_plot <- ggplot(bluffmesa_post, aes(x = reorder(plot_id, scorch_ht, na.rm = TRUE), scorch_ht)) +
+  geom_boxplot(fill = "slateblue") +
+  ggtitle("Scorch height across plots at Bluff Mesa") +
+  labs(y = "Char height (ft)", x = "Plot") 
 
 bm_scorch_plot
 
-# crown scorch percent across plots at laguna
-bm_crscpct_plot <- ggplot(bluffmesa_post, aes(plot_id, cr_sc_pct)) +
-  geom_boxplot(fill = "slateblue")
+# crown scorch percent across plots at bluff mesa
+bm_crscpct_plot <- ggplot(bluffmesa_post, aes(x = reorder(plot_id, cr_sc_pct, na.rm = TRUE), cr_sc_pct)) +
+  geom_boxplot(fill = "slateblue") +
+  ggtitle("Crown scorch percent across plots at Bluff Mesa") +
+  labs(y = "Crown scorch percent (%)", x = "Plot") 
 
 bm_crscpct_plot
 ```
@@ -1412,25 +1422,31 @@ thomas_post <- thomas_post %>%
   mutate(plot_id = as.character(plot_id))
 
 # char height across plots at laguna
-tf_char_plot <- ggplot(thomas_post, aes(plot_id, char_ht)) +
-  geom_boxplot(fill = "plum3")
+tf_char_plot <- ggplot(thomas_post, aes(x = reorder(plot_id, char_ht, na.rm = TRUE), char_ht)) +
+  geom_boxplot(fill = "plum3") +
+  ggtitle("Char height across plots at Thomas Fire") +
+  labs(y = "Char height (ft)", x = "Plot") 
 
 tf_char_plot
 
 # scorch height across plots at laguna
-tf_scorch_plot <- ggplot(thomas_post, aes(plot_id, scorch_ht)) +
-  geom_boxplot(fill = "plum3")
+tf_scorch_plot <- ggplot(thomas_post, aes(x = reorder(plot_id, scorch_ht, na.rm = TRUE), scorch_ht)) +
+  geom_boxplot(fill = "plum3") +
+  ggtitle("Scorch height across plots at Thomas Fire") +
+  labs(y = "Scorch height (ft)", x = "Plot") 
 
 tf_scorch_plot
 
 # crown scorch percent across plots at laguna
-tf_crscpct_plot <- ggplot(thomas_post, aes(plot_id, cr_sc_pct)) +
-  geom_boxplot(fill = "plum3")
+tf_crscpct_plot <- ggplot(thomas_post, aes(x = reorder(plot_id, cr_sc_pct, na.rm = TRUE), cr_sc_pct)) +
+  geom_boxplot(fill = "plum3") +
+  ggtitle("Crown scorch percent across plots at Thomas Fire") +
+  labs(y = "Crown scorch percent (%)", x = "Plot") 
 
 tf_crscpct_plot
 ```
 
-### fuels bar plots
+### fuels
 #### laguna mountain 
 ```{r}
 # bar plot of fuel distribution in laguna mountain (tons per acre)
@@ -1458,49 +1474,49 @@ lm_fuelsummary <- data.frame(
 )
 
 # fuels summary bar plot
-lm_summaryplot <- ggplot(lm_fuelsummary, aes(x=category, y=value)) + 
+lm_summaryplot <- ggplot(lm_fuelsummary, aes(x=reorder(category, value, na.rm = TRUE), y=value)) + 
   geom_bar(col = "darkseagreen", fill = "darkseagreen", stat = "identity") +
   ggtitle("Summary of fuels and distance to crown at Laguna Mountain") +
   labs(y = "Fuel loading (tons/acre)", x = "Fuel category") 
 
 # fine fuels per plot
-lm_fineplot <- ggplot(lm_fuels, aes(x=plot_id, y=fine_fuels)) + 
+lm_fineplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, fine_fuels, na.rm = TRUE), y=fine_fuels)) + 
   geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
   ggtitle("Distribution of fine fuels at Laguna Mountain") +
   labs(y = "Fine fuels (tons/acre)", x = "Plot ID")
 
 # 1 HR fuels per plot
-lm_1hrplot <- ggplot(lm_fuels, aes(x=plot_id, y=hr_1)) + 
+lm_1hrplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, hr_1, na.rm = TRUE), y=hr_1)) + 
   geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
   ggtitle("Distribution of 1 hour fuels at Laguna Mountain") +
   labs(y = "1 hour fuels (tons/acre)", x = "Plot ID")
 
 # 10 HR fuels per plot
-lm_10hrplot <- ggplot(lm_fuels, aes(x=plot_id, y=hr_10)) + 
+lm_10hrplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, hr_10, na.rm = TRUE), y=hr_10)) + 
   geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
   ggtitle("Distribution of 10 hour fuels at Laguna Mountain") +
   labs(y = "10 hour fuels (tons/acre)", x = "Plot ID")
 
 # 100 HR fuels per plot
-lm_100hrplot <- ggplot(lm_fuels, aes(x=plot_id, y=hr_100)) + 
+lm_100hrplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, hr_100, na.rm = TRUE), y=hr_100)) + 
   geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
   ggtitle("Distribution of 100 hour fuels at Laguna Mountain") +
   labs(y = "100 hour fuels (tons/acre)", x = "Plot ID")
 
 # duff & litter per plot
-lm_dufflitterplot <- ggplot(lm_fuels, aes(x=plot_id, y=duff_litter)) + 
+lm_dufflitterplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, duff_litter, na.rm =  TRUE), y=duff_litter)) + 
   geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
   ggtitle("Distribution of duff and litter at Laguna Mountain") +
   labs(y = "Duff and litter (tons/acre)", x = "Plot ID")
 
 # distance to crown per plot
-lm_distplot <- ggplot(lm_fuels, aes(x=plot_id, y=distance_to_crown_ft)) + 
+lm_distplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, distance_to_crown_ft, na.rm = TRUE), y=distance_to_crown_ft)) + 
   geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
   ggtitle("Distribution of distance to crown (ft) at Laguna Mountain")  +
   labs(y = "Distance to crown (ft)", x = "Plot ID")# missing values --> no data for that plot
 
 # total fuels per plot
-lm_totalfuelsplot <- ggplot(lm_fuels, aes(x=plot_id, y=total)) + 
+lm_totalfuelsplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, total, na.rm = TRUE), y=total)) + 
   geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
   ggtitle("Distribution of total fuels at Laguna Mountain") +
   labs(y = "Total fuels (tons/acre)", x = "Plot ID")
@@ -1527,62 +1543,70 @@ bdist_crown_num <- as.numeric(bm_fuels$distance_to_crown_ft) %>%
   na.omit()
 
 # create vector of fine fuels sum
-hr_1 <- sum(bhr_1_num)
-hr_10 <- sum(bhr_10_num)
-hr_100 <- sum(bhr_100_num)
-duff_litter <- sum(bduff_litter_num)
-dist_crown <- sum(bdist_crown_num)
+bhr_1 <- sum(bhr_1_num)
+bhr_10 <- sum(bhr_10_num)
+bhr_100 <- sum(bhr_100_num)
+bduff_litter <- sum(bduff_litter_num)
+bdist_crown <- sum(bdist_crown_num)
 
 # create data frame for summary of fuels across bluff mesa
 bm_fuelsummary <- data.frame(
   category = c("1 hr", "10 hr", "100 hr", "duff/litter"), 
-  value = c(hr_1, hr_10, hr_100, duff_litter)
+  value = c(bhr_1, bhr_10, bhr_100, bduff_litter)
 )
 
+# make all y-values numeric rather than characters
+bm_fuels <- bm_fuels %>%
+  mutate(hr_1 = as.numeric(hr_1)) %>%
+  mutate(hr_10 = as.numeric(hr_10)) %>%
+  mutate(hr_100 = as.numeric(hr_100)) %>%
+  mutate(duff_litter = as.numeric(duff_litter)) %>%
+  mutate(distance_to_crown_ft = as.numeric(distance_to_crown_ft)) %>%
+  mutate(total = as.numeric(total))
+
 # fuels summary bar plot
-bm_summaryplot <- ggplot(bm_fuelsummary, aes(x=category, y=value)) + 
+bm_summaryplot <- ggplot(bm_fuelsummary, aes(x=reorder(category, value, na.rm = TRUE), y=value)) + 
   geom_bar(col = "darkslateblue", fill = "darkslateblue", stat = "identity") +
   ggtitle("Summary of fuels and distance to crown at Bluff Mesa") +
   labs(y = "Fuel loading (tons/acre)", x = "Fuel category") 
 
 # 1 HR fuels per plot
-bm_1hrplot <- ggplot(bm_fuels, aes(x=plot_id, y=hr_1)) + 
+bm_1hrplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, hr_1, na.rm = TRUE), y=hr_1)) + 
   geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
   ggtitle("Distribution of 1 hour fuels at Bluff Mesa") +
   labs(y = "1 hour fuels (tons/acre)", x = "Plot ID")
 
 # 10 HR fuels per plot
-bm_10hrplot <- ggplot(bm_fuels, aes(x=plot_id, y=hr_10)) + 
+bm_10hrplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, hr_10, na.rm = TRUE), y=hr_10)) + 
   geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
   ggtitle("Distribution of 10 hour fuels at Bluff Mesa") +
   labs(y = "10 hour fuels (tons/acre)", x = "Plot ID")
 
 # 100 HR fuels per plot
-bm_100hrplot <- ggplot(bm_fuels, aes(x=plot_id, y=hr_100)) + 
+bm_100hrplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, hr_100, na.rm = TRUE), y=hr_100)) + 
   geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
   ggtitle("Distribution of 100 hour fuels at Bluff Mesa") +
   labs(y = "100 hour fuels (tons/acre)", x = "Plot ID")
 
 # duff & litter per plot
-bm_dufflitterplot <- ggplot(bm_fuels, aes(x=plot_id, y=duff_litter)) + 
+bm_dufflitterplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, duff_litter, na.rm = TRUE), y=duff_litter)) + 
   geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
   ggtitle("Distribution of duff and litter at Bluff Mesa") +
   labs(y = "Duff and litter (tons/acre)", x = "Plot ID")
 
 # distance to crown per plot
-bm_distplot <- ggplot(bm_fuels, aes(x=plot_id, y=distance_to_crown_ft)) + 
+bm_distplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, distance_to_crown_ft, na.rm = TRUE), y=distance_to_crown_ft)) + 
   geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
   ggtitle("Distribution of distance to crown (ft) at Bluff Mesa")  +
   labs(y = "Distance to crown (ft)", x = "Plot ID")# missing values --> no data for that plot
 
 # total fuels per plot
-bm_totalfuelsplot <- ggplot(bm_fuels, aes(x=plot_id, y=total)) + 
+bm_totalfuelsplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, total, na.rm = TRUE), y=total)) + 
   geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
   ggtitle("Distribution of total fuels at Bluff Mesa") +
   labs(y = "Total fuels (tons/acre)", x = "Plot ID")
 
 bm_summaryplot
-bm_fineplot
 bm_1hrplot
 bm_10hrplot
 bm_100hrplot
@@ -1619,50 +1643,58 @@ tf_fuelsummary <- data.frame(
   value = c(hr_1, hr_10, hr_100, duff_litter)
 )
 
+# make all y-values numeric rather than characters
+tf_fuels <- tf_fuels %>%
+  mutate(hr_1 = as.numeric(hr_1)) %>%
+  mutate(hr_10 = as.numeric(hr_10)) %>%
+  mutate(hr_100 = as.numeric(hr_100)) %>%
+  mutate(duff_litter = as.numeric(duff_litter)) %>%
+  mutate(distance_to_crown_ft = as.numeric(distance_to_crown_ft)) %>%
+  mutate(total = as.numeric(total))
+
 # fuels summary bar plot
-tf_summaryplot <- ggplot(tf_fuelsummary, aes(x=category, y=value)) + 
+tf_summaryplot <- ggplot(tf_fuelsummary, aes(x=reorder(category, value, na.rm = TRUE), y=value)) + 
   geom_bar(col = "plum4", fill = "plum4", stat = "identity") +
   ggtitle("Summary of fuels and distance to crown at Thomas Fire") +
   labs(y = "Fuel loading (tons/acre)", x = "Fuel category") 
 
 # 1 HR fuels per plot
-tf_1hrplot <- ggplot(tf_fuels, aes(x=plot_id, y=hr_1)) + 
+tf_1hrplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, hr_1, na.rm = TRUE), y=hr_1)) + 
   geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
   ggtitle("Distribution of 1 hour fuels at Thomas Fire") +
   labs(y = "1 hour fuels (tons/acre)", x = "Plot ID")
 
 # 10 HR fuels per plot
-tf_10hrplot <- ggplot(tf_fuels, aes(x=plot_id, y=hr_10)) + 
+tf_10hrplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, hr_10, na.rm = TRUE), y=hr_10)) + 
   geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
   ggtitle("Distribution of 10 hour fuels at Thomas Fire") +
   labs(y = "10 hour fuels (tons/acre)", x = "Plot ID")
 
 # 100 HR fuels per plot
-tf_100hrplot <- ggplot(tf_fuels, aes(x=plot_id, y=hr_100)) + 
+tf_100hrplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, hr_100, na.rm = TRUE), y=hr_100)) + 
   geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
   ggtitle("Distribution of 100 hour fuels at Thomas Fire") +
   labs(y = "100 hour fuels (tons/acre)", x = "Plot ID")
 
 # duff & litter per plot
-tf_dufflitterplot <- ggplot(tf_fuels, aes(x=plot_id, y=duff_litter)) + 
+tf_dufflitterplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, duff_litter, na.rm = TRUE), y=duff_litter)) + 
   geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
   ggtitle("Distribution of duff and litter at Thomas Fire") +
   labs(y = "Duff and litter (tons/acre)", x = "Plot ID")
 
 # distance to crown per plot
-tf_distplot <- ggplot(tf_fuels, aes(x=plot_id, y=distance_to_crown_ft)) + 
+tf_distplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, distance_to_crown_ft, na.rm = TRUE), y=distance_to_crown_ft)) + 
   geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
   ggtitle("Distribution of distance to crown (ft) at Thomas Fire")  +
   labs(y = "Distance to crown (ft)", x = "Plot ID")# missing values --> no data for that plot
 
 # total fuels per plot
-tf_totalfuelsplot <- ggplot(tf_fuels, aes(x=plot_id, y=total)) + 
+tf_totalfuelsplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, total, na.rm = TRUE), y=total)) + 
   geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
   ggtitle("Distribution of total fuels at Thomas Fire") +
   labs(y = "Total fuels (tons/acre)", x = "Plot ID")
 
 tf_summaryplot
-tf_fineplot
 tf_1hrplot
 tf_10hrplot
 tf_100hrplot

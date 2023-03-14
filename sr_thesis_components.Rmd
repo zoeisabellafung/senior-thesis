@@ -232,31 +232,6 @@ prefire_whole <- rbind(
   mutate(category = rep("pre", length = 348))
 ```
 
-#### coordinate data
-```{r}
-# laguna mtn coordinates
-LM_coord <- read.csv("data/Nicole/laguna/LM_coordinates.csv") %>%
-  clean_names() %>%
-  select(site_year, plot_id, easting, northing) %>%
-  filter(plot_id > 127) %>%
-  filter(!duplicated(plot_id))
-
-# bluff mesa coordinates
-BM_coord <- read.csv("data/Nicole/bluffmesa/BM_coordinates.csv") %>%
-  clean_names() %>%
-  select(site_year, plot_id, easting, northing) %>%
-  filter(plot_id > 23) %>%
-  filter(plot_id < 54) %>%
-  slice(-(1:3)) %>%
-  filter(!duplicated(plot_id))
-
-# thomas fire coordinates
-TF_coord <- read.csv("data/Nicole/thomas/TF_coord.csv") %>%
-  clean_names() %>%
-  select(site_year, plot_id, easting, northing) %>%
-  slice(-(1))
-```
-
 ## abundance
 #### laguna mountain
 ```{r}
@@ -733,8 +708,15 @@ tf_abundance <- rbind(thomas_post_PIPO_clean, thomas_post_PSMA_clean, thomas_pos
 
 #### combine all abundance data
 ```{r}
-abundance_whole <- rbind(l_abundance, bm_abundance, tf_abundance)
-# note: BM 26 ABCO = NA b/c no dbh data recorded
+# load in x & y coords
+coord <- read_csv("data/Nicole/zoe_transect_coordinates.csv") %>%
+  clean_names()
+
+# combine abundance across all three plots
+abundance_whole <- rbind(l_abundance, bm_abundance, tf_abundance) %>%
+  mutate(x_long = coord$x_long) %>%
+  mutate(y_long = coord$y_lat)
+  # note: BM 26 ABCO = NA b/c no dbh data recorded
 
 # export to csv
 write.csv(abundance_whole, "data/Nicole/abundance_whole.csv", row.names=FALSE)
@@ -770,7 +752,7 @@ bm_fuels <- read.csv("data/Nicole/bluffmesa/BM_coordinates.csv") %>%
   mutate(fine_fuels = rep("NA", length = 40)) %>%
   mutate(duff = rep("NA", length = 40)) %>%
   mutate(litter = rep("NA", length = 40)) %>%
-  mutate(litter = na_if(litter, "NA"), duff = na_if(duff, "NA"), fine_fuels = na_if(fine_fuels, "NA"))
+  mutate(litter = na_if(litter, "NA"), duff = na_if(duff, "n/a"), fine_fuels = na_if(fine_fuels, "NA"))
 
 # load in thomas fire fuels data
 tf_fuels <- read.csv("data/Nicole/thomas/TF_coord.csv") %>%
@@ -781,8 +763,7 @@ tf_fuels <- read.csv("data/Nicole/thomas/TF_coord.csv") %>%
   mutate(fine_fuels = rep("NA", length = 15)) %>%
   mutate(duff = rep("NA", length = 15)) %>%
   mutate(litter = rep("NA", length = 15)) %>%
-  na_if("NA") %>%
-  na_if("n/a")
+  mutate(hr_1 = na_if(hr_1, "n/a"), hr_10 = na_if(hr_10, "n/a"), hr_100 = na_if(hr_100, "n/a"), cwd = na_if(cwd, "n/a"), total = na_if(total, "n/a"), duff_litter = na_if(duff_litter, "n/a"), fuel = na_if(fuel, "n/a"))
 
 fuels_whole <- rbind(
   lm_fuels, bm_fuels, tf_fuels
@@ -793,7 +774,7 @@ write.csv(fuels_whole, "data/Nicole/fuels_whole.csv", row.names=FALSE)
 ```
 
 ## post-fire data
-#### laguna mountain post-fire
+### laguna mountain post-fire
 ```{r}
 # load in raw post-fire laguna mountain data (2021 & 2022)
 lm_128_2021_trees <- read.csv("data/Nicole/laguna/lagunamtn-post/LM_128_2021_trees.csv") %>%
@@ -873,7 +854,7 @@ laguna_post <- laguna_post %>%
   select(location, plot_id, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, species, tree_area)
 ```
 
-#### bluff mesa post-fire
+### bluff mesa post-fire
 ```{r}
 # load in raw post-fire bluff mesa data (2021)
 bm_24_2021_trees <- read.csv("data/Nicole/bluffmesa/BM_24_2021_trees.csv") %>%
@@ -956,34 +937,6 @@ glopnet_umca <- glopnet %>%
   filter(species == "Umbellularia californica")
 ```
 
-#### leaf area
-```{r}
-# determine the species present in the pre/post fire data
-laguna_species <- unique(laguna_pre$species) # create list of all species present in laguna fire data
-bluffmesa_species <- unique(bluffmesa_pre$species) # create list of all species present in bluff mesa fire data
- 
-# read in data from TRY database
-leaf_area <- read.csv("data/Veg-data/leaf_area.csv") %>%
-  clean_names() %>%
-  select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value) %>%
-  slice_head(n = 65)
-
-# calculate community weighted mean (trait value x species abundance)
-## laguna mountain
-laguna_plots <- unique(laguna_pre$plot_id) %>% # list all of the plots included in the laguna mountain burn area
-  as.character()
-leaf_area_QUCH <- leaf_area %>% # subset leaf area data to only include QUCH
-  filter(leaf_area$species_name == "Quercus chapmanii")
-leaf_area_QUKE <- leaf_area %>% # subset leaf area data to only include QUKE
-  filter(leaf_area$species_name == "Quercus keloggii")
-leaf_area_ABCO <- leaf_area %>% # subset leaf area data to only include ABCO
-  filter(leaf_area$species_name == "Abies concolor")
-
-## bluff mesa
-bluffmesa_plots <- unique(bluffmesa_pre$plot_id) %>% # list all of the plots included in the bluff mesa burn area
-  as.character()
-```
-
 ## leaf trait bar plots
 ```{r}
 unique(pre_post_whole$species)
@@ -992,102 +945,6 @@ unique(pre_post_whole$species)
 # trait IDs: 28, 3117, 17, 940, 14, 37, 145, 22, 42, 3106, 59, 8, 38, 30
 # final traits: 3117, 17, 940, 145, 3106
 ```
-### leaf area (old)
-#### laguna mountain
-```{r}
-### leaf area
-## laguna mountain
-# calculate QUCH mean leaf area
-QUCH_leaf_area <- (15.76 + 14.76 + 28.2 + 18.57 + 14.29 + 21.47 + 24.14 + 17 + 9.53 + 15.16 + 12.17 + 14.22 + 12.45 + 21.74 + 20.46 + 18.23 +12.71 + 29.86 + 22.27 + 17.11 + 15.23 + 11.67 + 17.02 + 16.09 + 12.36 + 12.5 + 20.97 + 18.67 + 21.87 + 18.84 + 18.44 + 14.72 + 14.64 + 17.83 + 11.87 + 21.58 + 12.54 + 15.76 + 15.76 + 21.3747)/40 # cm^2
-
-QUKE_leaf_area <- 40.89 # cm&2
-
-laguna_80 <-  (QUCH_leaf_area*0.02188190)+(QUKE_leaf_area*0.127896664) # NOTE: doesn't account for PIJE species present in plot 80; no leaf area data for PIJE
-laguna_81 <- (QUCH_leaf_area*0.137503524)+(QUKE_leaf_area*0.132905083) # NOTE: missing PIJE data
-laguna_82 <- (QUCH_leaf_area*0.036714895)+(QUKE_leaf_area*0.204246613) # NOTE: missing PIJE data
-laguna_83 <- (QUCH_leaf_area*0.030720348)+(QUKE_leaf_area*0.282228933) # NOTE: missing PIJE data
-laguna_85 <- (QUKE_leaf_area*0.104909155) # NOTE: missing PIJE data
-laguna_86 <- (QUKE_leaf_area*0.084400697) # NOTE: missing PIJE data
-laguna_87 <- (QUCH_leaf_area*0.013481479)+(QUKE_leaf_area*0.060271165) # NOTE: missing PIJE data
-laguna_88 <- (QUKE_leaf_area*0.210908254) # NOTE: missing PIJE data
-laguna_89 <- "NA" # NOTE: missing PIJE and PICO data
-laguna_90 <- "NA" # NOTE: nissing PIJE and PICO data
-laguna_91 <- (QUKE_leaf_area*0.043702522) # NOTE: missing PIJE and PICO data
-laguna_92 <- (QUKE_leaf_area*0.049942439) # NOTE: missing PIJE data
-laguna_93 <- (QUKE_leaf_area*0.077707730) # NOTE: missing PIJE data
-laguna_95 <- (QUKE_leaf_area*0.203380257) 
-laguna_97 <- (QUKE_leaf_area*0.052624520) # NOTE: missing PIJE data
-laguna_98 <- (QUKE_leaf_area*0.282672096) # NOTE: missing PIJE data
-laguna_99 <- (QUKE_leaf_area*0.005792153) # NOTE: missing PIJE data
-laguna_105 <- (QUKE_leaf_area*0.032854765) # NOTE: missing PIJE data
-laguna_106 <- "NA" # NOTE: missing PIJE data
-laguna_107 <- "NA" # NOTE: missing PIJE data
-laguna_108 <- (QUKE_leaf_area*0.066777547) # NOTE: missing PIJE data
-laguna_109 <- (QUKE_leaf_area*0.163879317) # NOTE: missing PIJE data
-laguna_110 <- (QUCH_leaf_area*0.018574086) # NOTE: missing PIJE data
-laguna_111 <- (QUKE_leaf_area*0.111012804) # NOTE: missing PIJE & PICO data
-laguna_112 <- (QUKE_leaf_area*0.346895411) # NOTE: missing PIJE & PICO data
-laguna_113 <- (QUKE_leaf_area*0.228543739) # NOTE: missing PIJE & PICO data
-laguna_114 <- (QUKE_leaf_area*0.098418239) 
-laguna_115 <- (QUKE_leaf_area*0.168117903)
-
-# community weighted mean vector
-cwm_la_laguna <- c(laguna_80, laguna_81, laguna_82, laguna_83, laguna_85, laguna_86, laguna_87, laguna_88, laguna_89, laguna_90, laguna_91, laguna_92, laguna_93, laguna_95, laguna_97, laguna_98, laguna_99, laguna_105, laguna_106, laguna_107, laguna_108, laguna_109, laguna_110, laguna_111, laguna_112, laguna_113, laguna_114, laguna_115) %>%
-  as.numeric()
-
-# data frame w/ plot ID & community weighted mean
-laguna_leaf_area <- data.frame(laguna_plots, cwm_la_laguna)
-
-# bar plot of plot x community weighted means
-laguna_la_box <-ggplot(laguna_leaf_area, aes(laguna_plots, cwm_la_laguna)) + 
-  geom_col(fill = "darkseagreen") +
-  xlab("Plot number") +
-  ylab("Community weighted mean (cm^2)") +
-  theme_bw() 
-
-# laguna_leaf_area %>% mutate(laguna_plots = fct_relevel(laguna_plots, "80", "81", "82", "83", "85", "86", "87", "88", "89", "90", "91", "92", "93", "95", "97", "98", "99", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115")) %>%
-
-laguna_la_box
-```
-
-#### bluff mesa 
-```{r}
-## bluff mesa
-# calculate ABCO mean leaf area
-ABCO_leaf_area <- (2.38 + 2.34 + 1.9 + 1.88 + 1.62 + 1.59 + 1.39 + 1.21 + 0.96 + 0.91 + 0.68 + 0.56 + 0.55 + 0.53 + 0.43 + 0.34 + 0.26 + 0.18 + 0.18 + 0.12 + 0.5)/21 # cm^2
-
-bluffmesa_24 <- (ABCO_leaf_area*0.03388088) # NOTE: missing PIJE data
-bluffmesa_25 <- "NA" # NOTE: missing PIJE data
-bluffmesa_26 <- "NA" # NOTE: missing PIJE and ABCO data
-bluffmesa_27 <- "NA" # NOTE: missing PILA data
-bluffmesa_33 <- (ABCO_leaf_area*0.12813866) # NOTE: missing PIJE data
-bluffmesa_48 <- (ABCO_leaf_area*0.14274096) 
-bluffmesa_49 <- (ABCO_leaf_area*0.88398739) # NOTE: missing PIJE data
-bluffmesa_50 <- "NA" # NOTE: missing PIJE data
-bluffmesa_51 <- "NA" # NOTE: missing PIJE data
-bluffmesa_52 <- (ABCO_leaf_area*0.03291174) # NOTE: missing PIJE data
-bluffmesa_53 <- "NA" # NOTE: missing PIJE data
-
-# community weighted mean vector
-cwm_la_bm <- c(bluffmesa_24, bluffmesa_25, bluffmesa_26, bluffmesa_27, bluffmesa_33, bluffmesa_48, bluffmesa_49, bluffmesa_50, bluffmesa_51, bluffmesa_52, bluffmesa_53) %>%
-  as.numeric()
-
-# data frame w/ plot ID & community weighted mean
-bluffmesa_leaf_area <- data.frame(bluffmesa_plots, cwm_la_bm)
-
-# bar plot of plot x community weighted means
-bluffmesa_la_box <-ggplot(bluffmesa_leaf_area, aes(bluffmesa_plots, cwm_la_bm)) + 
-  geom_col(fill = "thistle3") +
-  xlab("Plot number") +
-  ylab("Community weighted mean (cm^2)") +
-  ggtitle("Average leaf area at Bluff Mesa") +
-  theme_hc(style = "darkunica") +
-  scale_colour_hc("darkunica")
-
-bluffmesa_la_box
-
-```
-
 ### specific leaf area (DONE)
 ```{r}
 # read in data from TRY database
@@ -1189,70 +1046,70 @@ thomas_sla_box
 
 ### leaf compoundness (IN PROGRESS)
 ```{r}
-# read in data from TRY database
-try_compound <- read_csv("data/Traits/try-compound.csv") %>%
-  clean_names() %>%
-  select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value, unit_name) %>%
-  filter(trait_id==c("17")) %>% # only include rows with compoundness measurements (exclude rows w/ other data measurements)
-  mutate(species_name = str_replace(species_name, "Quercus chapmanni", "Quercus chapmanii")) %>%
-  mutate(species_name = str_replace(species_name, "Quercus wislizeni", "Quercus wislizenii")) %>%
-  mutate(species_name = str_replace(species_name, "Quercus keloggii", "Quercus kelloggii")) %>%
-  mutate(std_value = as.numeric(orig_value_str))
-
-unique(try_compound$species_name) # determine the species included in the compoundness data
-
-# calculate mean value of SLA for each species
-mean_try_sla <- try_sla %>%
-  group_by(species_name) %>%
-  summarise(mean_ll = mean(std_value)) %>%
-  mutate(unit = rep("mm2/mg", length = 6))
-
-# calculate community weighted mean (trait value x species abundance)
-## laguna mountain
-laguna_sla_pije <- l_abundance %>%
-  filter(species == "PIJE") %>%
-  mutate(sla_cwm = abundance*3.182446)
-
-laguna_sla_quke <- l_abundance %>%
-  filter(species == "QUKE") %>%
-  mutate(sla_cwm = abundance*9.012142)
-
-laguna_sla_cwm <- c(laguna_sla_pije$sla_cwm, laguna_sla_quke$sla_cwm)
-
-l_abundance <- l_abundance %>%
-  mutate(sla_cwm = laguna_sla_cwm) %>%
-  mutate(plot_id = as.character(plot_id))
-
-## bluff mesa
-bm_sla_pije <- bm_abundance %>%
-  filter(species == "PIJE") %>%
-  mutate(sla_cwm = abundance*3.182446)
-
-bm_sla_abco <- bm_abundance %>%
-  filter(species == "ABCO") %>%
-  mutate(sla_cwm = abundance*5.709716)
-
-bm_sla_cwm <- c(bm_sla_pije$sla_cwm, bm_sla_abco$sla_cwm)
-
-bm_abundance <- bm_abundance %>%
-  mutate(sla_cwm = bm_sla_cwm) %>%
-  mutate(plot_id = as.character(plot_id))
-
-## thomas fire
-tf_sla_pipo <- tf_abundance %>%
-  filter(species == "PIPO") %>%
-  mutate(sla_cwm = abundance*4.897218)
-
-tf_sla_quch <- tf_abundance %>%
-  filter(species == "QUCH") %>%
-  mutate(sla_cwm = abundance*8.862914)
-
-tf_sla_cwm <- c(tf_sla_pipo$sla_cwm, tf_sla_quch$sla_cwm)
-
-tf_abundance <- tf_abundance %>%
-  filter(species == "PIPO" | species == "QUCH") %>%
-  mutate(sla_cwm = tf_sla_cwm) %>%
-  mutate(plot_id = as.character(plot_id))
+# # read in data from TRY database
+# try_compound <- read_csv("data/Traits/try-compound.csv") %>%
+#   clean_names() %>%
+#   select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value, unit_name) %>%
+#   filter(trait_id==c("17")) %>% # only include rows with compoundness measurements (exclude rows w/ other data measurements)
+#   mutate(species_name = str_replace(species_name, "Quercus chapmanni", "Quercus chapmanii")) %>%
+#   mutate(species_name = str_replace(species_name, "Quercus wislizeni", "Quercus wislizenii")) %>%
+#   mutate(species_name = str_replace(species_name, "Quercus keloggii", "Quercus kelloggii")) %>%
+#   mutate(std_value = as.numeric(orig_value_str))
+# 
+# unique(try_compound$species_name) # determine the species included in the compoundness data
+# 
+# # calculate mean value of SLA for each species
+# mean_try_sla <- try_sla %>%
+#   group_by(species_name) %>%
+#   summarise(mean_ll = mean(std_value)) %>%
+#   mutate(unit = rep("mm2/mg", length = 6))
+# 
+# # calculate community weighted mean (trait value x species abundance)
+# ## laguna mountain
+# laguna_sla_pije <- l_abundance %>%
+#   filter(species == "PIJE") %>%
+#   mutate(sla_cwm = abundance*3.182446)
+# 
+# laguna_sla_quke <- l_abundance %>%
+#   filter(species == "QUKE") %>%
+#   mutate(sla_cwm = abundance*9.012142)
+# 
+# laguna_sla_cwm <- c(laguna_sla_pije$sla_cwm, laguna_sla_quke$sla_cwm)
+# 
+# l_abundance <- l_abundance %>%
+#   mutate(sla_cwm = laguna_sla_cwm) %>%
+#   mutate(plot_id = as.character(plot_id))
+# 
+# ## bluff mesa
+# bm_sla_pije <- bm_abundance %>%
+#   filter(species == "PIJE") %>%
+#   mutate(sla_cwm = abundance*3.182446)
+# 
+# bm_sla_abco <- bm_abundance %>%
+#   filter(species == "ABCO") %>%
+#   mutate(sla_cwm = abundance*5.709716)
+# 
+# bm_sla_cwm <- c(bm_sla_pije$sla_cwm, bm_sla_abco$sla_cwm)
+# 
+# bm_abundance <- bm_abundance %>%
+#   mutate(sla_cwm = bm_sla_cwm) %>%
+#   mutate(plot_id = as.character(plot_id))
+# 
+# ## thomas fire
+# tf_sla_pipo <- tf_abundance %>%
+#   filter(species == "PIPO") %>%
+#   mutate(sla_cwm = abundance*4.897218)
+# 
+# tf_sla_quch <- tf_abundance %>%
+#   filter(species == "QUCH") %>%
+#   mutate(sla_cwm = abundance*8.862914)
+# 
+# tf_sla_cwm <- c(tf_sla_pipo$sla_cwm, tf_sla_quch$sla_cwm)
+# 
+# tf_abundance <- tf_abundance %>%
+#   filter(species == "PIPO" | species == "QUCH") %>%
+#   mutate(sla_cwm = tf_sla_cwm) %>%
+#   mutate(plot_id = as.character(plot_id))
 ```
 
 ### leaf length (DONE)
@@ -1349,28 +1206,6 @@ thomas_ll_box <-ggplot(tf_abundance, aes(x = reorder(plot_id, ll_cwm), y = ll_cw
   theme_bw() 
 
 thomas_ll_box
-```
-
-### leaf dry matter content (old)
-```{r}
-# read in data from TRY database 
-ldmc <- read.csv("data/Veg-data/ldmc.csv") %>%
-  clean_names() %>%
-  select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value, unit_name) %>% 
-  filter(trait_id==c("47")) # only include rows with leaf length measurements (exclude rows w/ other data measurements)
-
-unique(ldmc$species_name) # determine the species included in the LDMC data
-
-# calculate community weighted mean (trait value x species abundance)
-## laguna mountain
-laguna_plots # recall all of the plots included in the laguna mountain burn area
-
-ldmc_ABCO <- ldmc %>% # subset leaf length data to only include ABCO
-  filter(ldmc$species_name == "Abies concolor")
-
-## bluff mesa
-bluffmesa_plots # recall all of the plots included in the bluff mesa burn area
-
 ```
 
 ### leaf width (DONE)
@@ -1572,6 +1407,7 @@ thomas_height_box <-ggplot(tf_abundance, aes(x = reorder(plot_id, height_cwm), y
 
 thomas_height_box
 ``` 
+
 ### leaf curling (DONE)
 ```{r}
 # calculate community weighted mean (trait value x species abundance)

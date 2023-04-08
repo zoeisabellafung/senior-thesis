@@ -1211,7 +1211,7 @@ laguna_curl_quke <- l_abundance %>%
   filter(species == "QUKE") %>%
   mutate(curl_wtd = abundance*33.83)
 
-laguna_curl_wtd <- c(laguna_curl_pije$width_wtd, laguna_curl_quke$width_wtd)
+laguna_curl_wtd <- c(laguna_curl_pije$curl_wtd, laguna_curl_quke$curl_wtd)
 
 l_abundance <- l_abundance %>%
   mutate(curl_wtd = laguna_curl_wtd) %>%
@@ -1847,19 +1847,385 @@ scatterdata <- postfire_whole %>%
     "52" ~ "4.793937",
     "53" ~ "3.182446"
   )) %>%
-  mutate(sla_cwm = as.numeric(sla_cwm))
+  mutate(sla_cwm = as.numeric(sla_cwm)) %>%
+  mutate(ll_cwm = case_match(
+    plot_id,
+    "128" ~ "18.15473",
+    "129" ~ "16.13438",
+    "130" ~ "18.93515",
+    "132" ~ "19.66667",
+    "133" ~ "17.47778",
+    "134" ~ "18.22670",
+    "135" ~ "16.60761",
+    "137" ~ "18.28958",
+    "138" ~ "14.18818",
+    "139" ~ "18.45063",
+    "140" ~ "19.66667", 
+    "141" ~ "19.66667",
+    "142" ~ "15.57524",
+    "143" ~ "17.71075",
+    "144" ~ "16.93975",
+    "145" ~ "NA", 
+    "170" ~ "16.43702",
+    "171" ~ "13.20260",
+    "172" ~ "14.79277",
+    "173" ~ "13.43556",
+    "175" ~ "13.19363",
+    "176" ~ "13.69312",
+    "177" ~ "13.75375",
+    "179" ~ "13.60313",
+    "180" ~ "13.79394",
+    "181" ~ "14.21628",
+    "195" ~ "13.31431",
+    "196" ~ "13.00000",
+    "197" ~ "17.69636",
+    "198" ~ "15.99424",
+    "199" ~ "13.52306",
+    "200" ~ "13.04333",
+    "24" ~ "18.172074",
+    "25" ~ "19.666667",
+    "26" ~ "NA",
+    "27" ~ "19.666667",
+    "33" ~ "14.767674",
+    "48" ~ "3.000000",
+    "49" ~ "4.921254",
+    "50" ~ "19.666667",
+    "51" ~ "19.666667",
+    "52" ~ "9.039318",
+    "53" ~ "19.666667"
+  )) %>%
+  mutate(ll_cwm = as.numeric(ll_cwm)) %>%
+  mutate(width_cwm = case_match(
+    plot_id,
+    "128" ~ "2.176432",
+    "129" ~ "4.850870",
+    "130" ~ "1.143340",
+    "132" ~ "0.175000",
+    "133" ~ "3.072545",
+    "134" ~ "2.081162",
+    "135" ~ "4.224431",
+    "137" ~ "1.997919",
+    "138" ~ "7.427145",
+    "139" ~ "1.784735",
+    "140" ~ "0.175000", 
+    "141" ~ "0.175000",
+    "142" ~ "5.591025",
+    "143" ~ "2.764144",
+    "144" ~ "3.784761",
+    "145" ~ "NA", 
+    "170" ~ "4.450242",
+    "171" ~ "8.731809",
+    "172" ~ "6.626821",
+    "173" ~ "8.423429",
+    "175" ~ "8.743687",
+    "176" ~ "8.082477",
+    "177" ~ "8.002217",
+    "179" ~ "8.201605",
+    "180" ~ "7.949028",
+    "181" ~ "7.389947",
+    "195" ~ "8.583935",
+    "196" ~ "9.000000",
+    "197" ~ "2.783191",
+    "198" ~ "5.036378",
+    "199" ~ "8.307593",
+    "200" ~ "8.942646",
+    "24" ~ "0.1779267",
+    "25" ~ "0.1750000",
+    "26" ~ "NA",
+    "27" ~ "0.1750000",
+    "33" ~ "0.1845931",
+    "48" ~ "0.2076364",
+    "49" ~ "0.2038742",
+    "50" ~ "0.1750000",
+    "51" ~ "0.1750000",
+    "52" ~ "0.1958103",
+    "53" ~ "0.1750000"
+  )) %>%
+  mutate(width_cwm = as.numeric(width_cwm)) %>%
+  mutate(height_cwm = case_match(
+    plot_id,
+    "128" ~ "45.00444",
+    "129" ~ "38.06834",
+    "130" ~ "47.68374",
+    "132" ~ "50.19511",
+    "133" ~ "42.68039",
+    "134" ~ "45.25152",
+    "135" ~ "39.69300",
+    "137" ~ "45.46741",
+    "138" ~ "31.38682",
+    "139" ~ "46.02030",
+    "140" ~ "50.19511", 
+    "141" ~ "50.19511",
+    "142" ~ "36.14876",
+    "143" ~ "43.48022",
+    "144" ~ "40.83327",
+    "145" ~ "NA", 
+    "170" ~ "39.10736",
+    "171" ~ "28.00320",
+    "172" ~ "33.46245",
+    "173" ~ "28.80298",
+    "175" ~ "27.97240",
+    "176" ~ "29.68723",
+    "177" ~ "29.89539",
+    "179" ~ "29.37828",
+    "180" ~ "30.03333",
+    "181" ~ "31.48330",
+    "195" ~ "28.38671",
+    "196" ~ "27.30766",
+    "197" ~ "43.43082",
+    "198" ~ "37.58723",
+    "199" ~ "29.10340",
+    "200" ~ "27.45640",
+    "24" ~ "49.87833",
+    "25" ~ "50.19511",
+    "26" ~ "NA",
+    "27" ~ "50.19511",
+    "33" ~ "49.15675",
+    "48" ~ "46.66255",
+    "49" ~ "47.06976",
+    "50" ~ "50.19511",
+    "51" ~ "50.19511",
+    "52" ~ "47.94260",
+    "53" ~ "50.19511"
+  )) %>%
+  mutate(height_cwm = as.numeric(height_cwm)) %>%
+    mutate(curl_cwm = case_match(
+    plot_id,
+    "128" ~ "7.672345",
+    "129" ~ "17.924610",
+    "130" ~ "3.712061",
+    "132" ~ "0.000000",
+    "133" ~ "11.107529",
+    "134" ~ "7.307134",
+    "135" ~ "15.523200",
+    "137" ~ "6.988030",
+    "138" ~ "27.800572",
+    "139" ~ "6.170802",
+    "140" ~ "0.000000", 
+    "141" ~ "0.000000",
+    "142" ~ "20.761939",
+    "143" ~ "9.925297",
+    "144" ~ "13.837760",
+    "145" ~ "NA", 
+    "170" ~ "16.388830",
+    "171" ~ "32.801911",
+    "172" ~ "24.732590",
+    "173" ~ "31.619757",
+    "175" ~ "32.847442",
+    "176" ~ "30.312742",
+    "177" ~ "30.005072",
+    "179" ~ "30.769412",
+    "180" ~ "29.801173",
+    "181" ~ "27.657978",
+    "195" ~ "32.235045",
+    "196" ~ "33.830000",
+    "197" ~ "9.998311",
+    "198" ~ "18.635742",
+    "199" ~ "31.175708",
+    "200" ~ "33.610137",
+    "24" ~ "0",
+    "25" ~ "0",
+    "26" ~ "NA",
+    "27" ~ "0",
+    "33" ~ "0",
+    "48" ~ "0",
+    "49" ~ "0",
+    "50" ~ "0",
+    "51" ~ "0",
+    "52" ~ "0",
+    "53" ~ "0"
+  )) %>%
+  mutate(curl_cwm = as.numeric(curl_cwm))
 
 # scatterplots with combined data from both laguna & bluff mesa
 # SLA vs. char height
 sla_char_scatter <- ggplot(scatterdata, aes(x=sla_cwm, y=char_ht, color=location)) + 
     geom_point() +
   ggtitle("Char height as a function of specific leaf area") +
-  labs(y = "Char height (m)", x = "Specific leaf area (mm2/mg)")
+  labs(y = "Char height (m)", x = "Specific leaf area (mm2/mg)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# SLA vs. scorch height
+sla_scorch_scatter <- ggplot(scatterdata, aes(x=sla_cwm, y=scorch_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Scorch height as a function of specific leaf area") +
+  labs(y = "Scorch height (m)", x = "Specific leaf area (mm2/mg)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# SLA vs. crown scorch %
+sla_crscpct_scatter <- ggplot(scatterdata, aes(x=sla_cwm, y=cr_sc_pct, color=location)) + 
+    geom_point() +
+  ggtitle("Crown scorch % as a function of specific leaf area") +
+  labs(y = "Crown scorch (%)", x = "Specific leaf area (mm2/mg)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# leaf length vs. char height
+ll_char_scatter <- ggplot(scatterdata, aes(x=ll_cwm, y=char_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Char height as a function of leaf length") +
+  labs(y = "Char height (m)", x = "Leaf length (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# leaf length vs. scorch height
+ll_scorch_scatter <- ggplot(scatterdata, aes(x=ll_cwm, y=scorch_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Scorch height as a function of leaf length") +
+  labs(y = "Scorch height (m)", x = "Leaf length (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# leaf length vs. crown scorch %
+ll_crscpct_scatter <- ggplot(scatterdata, aes(x=ll_cwm, y=cr_sc_pct, color=location)) + 
+    geom_point() +
+  ggtitle("Crown scorch % as a function of leaf length") +
+  labs(y = "Crown scorch (%)", x = "Leaf length (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# leaf width vs. char height
+width_char_scatter <- ggplot(scatterdata, aes(x=width_cwm, y=char_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Char height as a function of leaf width") +
+  labs(y = "Char height (m)", x = "Leaf width (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# leaf width vs. scorch height
+width_scorch_scatter <- ggplot(scatterdata, aes(x=width_cwm, y=scorch_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Scorch height as a function of leaf width") +
+  labs(y = "Scorch height (m)", x = "Leaf width (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# leaf width vs. crown scorch %
+width_crscpct_scatter <- ggplot(scatterdata, aes(x=width_cwm, y=cr_sc_pct, color=location)) + 
+    geom_point() +
+  ggtitle("Crown scorch % as a function of leaf width") +
+  labs(y = "Crown scorch (%)", x = "Leaf width (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# plant height vs. char height
+height_char_scatter <- ggplot(scatterdata, aes(x=height_cwm, y=char_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Char height as a function of plant height") +
+  labs(y = "Char height (m)", x = "Plant height (m)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# plant height vs. scorch height
+height_scorch_scatter <- ggplot(scatterdata, aes(x=height_cwm, y=scorch_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Scorch height as a function of plant height") +
+  labs(y = "Scorch height (m)", x = "Plant height (m)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# plant height vs. crown scorch %
+height_crscpct_scatter <- ggplot(scatterdata, aes(x=height_cwm, y=cr_sc_pct, color=location)) + 
+    geom_point() +
+  ggtitle("Crown scorch % as a function of plant height") +
+  labs(y = "Crown scorch (%)", x = "Plant height (m)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# curling vs. char height
+curl_char_scatter <- ggplot(scatterdata, aes(x=curl_cwm, y=char_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Char height as a function of leaf curling") +
+  labs(y = "Char height (m)", x = "Leaf curl height (mm)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# curling vs. scorch height
+curl_scorch_scatter <- ggplot(scatterdata, aes(x=curl_cwm, y=scorch_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Scorch height as a function of leaf curling") +
+  labs(y = "Scorch height (m)", x = "Leaf curl height (mm)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+# plant height vs. crown scorch %
+curl_crscpct_scatter <- ggplot(scatterdata, aes(x=curl_cwm, y=cr_sc_pct, color=location)) + 
+    geom_point() +
+  ggtitle("Crown scorch % as a function of leaf curling") +
+  labs(y = "Crown scorch (%)", x = "Leaf curl height (mm)") +
+  geom_smooth(method=lm , color="darkblue", se=FALSE)
+
+sla_char_scatter
+sla_crscpct_scatter
+sla_scorch_scatter
+ll_char_scatter
+ll_scorch_scatter
+ll_crscpct_scatter
+width_char_scatter
+width_scorch_scatter
+width_crscpct_scatter
+height_char_scatter
+height_scorch_scatter
+height_crscpct_scatter
+curl_char_scatter
+curl_scorch_scatter
+curl_crscpct_scatter
 ```
 
-# statistical analyses
-## anova (in progress...)
 
+# statistical analyses
+## linear regressions
+```{r}
+# SLA v. char height
+lm_sla_char = lm(char_ht~sla_cwm, data = scatterdata) # create the linear regression
+summary(lm_sla_char) # review the results --> SIGNIFICANT
+
+# SLA v. scorch height
+lm_sla_scorch = lm(scorch_ht~sla_cwm, data = scatterdata) # create the linear regression
+summary(lm_sla_scorch) # review the results --> not significant
+
+# SLA v. crown scorch %
+lm_sla_crscpct = lm(cr_sc_pct~sla_cwm, data = scatterdata) # create the linear regression
+summary(lm_sla_crscpct) # review the results --> SIGNIFICANT
+
+# leaf length v. char height
+lm_ll_char = lm(char_ht~ll_cwm, data = scatterdata) # create the linear regression
+summary(lm_ll_char) # review the results --> SIGNIFICANT
+
+# leaf length v. scorch height
+lm_ll_scorch = lm(scorch_ht~ll_cwm, data = scatterdata) # create the linear regression
+summary(lm_ll_scorch) # review the results --> not significant
+
+# leaf length v. crown scorch %
+lm_ll_crscpct = lm(cr_sc_pct~ll_cwm, data = scatterdata) # create the linear regression
+summary(lm_ll_crscpct) # review the results --> not significant
+
+# leaf width v. char height
+lm_width_char = lm(char_ht~width_cwm, data = scatterdata) # create the linear regression
+summary(lm_width_char) # review the results --> SIGNIFICANT
+
+# leaf width v. scorch height
+lm_width_scorch = lm(scorch_ht~width_cwm, data = scatterdata) # create the linear regression
+summary(lm_width_scorch) # review the results --> not significant
+
+# leaf width v. crown scorch %
+lm_width_crscpct = lm(cr_sc_pct~width_cwm, data = scatterdata) # create the linear regression
+summary(lm_width_crscpct) # review the results --> SIGNIFICANT
+
+# plant veg height v. char height
+lm_height_char = lm(char_ht~height_cwm, data = scatterdata) # create the linear regression
+summary(lm_height_char) # review the results --> SIGNIFICANT
+
+# plant veg height v. scorch height
+lm_height_scorch = lm(scorch_ht~height_cwm, data = scatterdata) # create the linear regression
+summary(lm_height_scorch) # review the results --> not significant
+
+# plant veg height v. crown scorch %
+lm_height_crscpct = lm(cr_sc_pct~height_cwm, data = scatterdata) # create the linear regression
+summary(lm_height_crscpct) # review the results --> SIGNIFICANT
+
+# leaf curl height v. char height
+lm_curl_char = lm(char_ht~curl_cwm, data = scatterdata) # create the linear regression
+summary(lm_curl_char) # review the results --> SIGNIFICANT
+
+# leaf curl height v. scorch height
+lm_curl_scorch = lm(scorch_ht~curl_cwm, data = scatterdata) # create the linear regression
+summary(lm_curl_scorch) # review the results --> not significant
+
+# leaf curl height v. crown scorch %
+lm_curl_crscpct = lm(cr_sc_pct~curl_cwm, data = scatterdata) # create the linear regression
+summary(lm_curl_crscpct) # review the results --> SIGNIFICANT
+```
+
+## anova (in progress...)
 ```{r}
 # variation in SLA between plots (not working because there is no within variance??)
 ## laguna mtn

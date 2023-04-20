@@ -1715,7 +1715,6 @@ tf_crscpct_plot
 ```
 
 ### fuels
-#### laguna mountain 
 ```{r}
 # bar plot of fuel distribution in laguna mountain (tons per acre)
 # rearrange fuels data frame for graphing purposes
@@ -1732,7 +1731,8 @@ location <- c(rep("Laguna Mountain", 272), rep("Bluff Mesa", 88))
 fuels_arrange <- data.frame(plot_id, fuel_class, value) %>%
   filter(!fuel_class=="row_num") %>%
   mutate(location=location) %>%
-  filter(!fuel_class=="total_all")
+  filter(!fuel_class=="total_all") %>%
+  filter(!fuel_class=="total_wood")
 
 # filter fuels data frame to only include fuels at laguna
 lm_fuels <- fuels_arrange %>%
@@ -1744,7 +1744,18 @@ lm_fuels_plot <- ggplot(lm_fuels, aes(fill=fuel_class, y=value, x=plot_id)) +
   xlab("Plot") +
   ylab("Fuel loading (tons/acre)")
 
+# filter fuels data frame to only include fuels at bluff mesa
+bm_fuels <- fuels_arrange %>%
+  filter(location=="Bluff Mesa")
+
+bm_fuels_plot <- ggplot(bm_fuels, aes(fill=fuel_class, y=value, x=plot_id)) + 
+  geom_bar(position="stack", stat="identity") +
+  ggtitle("Fuel loading distribution at Bluff Mesa") +
+  xlab("Plot") +
+  ylab("Fuel loading (tons/acre)")
+
 lm_fuels_plot
+bm_fuels_plot
 ```
 
 #### bluff mesa

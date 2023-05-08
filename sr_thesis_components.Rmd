@@ -142,84 +142,6 @@ bluffmesa_pre <- rbind(
   mutate(tree_area = ((pi*(dbh^2)/4)/100)) # add column w/ area measurements for each tree
 ```
 
-### thomas fire
-```{r}
-# read in thomas fire data
-thomas1 <- read.csv("data/Nicole/thomas/TF_postfire_2018.csv") %>%
-  clean_names() %>%
-  slice_head(n = 67) %>%
-  as.data.frame() %>%
-  mutate(plot_id = c("PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-2", "PIPO-2", "PIPO-2", "PIPO-2", "PIPO-2", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1")) %>%
-  mutate(uv1 = rep("NA", length = 67)) %>%
-  mutate(uv2 = rep("NA", length = 67)) %>%
-  mutate(uv3 = rep("NA", length = 67)) %>%
-  mutate(height_m = na_if(height_m, "NO DATA")) 
-
-ht <- thomas1$height_m %>%
-    as.numeric(unlist("height_m"))
-
-# add new column to thomas 1
-thomas1$ht <- ht
-
-thomas1 <- thomas1 %>%
-  rename("location" = "project", "tag_no" = "tree", "dbh" = "dbh_cm", "char_ht" = "torch_height_m", "scorch_ht" = "scorch_height_m") %>% # NOTE: ARE TORCH AND CHAR THE SAME THING?
-  mutate(crwn_rto = (((ht - height_to_crown_base)/ht)*100)) %>% # calculate crown ratio from tree height & height to crown 
-  mutate(crwn_rad = (crown_width)/2) %>% # calculate crown radius from crown width 
-  mutate(tree_area = ((pi*(dbh^2)/4)/100)) %>% # calculate tree area from dbh
-  mutate(category = rep("post", length = 67)) %>%
-  mutate(cr_sc_pct = (100-percent_green)) %>%
-  select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, location, tree_area, category) 
-
-thomas2 <- read.csv("data/Nicole/thomas/TF_postfire_2018-2.csv") %>%
-  clean_names() %>%
-  slice_head(n = 35) %>%
-  mutate(uv1 = rep("NA", length = 35)) %>%
-  mutate(uv2 = rep("NA", length = 35)) %>%
-  mutate(uv3 = rep("NA", length = 35)) %>%
-  mutate(percent_green = rep("NA", length = 35)) %>% 
-  rename("location" = "project", "tag_no" = "tag", "dbh" = "dbh_cm", "ht" = "height_m", "char_ht" = "torch_ht", "cr_sc_pct" = "percent_green") %>% # NOTE: ARE TORCH AND CHAR THE SAME THING?
-  mutate(crwn_rto = (((ht - heigt_to_crown_m)/ht)*100)) %>% # calculate crown ratio from tree height & height to crown 
-  mutate(crwn_rad = (crown_width)/2) %>% # calculate crown radius from crown width 
-  mutate(tree_area = ((pi*(dbh^2)/4)/100)) %>% # calculate tree area from dbh
-  mutate(category = rep("post", length = 35)) %>%
-  select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, location, tree_area, category) 
-
-thomas3 <- read.csv("data/Nicole/thomas/TF_postfire_2018-3.csv") %>%
-  clean_names() %>%
-  slice_head(n = 137) %>%
-  mutate(uv1 = rep("NA", length = 137)) %>%
-  mutate(uv2 = rep("NA", length = 137)) %>%
-  mutate(uv3 = rep("NA", length = 137)) %>%
-  mutate(percent_green = rep("NA", length = 137)) %>%
-  mutate(heigt_to_crown_m = na_if(heigt_to_crown_m, "-")) %>%
-  as.data.frame()
-
-ht <- thomas3$height_m %>%
-    as.numeric(unlist("height_m"))
-
-height_to_crown_m <- thomas3$heigt_to_crown_m %>%
-  as.numeric(unlist("heigt_to_crown_m"))
-
-crown_wid <- thomas3$crown_width %>%
-    as.numeric(unlist("crown_width"))
-
-# add new column to thomas 1
-thomas3$ht <- ht
-thomas3$height_to_crown_m <- height_to_crown_m
-thomas3$crown_wid <- crown_wid
-
-thomas3 <- thomas3 %>%
-  rename("location" = "project", "tag_no" = "tag", "dbh" = "dbh_cm", "char_ht" = "torch_ht", "cr_sc_pct" = "percent_green") %>% # NOTE: ARE TORCH AND CHAR THE SAME THING?
-  mutate(crwn_rto = (((ht - height_to_crown_m)/ht)*100)) %>% # calculate crown ratio from tree height & height to crown 
-  mutate(crwn_rad = (crown_wid)/2) %>% # calculate crown radius from crown width 
-  mutate(tree_area = ((pi*(dbh^2)/4)/100)) %>% # calculate tree area from dbh
-  mutate(category = rep("post", length = 137)) %>%
-  select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, location, tree_area, category) 
-
-# combine all thomas fire data
-thomas_post <- rbind(
-  thomas1, thomas2, thomas3)
-```
 
 #### combine all pre-fire data
 ```{r}
@@ -926,7 +848,7 @@ write.csv(abundance_whole, "data/Nicole/abundance_whole.csv", row.names=FALSE)
 
 ## fuels data
 ```{r}
-# load in raw fuels data
+# load in raw pre-fire fuels data
 LMF_1 <- read.csv("data/Nicole/fuels/LM_2020_fuels_128-133.csv") %>%
   mutate(location = rep("Laguna Mountain", length = 6))
 LMF_2 <- read.csv("data/Nicole/fuels/LM_2020_fuels_134-139.csv") %>%
@@ -940,12 +862,48 @@ BMF_1 <- read.csv("data/Nicole/fuels/BM_2020_fuels_24-33.csv") %>%
 BMF_2 <- read.csv("data/Nicole/fuels/BM_2020_fuels_48-53.csv") %>%
   mutate(location = rep("Bluff Mesa", length = 6))
 
-# combine all raw fuels data
+# load in raw post-fire fuels data
+LMFP_1 <- read.csv("data/Nicole/fuels/LM_2021_fuels_128-133.csv") %>%
+  mutate(location = rep("Laguna Mountain", length = 6))
+LMFP_2 <- read.csv("data/Nicole/fuels/LM_2021_fuels_134-139.csv") %>%
+  mutate(location = rep("Laguna Mountain", length = 6))
+LMFP_3 <- read.csv("data/Nicole/fuels/LM_2021_fuels_140-145.csv") %>%
+  mutate(location = rep("Laguna Mountain", length = 6))
+LMFP_4 <- read.csv("data/Nicole/fuels/LM_2022_fuels_170-200.csv") %>%
+  mutate(location = rep("Laguna Mountain", length = 16))
+BMFP_1 <- read.csv("data/Nicole/fuels/BM_2020_2_fuels_24-33.csv") %>%
+  mutate(location = rep("Bluff Mesa", length = 5))
+BMFP_2 <- read.csv("data/Nicole/fuels/BM_2021_fuels_48-53.csv") %>%
+  mutate(location = rep("Bluff Mesa", length = 6))
+
+# combine all raw pre-fire fuels data
 fuels_whole <- rbind(
   LMF_1, LMF_2, LMF_3, LMF_4, BMF_1, BMF_2
 ) %>%
   clean_names() %>%
   select(macroplot, mon_status, one_hr, ten_hr, hun_hr, fine_wood, total_wood, duff, litter, total_all, duff_dep, litt_dep, tot_dep, fuel_bed_dep, location)
+
+# combine all raw post-fire fuels data
+fuels_post <- rbind(
+  LMFP_1, LMFP_2, LMFP_3, LMFP_4, BMFP_1, BMFP_2) %>%
+  clean_names() %>%
+  select(macroplot, mon_status, one_hr, ten_hr, hun_hr, fine_wood, total_wood, duff, litter, total_all, duff_dep, litt_dep, tot_dep, fuel_bed_dep, location)
+
+# create data frame for consumption
+one_hr_diff <- fuels_whole$one_hr-fuels_post$one_hr
+ten_hr_diff <- fuels_whole$ten_hr-fuels_post$ten_hr
+hun_hr_diff <- fuels_whole$hun_hr-fuels_post$hun_hr
+duff_diff <- fuels_whole$duff-fuels_post$duff
+litter_diff <- fuels_whole$litter-fuels_post$litter
+duff_dep_diff <- fuels_whole$duff_dep-fuels_post$duff_dep
+litter_dep_diff <- fuels_whole$litt_dep-fuels_post$litt_dep
+
+consumption <- data.frame(one_hr_diff, ten_hr_diff, hun_hr_diff, duff_diff, litter_diff, duff_dep_diff, litter_dep_diff) %>%
+  mutate(location = fuels_post$location) %>%
+  mutate(plot_id = fuels_post$macroplot) %>%
+  slice(-c(9, 18)) %>%
+  mutate(duff_litter_diff = duff_diff+litter_diff) %>%
+  mutate(dep_diff = duff_dep_diff+litter_dep_diff)
 
 # export as csv
 write.csv(fuels_whole, "data/Nicole/fuels_whole.csv", row.names=FALSE)
@@ -2008,10 +1966,289 @@ lc_csp_plot <- ggplot(lc_csp, aes(x=cwm, y=csp, color=location)) +
 traits_char_plot
 traits_scorch_plot
 traits_csp_plot
+
+sla_char_plot
+ll_char_plot
+lw_char_plot
+height_char_plot
+lc_char_plot
+sla_scorch_plot
+ll_scorch_plot
+lw_scorch_plot
+height_scorch_plot
+lc_scorch_plot
+sla_csp_plot
+ll_csp_plot
+lw_csp_plot
+height_csp_plot
+lc_csp_plot
+```
+
+## fire severity vs. fuels scatterplots
+```{r}
+# filter fuel data to only include 1hr fuels
+one_hr <- fuel_class %>%
+  filter(fuel_class=="one_hr") %>%
+  slice(-c(4, 9)) %>%
+  mutate(char_ht = mean_char_ht$mean_char_ht) %>%
+  mutate(scorch_ht = mean_scorch_ht$mean_scorch_ht) %>%
+  mutate(csp = mean_csp$mean_csp) %>%
+  slice(-39)
+
+# filter fuel data to only include 10hr fuels
+ten_hr <- fuel_class %>%
+  filter(fuel_class=="ten_hr") %>%
+  slice(-c(4, 9)) %>%
+  mutate(char_ht = mean_char_ht$mean_char_ht) %>%
+  mutate(scorch_ht = mean_scorch_ht$mean_scorch_ht) %>%
+  mutate(csp = mean_csp$mean_csp) %>%
+  slice(-39)
+
+# filter fuel data to only include 100hr fuels
+hun_hr <- fuel_class %>%
+  filter(fuel_class=="hun_hr") %>%
+  slice(-c(4, 9)) %>%
+  mutate(char_ht = mean_char_ht$mean_char_ht) %>%
+  mutate(scorch_ht = mean_scorch_ht$mean_scorch_ht) %>%
+  mutate(csp = mean_csp$mean_csp) %>%
+  slice(-39)
+
+# scatterplots of char height vs fuels
+one_char_plot <- ggplot(one_hr, aes(x=value, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 1-hour fuel loading and char height") +
+    xlab("1-hour fuels (tons/acre)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+ten_char_plot <- ggplot(ten_hr, aes(x=value, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 10-hour fuel loading and char height") +
+    xlab("10-hour fuels (tons/acre)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+hun_char_plot <- ggplot(hun_hr, aes(x=value, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 100-hour fuel loading and char height") +
+    xlab("100-hour fuels (tons/acre)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# combine duff & litter values together per plot
+duff_litter_total <- duff_litter %>%
+  group_by(plot_id) %>%
+  summarise(duff_litter = sum(value)) %>%
+  slice(-c(4,9)) %>%
+  mutate(location = c(rep("Laguna Mountain", 32), rep("Bluff Mesa", 11))) %>%
+  mutate(char_ht = mean_char_ht$mean_char_ht) %>%
+  mutate(scorch_ht = mean_scorch_ht$mean_scorch_ht) %>%
+  mutate(csp = mean_csp$mean_csp) 
+
+# scatterplot of duff & litter vs. char height
+dl_char_plot <- ggplot(duff_litter_total, aes(x=duff_litter, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between duff & litter loading and char height") +
+    xlab("Duff & litter (tons/acre)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplots of scorch height vs fuels
+one_scorch_plot <- ggplot(one_hr, aes(x=value, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 1-hour fuel loading and scorch height") +
+    xlab("1-hour fuels (tons/acre)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+ten_scorch_plot <- ggplot(ten_hr, aes(x=value, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 10-hour fuel loading and scorch height") +
+    xlab("10-hour fuels (tons/acre)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+hun_scorch_plot <- ggplot(hun_hr, aes(x=value, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 100-hour fuel loading and scorch height") +
+    xlab("100-hour fuels (tons/acre)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplot of duff & litter vs. scorch height
+dl_scorch_plot <- ggplot(duff_litter_total, aes(x=duff_litter, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between duff & litter loading and scorch height") +
+    xlab("Duff & litter (tons/acre)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplots of crown scorch vs fuels
+one_csp_plot <- ggplot(one_hr, aes(x=value, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 1-hour fuel loading and crown scorch") +
+    xlab("1-hour fuels (tons/acre)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+ten_csp_plot <- ggplot(ten_hr, aes(x=value, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 10-hour fuel loading and crown scorch") +
+    xlab("10-hour fuels (tons/acre)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+hun_csp_plot <- ggplot(hun_hr, aes(x=value, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 100-hour fuel loading and crown scorch") +
+    xlab("100-hour fuels (tons/acre)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplot of duff & litter vs. crown scorch 
+dl_csp_plot <- ggplot(duff_litter_total, aes(x=duff_litter, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between duff & litter loading and crown scorch") +
+    xlab("Duff & litter (tons/acre)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# print plots
+one_char_plot
+ten_char_plot
+hun_char_plot
+dl_char_plot
+one_scorch_plot
+ten_scorch_plot
+hun_scorch_plot
+dl_scorch_plot
+one_csp_plot
+ten_csp_plot
+hun_csp_plot
+dl_csp_plot
+```
+
+## litter density vs. leaf trait scatterplots
+```{r}
+# calculate litter density per plot (tons/m3)
+density <- fuels_whole %>%
+  select(macroplot, duff, litter, tot_dep) %>%
+  mutate(tot_mass = duff + litter) %>%
+  mutate(tot_dep_m = tot_dep/100) %>%
+  mutate(volume_m3 = tot_dep_m*405) %>%
+  mutate(mass_tons = (tot_mass/4046.86)*405) %>%
+  mutate(density = mass_tons/volume_m3) %>%
+  slice(-c(9,18)) %>%
+  mutate(location = c(rep("Laguna Mountain", 32), rep("Bluff Mesa", 11)))
+
+# create dataframe for all cwm values
+cwm_all <- rbind(laguna_cwm, bluffmesa_cwm) %>%
+  distinct(sla_cwm, ll_cwm, width_cwm, height_cwm, curl_cwm)
+
+# add cwms to density dataframe
+density <- density %>%
+  mutate(sla = cwm_all$sla_cwm) %>%
+  mutate(ll = cwm_all$ll_cwm) %>%
+  mutate(lw = cwm_all$width_cwm) %>%
+  mutate(height = cwm_all$height_cwm) %>%
+  mutate(lc = cwm_all$curl_cwm)
+
+# scatterplot: traits vs. litter density
+sla_dens_plot <- ggplot(density, aes(x=sla, y=density, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between specific leaf area and litter density") +
+    xlab("Specific leaf area (mm2/mg)") +
+    ylab("Litter density (tons/m3)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+ll_dens_plot <- ggplot(density, aes(x=ll, y=density, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf length and litter density") +
+    xlab("Leaf length (cm)") +
+    ylab("Litter density (tons/m3)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+lw_dens_plot <- ggplot(density, aes(x=lw, y=density, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf width and litter density") +
+    xlab("Leaf width (cm)") +
+    ylab("Litter density (tons/m3)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+height_dens_plot <- ggplot(density, aes(x=height, y=density, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between plant height and litter density") +
+    xlab("Plant height (m)") +
+    ylab("Litter density (tons/m3)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+lc_dens_plot <- ggplot(density, aes(x=lc, y=density, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf curl height and litter density") +
+    xlab("Leaf curl height (mm)") +
+    ylab("Litter density (tons/m3)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# print plots
+sla_dens_plot
+ll_dens_plot
+lw_dens_plot
+height_dens_plot
+lc_dens_plot
+```
+
+## fuel consumption vs. leaf trait scatterplots LEFT OFF HERE!  
+```{r}
+# add cwms to consumption dataframe
+consumption <- consumption %>%
+  mutate(sla = cwm_all$sla_cwm) %>%
+  mutate(ll = cwm_all$ll_cwm) %>%
+  mutate(lw = cwm_all$width_cwm) %>%
+  mutate(height = cwm_all$height_cwm) %>%
+  mutate(lc = cwm_all$curl_cwm) %>%
+  slice(-35)
+
+# scatterplot of sla vs. duff/litter consumed
+sla_cons_plot <- ggplot(consumption, aes(x=sla, y=duff_litter_diff, color=location)) +
+    geom_point() +
+    ggtitle("Correlation between specific leaf area and duff/litter consumed") +
+    xlab("Specific leaf area (mm2/mg)") +
+    ylab("Duff/litter consumed (tons/area)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplot of leaf length vs. duff/litter consumed
+ll_cons_plot <- ggplot(consumption, aes(x=ll, y=duff_litter_diff, color=location)) +
+    geom_point() +
+    ggtitle("Correlation between leaf length and duff/litter consumed") +
+    xlab("Leaf length (cm)") +
+    ylab("Duff/litter consumed (tons/area)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplot of sla vs. duff/litter depth consumed
+sla_cons_plot2 <- ggplot(consumption, aes(x=sla, y=dep_diff, color=location)) +
+    geom_point() +
+    ggtitle("Correlation between specific leaf area and duff/litter depth consumed") +
+    xlab("Specific leaf area (mg/mm2)") +
+    ylab("Duff/litter depth consumed (cm)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplot of leaf length vs. duff/litter depth consumed
+ll_cons_plot2 <- ggplot(consumption, aes(x=ll, y=dep_diff, color=location)) +
+    geom_point() +
+    ggtitle("Correlation between leaf length and duff/litter depth consumed") +
+    xlab("Leaf length (cm)") +
+    ylab("Duff/litter depth consumed (cm)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# print plots
+sla_cons_plot
+ll_cons_plot 
+sla_cons_plot2
+ll_cons_plot2 
 ```
 
 # statistical analyses
-## linear regressions
+## linear regressions: leaf traits vs. fire severity
 ```{r}
 # SLA v. char height
 lr_sla_char = lm(char_ht~cwm, data = sla_char) # create the linear regression
@@ -2074,7 +2311,82 @@ lr_lc_csp = lm(csp~cwm, data = lc_csp) # create the linear regression
 summary(lr_lc_csp) # review the results --> not significant
 ```
 
-## multiple regression
+## linear regressions: fuels vs. fire severity
+```{r}
+# 1 hr v. char height
+lr_one_char = lm(char_ht~value, data = one_hr) # create the linear regression
+summary(lr_one_char) # review the results --> not significant
+
+# 10 hr v. char height
+lr_ten_char = lm(char_ht~value, data = ten_hr) # create the linear regression
+summary(lr_ten_char) # review the results --> not significant
+
+# 100 hr v. char height
+lr_hun_char = lm(char_ht~value, data = hun_hr) # create the linear regression
+summary(lr_hun_char) # review the results --> not significant
+
+# duff/litter v. char height
+lr_dl_char = lm(char_ht~duff_litter, data = duff_litter_total) # create the linear regression
+summary(lr_dl_char) # review the results --> not significant
+
+# 1 hr v. scorch height
+lr_one_scorch = lm(scorch_ht~value, data = one_hr) # create the linear regression
+summary(lr_one_scorch) # review the results --> not significant
+
+# 10 hr v. scorch height
+lr_ten_scorch = lm(scorch_ht~value, data = ten_hr) # create the linear regression
+summary(lr_ten_scorch) # review the results --> not significant
+
+# 100 hr v. scorch height
+lr_hun_scorch = lm(scorch_ht~value, data = hun_hr) # create the linear regression
+summary(lr_hun_scorch) # review the results --> not significant
+
+# duff/litter v. scorch height
+lr_dl_scorch = lm(scorch_ht~duff_litter, data = duff_litter_total) # create the linear regression
+summary(lr_dl_scorch) # review the results --> not significant
+
+# 1 hr v. crown scorch
+lr_one_csp = lm(csp~value, data = one_hr) # create the linear regression
+summary(lr_one_csp) # review the results --> not significant
+
+# 10 hr v. crown scorch 
+lr_ten_csp = lm(csp~value, data = ten_hr) # create the linear regression
+summary(lr_ten_csp) # review the results --> not significant
+
+# 100 hr v. crown scorch 
+lr_hun_csp = lm(csp~value, data = hun_hr) # create the linear regression
+summary(lr_hun_csp) # review the results --> not significant
+
+# duff/litter v. crown scorch 
+lr_dl_csp = lm(csp~duff_litter, data = duff_litter_total) # create the linear regression
+summary(lr_dl_csp) # review the results --> not significant
+```
+
+## linear regressions: leaf traits vs. litter density
+```{r}
+# SLA v. density
+lr_sla_dens = lm(density~sla, data = density) # create the linear regression
+summary(lr_sla_dens) # review the results --> not significant
+
+# leaf length v. density
+lr_ll_dens = lm(density~ll, data = density) # create the linear regression
+summary(lr_ll_dens) # review the results --> not significant
+
+# leaf width v. density
+lr_lw_dens = lm(density~lw, data = density) # create the linear regression
+summary(lr_lw_dens) # review the results --> not significant
+
+# height v. density
+lr_height_dens = lm(density~height, data = density) # create the linear regression
+summary(lr_height_dens) # review the results --> not significant
+
+# curl v. density
+lr_lc_dens = lm(density~lc, data = density) # create the linear regression
+summary(lr_lc_dens) # review the results --> not significant
+```
+
+## linear regressions: leaf traits vs. fuel consumption
+## multiple regression: leaf traits vs. fire severity
 ```{r}
 # create dataframe 
 char_ht <- sla_char$char_ht
@@ -2085,10 +2397,15 @@ height <- height_char$cwm
 curl <- lc_char$cwm
 
 char_mult_data <- data.frame(char_ht, sla, ll, width, height, curl)
+cor(char_mult_data)
 
-# char height
-char_mult <- lm(char_ht ~ sla + ll + width + height + curl, data = char_mult_data) # multiple regression model
-summary(char_mult) # display results of mult. regression --> not significant
+# char height: sla, ll, & width
+char_mult1 <- lm(char_ht ~ sla + ll + width, data = char_mult_data) # multiple regression model
+summary(char_mult1) # display results of mult. regression --> not significant
+
+# char height: sla, ll, & curl
+char_mult3 <- lm(char_ht ~ sla + ll + curl, data = char_mult_data) # multiple regression model
+summary(char_mult3) # display results of mult. regression --> not significant
 
 # create dataframe 
 scorch_ht <- sla_scorch$scorch_ht
@@ -2100,9 +2417,13 @@ curl <- lc_scorch$cwm
 
 scorch_mult_data <- data.frame(scorch_ht, sla, ll, width, height, curl)
 
-# scorch height
-scorch_mult <- lm(scorch_ht ~ sla + ll + width + height + curl, data = scorch_mult_data) # multiple regression model
-summary(scorch_mult) # display results of mult. regression --> SIGNIFICANT?
+# scorch height: sla, ll, & width
+scorch_mult1 <- lm(scorch_ht ~ sla + ll + width, data = scorch_mult_data) # multiple regression model
+summary(scorch_mult1) # display results of mult. regression --> SIGNIFICANT?
+
+# scorch height: sla, ll, & curl
+scorch_mult3 <- lm(scorch_ht ~ sla + ll + curl, data = scorch_mult_data) # multiple regression model
+summary(scorch_mult3) # display results of mult. regression --> SIGNIFICANT?
 
 # create dataframe 
 csp <- sla_csp$csp
@@ -2114,11 +2435,64 @@ curl <- lc_csp$cwm
 
 csp_mult_data <- data.frame(csp, sla, ll, width, height, curl)
 
-# crown scorch %
-csp_mult <- lm(csp ~ sla + ll + width + height + curl, data = csp_mult_data) # multiple regression model
-summary(csp_mult) # display results of mult. regression --> not significant
+# crown scorch %: sla, ll, & width
+csp_mult1 <- lm(csp ~ sla + ll + width, data = csp_mult_data) # multiple regression model
+summary(csp_mult1) # display results of mult. regression --> not significant
 
-# mult regression again, without curl and height
-char_mult2 <- lm(char_ht ~ sla + ll + width, data = char_mult_data) # multiple regression model
-summary(char_mult2) # display results of mult. regression
+# crown scorch %: sla, ll, & curl
+csp_mult3 <- lm(csp ~ sla + ll + curl, data = csp_mult_data) # multiple regression model
+summary(csp_mult3) # display results of mult. regression --> not significant
 ```
+
+## multiple regression: leaf traits vs. fuel consumption
+```{r}
+cor_consumption <- consumption %>%
+  select(sla, ll, lw, lc)
+
+cor(cor_consumption)
+
+# 1hr ~ SLA, ll
+onehr_mult1 <- lm(one_hr_diff ~ sla + ll, data = consumption) # multiple regression model
+summary(onehr_mult1) # display results of mult. regression --> not significant
+
+# 1hr ~ width, ll
+onehr_mult2 <- lm(one_hr_diff ~ lw + ll, data = consumption) # multiple regression model
+summary(onehr_mult2) # display results of mult. regression --> not significant
+
+# 1hr ~ curl, ll
+onehr_mult3 <- lm(one_hr_diff ~ lc + ll, data = consumption) # multiple regression model
+summary(onehr_mult3) # display results of mult. regression --> not significant
+
+# 10hr ~ SLA, ll, width
+tenhr_mult1 <- lm(ten_hr_diff ~ sla + ll + lw, data = consumption) # multiple regression model
+summary(tenhr_mult1) # display results of mult. regression --> not significant
+
+# 100hr ~ SLA, ll, width
+hunhr_mult1 <- lm(hun_hr_diff ~ sla + ll + lw, data = consumption) # multiple regression model
+summary(hunhr_mult1) # display results of mult. regression --> not significant
+
+# duff & litter ~ SLA, ll
+dl_mult1 <- lm(duff_litter_diff ~ sla + ll, data = consumption) # multiple regression model
+summary(dl_mult1) # display results of mult. regression --> SIGNIFICANT?
+
+# duff & litter ~ width, ll
+dl_mult2 <- lm(duff_litter_diff ~ lw + ll, data = consumption) # multiple regression model
+summary(dl_mult2) # display results of mult. regression --> SIGNIFICANT?
+
+# duff & litter ~ curl, ll
+dl_mult3 <- lm(duff_litter_diff ~ lc + ll, data = consumption) # multiple regression model
+summary(dl_mult3) # display results of mult. regression --> SIGNIFICANT?
+
+# duff & litter dep ~ sla, ll
+dep_mult1 <- lm(dep_diff ~ sla + ll, data = consumption) # multiple regression model
+summary(dep_mult1) # display results of mult. regression --> SIGNIFICANT?
+
+# duff & litter dep ~ lw, ll
+dep_mult2 <- lm(dep_diff ~ lw + ll, data = consumption) # multiple regression model
+summary(dep_mult2) # display results of mult. regression --> SIGNIFICANT?
+
+# duff & litter dep ~ curl, ll
+dep_mult3 <- lm(dep_diff ~ lc + ll, data = consumption) # multiple regression model
+summary(dep_mult3) # display results of mult. regression --> SIGNIFICANT?
+```
+

@@ -25,6 +25,10 @@ library(ggthemes)
 library(tidystats)
 library(RColorBrewer)
 library(kableExtra)
+library(stats)
+library(ggfortify)
+library(wesanderson)
+library(vegan)
 ```
 
 # data cleaning 
@@ -675,176 +679,21 @@ bluffmesa_pre_PIJE_clean <- data.frame(
 # combine all pre-fire data from bluff mesa plots
 bm_abundance <- rbind(bluffmesa_pre_PIJE_clean, bluffmesa_pre_ABCO_clean)
 ```
-
-### thomas fire 
-```{r}
-# plot size: 11.35 m radius (405 m^2)
-unique(thomas_post$species) # identify species present in bluff mesa fire data
-
-thomas_post_PIPO <- filter(thomas_post, species == "PIPO") # create data frame w/ only PIPO sp.
-thomas_post_QUWI <- filter(thomas_post, species == "QUWI") # create data frame w/ only QUWI sp.
-thomas_post_QUCH <- filter(thomas_post, species == "QUCH") # create data frame w/ only QUCH sp.
-thomas_post_PSMA <- filter(thomas_post, species == "PSMA") # create data frame w/ only PSMA sp.
-thomas_post_UMCA <- filter(thomas_post, species == "UMCA") # create data frame w/ only UMCA sp.
-
-#### PIPO
-
-unique(thomas_post_PIPO$plot_id) # print each plot ID where PIPO is present
-
-# create a data frame for each plot 
-## NOTE: each plot is an 11.3m radius circular plot
-thomas_post_PIPO_1 <- filter(thomas_post_PIPO, plot_id == "PIPO-1")
-thomas_post_PIPO_2 <- filter(thomas_post_PIPO, plot_id == "PIPO-2")
-thomas_post_PIPO_3 <- filter(thomas_post_PIPO, plot_id == "PIPO-3")
-
-# calculate plot area
-plot_area <- pi*(11.35^2)
-## plot area = 405 m^2
-
-# create data frame: project, year, plot_id, & abundance for PIPO
-thomas_post_PIPO_clean <- data.frame(
-  project = rep("Thomas", times = length(unique(thomas_post_PIPO$plot_id))), 
-  species = rep("PIPO", times = length(unique(thomas_post_PIPO$plot_id))),
-  plot_id = c(unique(thomas_post_PIPO$plot_id)),
-  abundance = c(sum(thomas_post_PIPO_1$tree_area)/plot_area, sum(thomas_post_PIPO_2$tree_area)/plot_area, sum(thomas_post_PIPO_3$tree_area)/plot_area),
-  avg_ht = c(mean(thomas_post_PIPO_1$ht), mean(thomas_post_PIPO_2$ht), mean(thomas_post_PIPO_3$ht)),
-  easting = c(292063, 291414, 291304),
-  northing = c(3824903, 3824672, 3824663)
-)
-
-#### QUWI
-
-unique(thomas_post_QUWI$plot_id) # print each plot ID where QUWI is present
-
-# create a data frame for each plot 
-## NOTE: each plot is an 11.3m radius circular plot
-thomas_post_QUWI_1 <- filter(thomas_post_QUWI, plot_id == "PIPO-2")
-thomas_post_QUWI_2 <- filter(thomas_post_QUWI, plot_id == "BC12")
-
-# calculate plot area
-plot_area <- pi*(11.35^2)
-## plot area = 405 m^2
-
-# create data frame: project, year, plot_id, & abundance for QUWI
-thomas_post_QUWI_clean <- data.frame(
-  project = rep("Thomas", times = length(unique(thomas_post_QUWI$plot_id))), 
-  species = rep("QUWI", times = length(unique(thomas_post_QUWI$plot_id))),
-  plot_id = c(unique(thomas_post_QUWI$plot_id)),
-  abundance = c(sum(thomas_post_QUWI_1$tree_area)/plot_area, sum(thomas_post_QUWI_2$tree_area)/plot_area),
-  avg_ht = c(mean(thomas_post_QUWI_1$ht), mean(thomas_post_QUWI_2$ht)),
-  easting = c(291414, 270783),
-  northing = c(3824672, 3818567)
-)
-
-#### QUCH
-
-unique(thomas_post_QUCH$plot_id) # print each plot ID where QUCH is present
-
-# create a data frame for each plot 
-## NOTE: each plot is an 11.35m radius circular plot
-thomas_post_QUCH_1 <- filter(thomas_post_QUCH, plot_id == "BC1")
-thomas_post_QUCH_2 <- filter(thomas_post_QUCH, plot_id == "BC10")
-thomas_post_QUCH_3 <- filter(thomas_post_QUCH, plot_id == "BC11")
-thomas_post_QUCH_4 <- filter(thomas_post_QUCH, plot_id == "BC12")
-thomas_post_QUCH_5 <- filter(thomas_post_QUCH, plot_id == "BC2")
-thomas_post_QUCH_6 <- filter(thomas_post_QUCH, plot_id == "BC3")
-thomas_post_QUCH_7 <- filter(thomas_post_QUCH, plot_id == "BC4")
-thomas_post_QUCH_8 <- filter(thomas_post_QUCH, plot_id == "BC5")
-thomas_post_QUCH_9 <- filter(thomas_post_QUCH, plot_id == "BC6")
-thomas_post_QUCH_10 <- filter(thomas_post_QUCH, plot_id == "BC7")
-
-# calculate plot area
-plot_area <- pi*(11.35^2)
-## plot area = 405 m^2
-
-# create data frame: project, year, plot_id, & abundance for QUCH
-thomas_post_QUCH_clean <- data.frame(
-  project = rep("Thomas", times = length(unique(thomas_post_QUCH$plot_id))), 
-  species = rep("QUCH", times = length(unique(thomas_post_QUCH$plot_id))),
-  plot_id = c(unique(thomas_post_QUCH$plot_id)),
-  abundance = c(sum(thomas_post_QUCH_1$tree_area)/plot_area, sum(thomas_post_QUCH_2$tree_area)/plot_area, sum(thomas_post_QUCH_3$tree_area)/plot_area, sum(thomas_post_QUCH_4$tree_area)/plot_area, sum(thomas_post_QUCH_5$tree_area)/plot_area, sum(thomas_post_QUCH_6$tree_area)/plot_area, sum(thomas_post_QUCH_7$tree_area)/plot_area, sum(thomas_post_QUCH_8$tree_area)/plot_area, sum(thomas_post_QUCH_9$tree_area)/plot_area, sum(thomas_post_QUCH_10$tree_area)/plot_area),
-  avg_ht = c(mean(thomas_post_QUCH_1$ht), mean(thomas_post_QUCH_2$ht), mean(thomas_post_QUCH_3$ht), mean(thomas_post_QUCH_4$ht), mean(thomas_post_QUCH_5$ht), mean(thomas_post_QUCH_6$ht), mean(thomas_post_QUCH_7$ht), mean(thomas_post_QUCH_8$ht), mean(thomas_post_QUCH_9$ht), mean(thomas_post_QUCH_10$ht)),
-  easting = c(298424, 292126, 291790, 270783, 298262, 298407, 298752, 299952, 300114, 298189),
-  northing = c(3822263, 3825085, 3824989, 3818567, 3822354, 3822698, 3821985, 3821912, 3821966, 3822595)
-)
-
-#### PSMA
-
-unique(thomas_post_PSMA$plot_id) # print each plot ID where PSMA is present
-
-# create a data frame for each plot 
-## NOTE: each plot is an 11.35m radius circular plot
-thomas_post_PSMA_1 <- filter(thomas_post_PSMA, plot_id == "BC1")
-thomas_post_PSMA_2 <- filter(thomas_post_PSMA, plot_id == "BC10")
-thomas_post_PSMA_3 <- filter(thomas_post_PSMA, plot_id == "BC11")
-thomas_post_PSMA_4 <- filter(thomas_post_PSMA, plot_id == "BC12")
-thomas_post_PSMA_5 <- filter(thomas_post_PSMA, plot_id == "BC2")
-thomas_post_PSMA_6 <- filter(thomas_post_PSMA, plot_id == "BC3")
-thomas_post_PSMA_7 <- filter(thomas_post_PSMA, plot_id == "BC4")
-thomas_post_PSMA_8 <- filter(thomas_post_PSMA, plot_id == "BC5")
-thomas_post_PSMA_9 <- filter(thomas_post_PSMA, plot_id == "BC6")
-thomas_post_PSMA_10 <- filter(thomas_post_PSMA, plot_id == "BC7")
-thomas_post_PSMA_11 <- filter(thomas_post_PSMA, plot_id == "BC8")
-thomas_post_PSMA_12 <- filter(thomas_post_PSMA, plot_id == "BC9")
-
-# calculate plot area
-plot_area <- pi*(11.35^2)
-## plot area = 405 m^2
-
-# create data frame: project, year, plot_id, & abundance for PSMA
-thomas_post_PSMA_clean <- data.frame(
-  project = rep("Thomas", times = length(unique(thomas_post_PSMA$plot_id))), 
-  species = rep("PSMA", times = length(unique(thomas_post_PSMA$plot_id))),
-  plot_id = c(unique(thomas_post_PSMA$plot_id)),
-  abundance = c(sum(thomas_post_PSMA_1$tree_area)/plot_area, sum(thomas_post_PSMA_2$tree_area)/plot_area, sum(thomas_post_PSMA_3$tree_area)/plot_area, sum(thomas_post_PSMA_4$tree_area)/plot_area, sum(thomas_post_PSMA_5$tree_area)/plot_area, sum(thomas_post_PSMA_6$tree_area)/plot_area, sum(thomas_post_PSMA_7$tree_area)/plot_area, sum(thomas_post_PSMA_8$tree_area)/plot_area, sum(thomas_post_PSMA_9$tree_area)/plot_area, sum(thomas_post_PSMA_10$tree_area)/plot_area, sum(thomas_post_PSMA_11$tree_area)/plot_area, sum(thomas_post_PSMA_12$tree_area)/plot_area),
-  avg_ht = c(mean(thomas_post_PSMA_1$ht), mean(thomas_post_PSMA_2$ht), mean(thomas_post_PSMA_3$ht), mean(thomas_post_PSMA_4$ht), mean(thomas_post_PSMA_5$ht), mean(thomas_post_PSMA_6$ht), mean(thomas_post_PSMA_7$ht), mean(thomas_post_PSMA_8$ht), mean(thomas_post_PSMA_9$ht), mean(thomas_post_PSMA_10$ht), mean(thomas_post_PSMA_11$ht), mean(thomas_post_PSMA_12$ht)),
-  easting = c(298424, 292126, 291790, 270783, 298262, 298407, 298752, 299952, 300114, 298189, 300302, 292336),
-  northing = c(3822263, 3825085, 3824989, 3818567, 3822354, 3822698, 3821985, 3821912, 3821966, 3822595, 3823239, 3825104)
-)
-
-#### UMCA
-
-unique(thomas_post_UMCA$plot_id) # print each plot ID where UMCA is present
-
-# create a data frame for each plot 
-## NOTE: each plot is an 11.35m radius circular plot
-thomas_post_UMCA_1 <- filter(thomas_post_UMCA, plot_id == "BC12")
-
-# calculate plot area
-plot_area <- pi*(11.35^2)
-## plot area = 405 m^2
-
-# create data frame: project, year, plot_id, & abundance for UMCA
-thomas_post_UMCA_clean <- data.frame(
-  project = rep("Thomas", times = length(unique(thomas_post_UMCA$plot_id))), 
-  species = rep("UMCA", times = length(unique(thomas_post_UMCA$plot_id))),
-  plot_id = c(unique(thomas_post_UMCA$plot_id)),
-  abundance = c(sum(thomas_post_UMCA_1$tree_area)/plot_area),
-  avg_ht = c(mean(thomas_post_UMCA_1$ht)),
-  easting = c(270783),
-  northing = c(3818567)
-)
-
-# combine all pre-fire data from thomas fire plots
-tf_abundance <- rbind(thomas_post_PIPO_clean, thomas_post_PSMA_clean, thomas_post_QUCH_clean, thomas_post_QUWI_clean, thomas_post_UMCA_clean)
-```
-
 #### combine all abundance data
 ```{r}
 # load in x & y coords
-coord <- read_csv("data/Nicole/zoe_transect_coordinates.csv") %>%
-  clean_names()
-
-# combine abundance across all three plots
-abundance_whole <- rbind(l_abundance, bm_abundance, tf_abundance) %>%
-  mutate(x_long = coord$x_long) %>%
-  mutate(y_lat = coord$y_lat)
-  # note: BM 26 ABCO = NA b/c no dbh data recorded
-
-# export to csv
-write.csv(abundance_whole, "data/Nicole/abundance_whole.csv", row.names=FALSE)
+# coord <- read_csv("data/Nicole/zoe_transect_coordinates.csv") %>%
+#   clean_names()
+# 
+# # combine abundance across all three plots
+# abundance_whole <- rbind(l_abundance, bm_abundance, tf_abundance) %>%
+#   mutate(x_long = coord$x_long) %>%
+#   mutate(y_lat = coord$y_lat)
+#   # note: BM 26 ABCO = NA b/c no dbh data recorded
+# 
+# # export to csv
+# write.csv(abundance_whole, "data/Nicole/abundance_whole.csv", row.names=FALSE)
 ```
-
 
 ## fuels data
 ```{r}
@@ -1115,22 +964,6 @@ bm_abundance <- bm_abundance %>%
   mutate(sla_wtd = bm_sla_wtd) %>%
   mutate(plot_id = as.character(plot_id))
 
-## thomas fire
-tf_sla_pipo <- tf_abundance %>%
-  filter(species == "PIPO") %>%
-  mutate(sla_wtd = abundance*4.897218)
-
-tf_sla_quch <- tf_abundance %>%
-  filter(species == "QUCH") %>%
-  mutate(sla_wtd = abundance*8.862914)
-
-tf_sla_wtd <- c(tf_sla_pipo$sla_wtd, tf_sla_quch$sla_wtd)
-
-tf_abundance <- tf_abundance %>%
-  filter(species == "PIPO" | species == "QUCH") %>%
-  mutate(sla_wtd = tf_sla_wtd) %>%
-  mutate(plot_id = as.character(plot_id))
-
 # leaf length
 # read in data from TRY database
 try_ll <- read_csv("data/Traits/try-ll.csv") %>%
@@ -1176,22 +1009,6 @@ bm_ll_wtd <- c(bm_ll_pije$ll_wtd, bm_ll_abco$ll_wtd)
 
 bm_abundance <- bm_abundance %>%
   mutate(ll_wtd = bm_ll_wtd) %>%
-  mutate(plot_id = as.character(plot_id))
-
-## thomas fire
-tf_ll_pipo <- tf_abundance %>%
-  filter(species == "PIPO") %>%
-  mutate(ll_wtd = abundance*22.000000)
-
-tf_ll_quch <- tf_abundance %>%
-  filter(species == "QUCH") %>%
-  mutate(ll_wtd = abundance*6.166667)
-
-tf_ll_wtd <- c(tf_ll_pipo$ll_wtd, tf_ll_quch$ll_wtd)
-
-tf_abundance <- tf_abundance %>%
-  filter(species == "PIPO" | species == "QUCH") %>%
-  mutate(ll_wtd = tf_ll_wtd) %>%
   mutate(plot_id = as.character(plot_id))
 
 # leaf width
@@ -1241,22 +1058,6 @@ bm_abundance <- bm_abundance %>%
   mutate(width_wtd = bm_width_wtd) %>%
   mutate(plot_id = as.character(plot_id))
 
-## thomas fire
-tf_width_pipo <- tf_abundance %>%
-  filter(species == "PIPO") %>%
-  mutate(width_wtd = abundance*0.2814400)
-
-tf_width_quch <- tf_abundance %>%
-  filter(species == "QUCH") %>%
-  mutate(width_wtd = abundance*3.0222222)
-
-tf_width_wtd <- c(tf_width_pipo$width_wtd, tf_width_quch$width_wtd)
-
-tf_abundance <- tf_abundance %>%
-  filter(species == "PIPO" | species == "QUCH") %>%
-  mutate(width_wtd = tf_width_wtd) %>%
-  mutate(plot_id = as.character(plot_id))
-
 # plant height vegetative
 # read in data from TRY database
 try_height <- read_csv("data/Traits/try-height.csv")%>%
@@ -1279,7 +1080,7 @@ unique(try_height$species_name) # determine the species included in the leaf hei
 mean_try_height <- try_height %>%
   group_by(species_name) %>%
   summarise(mean_height = mean(std_value)) %>%
-  mutate(unit = rep("m", length = 16))
+  mutate(unit = rep("m", length = 16)) 
 
 # calculate weighted trait value (trait value x species abundance)
 ## laguna mountain
@@ -1310,22 +1111,6 @@ bm_height_wtd <- c(bm_height_pije$height_wtd, bm_height_abco$height_wtd)
 
 bm_abundance <- bm_abundance %>%
   mutate(height_wtd = bm_height_wtd) %>%
-  mutate(plot_id = as.character(plot_id))
-
-## thomas fire
-tf_height_pipo <- tf_abundance %>%
-  filter(species == "PIPO") %>%
-  mutate(height_wtd = abundance*18.489103)
-
-tf_height_quch <- tf_abundance %>%
-  filter(species == "QUCH") %>%
-  mutate(height_wtd = abundance*2.125775)
-
-tf_height_wtd <- c(tf_height_pipo$height_wtd, tf_height_quch$height_wtd)
-
-tf_abundance <- tf_abundance %>%
-  filter(species == "PIPO" | species == "QUCH") %>%
-  mutate(height_wtd = tf_height_wtd) %>%
   mutate(plot_id = as.character(plot_id))
 
 # leaf curling
@@ -1360,20 +1145,157 @@ bm_abundance <- bm_abundance %>%
   mutate(curl_wtd = bm_curl_wtd) %>%
   mutate(plot_id = as.character(plot_id))
 
-## thomas fire
-tf_curl_pipo <- tf_abundance %>%
-  filter(species == "PIPO") %>%
-  mutate(curl_wtd = rep(0, length = tf_abundance))
+# leaf N content per leaf area
+# read in data from TRY database
+try_N_la <- read_csv("data/Traits/try-n_p.csv") %>%
+  clean_names() %>%
+  select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value, unit_name) %>%
+  filter(trait_id=="50") %>%
+  mutate(std_value = as.numeric(std_value)) %>%
+  mutate(species_name = str_replace(species_name, "Quercus keloggii", "Quercus kelloggii")) 
 
-tf_curl_quch <- tf_abundance %>%
-  filter(species == "QUCH") %>%
-  mutate(curl_wtd = abundance*7.33)
+unique(try_N_la$species_name) # determine species included in N content per leaf area data
 
-tf_curl_wtd <- c(tf_curl_pipo$curl_wtd, tf_curl_quch$curl_wtd)
+# calculate mean value of leaf N content per leaf area for each species
+mean_try_N_la <- try_N_la %>%
+  group_by(species_name) %>%
+  summarise(mean_N_la = mean(std_value)) %>%
+  mutate(unit = rep("g/m2", length = 3)) 
 
-tf_abundance <- tf_abundance %>%
-  filter(species == "PIPO" | species == "QUCH") %>%
-  mutate(curl_wtd = tf_curl_wtd) %>%
+# calculate weighted trait value (trait value x species abundance)
+## laguna mountain
+laguna_n_la_pije <- l_abundance %>%
+  filter(species == "PIJE") %>%
+  mutate(n_la_wtd = abundance*3.336761)
+
+laguna_n_la_quke <- l_abundance %>%
+  filter(species == "QUKE") %>%
+  mutate(n_la_wtd = abundance*1.741306)
+
+laguna_n_la_wtd <- c(laguna_n_la_pije$n_la_wtd, laguna_n_la_quke$n_la_wtd)
+
+l_abundance <- l_abundance %>%
+  mutate(n_la_wtd = laguna_n_la_wtd) %>%
+  mutate(plot_id = as.character(plot_id))
+
+## bluff mesa
+bm_n_la_pije <- bm_abundance %>%
+  filter(species == "PIJE") %>%
+  mutate(n_la_wtd = abundance*3.336761)
+
+bm_n_la_abco <- bm_abundance %>%
+  filter(species == "ABCO") %>%
+  mutate(n_la_wtd = abundance*3.873892) 
+
+bm_n_la_wtd <- c(bm_n_la_pije$n_la_wtd, bm_n_la_abco$n_la_wtd)
+
+bm_abundance <- bm_abundance %>%
+  mutate(n_la_wtd = bm_n_la_wtd) %>%
+  mutate(plot_id = as.character(plot_id))
+
+# leaf N content per leaf dry mass
+# read in data from TRY database
+try_N_ldm <- read_csv("data/Traits/try-n_p.csv") %>%
+  clean_names() %>%
+  select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value, unit_name) %>%
+  filter(trait_id=="14") %>%
+  mutate(std_value = as.numeric(std_value)) %>%
+  mutate(species_name = str_replace(species_name, "Quercus keloggii", "Quercus kelloggii")) 
+
+unique(try_N_ldm$species_name) # determine species included in N content per leaf area data
+
+# calculate mean value of leaf N content per leaf area for each species
+mean_try_N_ldm <- try_N_ldm %>%
+  group_by(species_name) %>%
+  summarise(mean_N_ldm = mean(std_value)) %>%
+  mutate(unit = rep("mg/g", length = 3)) 
+
+# calculate weighted trait value (trait value x species abundance)
+## laguna mountain
+laguna_n_ldm_pije <- l_abundance %>%
+  filter(species == "PIJE") %>%
+  mutate(n_ldm_wtd = abundance*11.17233)
+
+laguna_n_ldm_quke <- l_abundance %>%
+  filter(species == "QUKE") %>%
+  mutate(n_ldm_wtd = abundance*17.12167)
+
+laguna_n_ldm_wtd <- c(laguna_n_ldm_pije$n_ldm_wtd, laguna_n_ldm_quke$n_ldm_wtd)
+
+l_abundance <- l_abundance %>%
+  mutate(n_ldm_wtd = laguna_n_ldm_wtd) %>%
+  mutate(plot_id = as.character(plot_id))
+
+## bluff mesa
+bm_n_ldm_pije <- bm_abundance %>%
+  filter(species == "PIJE") %>%
+  mutate(n_ldm_wtd = abundance*11.17233)
+
+bm_n_ldm_abco <- bm_abundance %>%
+  filter(species == "ABCO") %>%
+  mutate(n_ldm_wtd = abundance*12.66867) 
+
+bm_n_ldm_wtd <- c(bm_n_ldm_pije$n_ldm_wtd, bm_n_ldm_abco$n_ldm_wtd)
+
+bm_abundance <- bm_abundance %>%
+  mutate(n_ldm_wtd = bm_n_ldm_wtd) %>%
+  mutate(plot_id = as.character(plot_id))
+
+# leaf P content per leaf area
+# read in data from TRY database
+try_P_la <- read_csv("data/Traits/try-n_p.csv") %>%
+  clean_names() %>%
+  select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value, unit_name) %>%
+  filter(trait_id=="51") %>%
+  mutate(std_value = as.numeric(std_value))
+ 
+unique(try_P_la$species_name) # determine species included in N content per leaf area data --> no data for QUKE
+
+# leaf P content per leaf dry mass
+# read in data from TRY database
+try_P_ldm <- read_csv("data/Traits/try-n_p.csv") %>%
+  clean_names() %>%
+  select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value, unit_name) %>%
+  filter(trait_id=="15") %>%
+  mutate(std_value = as.numeric(std_value)) 
+
+unique(try_P_ldm$species_name) # determine species included in N content per leaf area data
+
+# calculate mean value of leaf N content per leaf area for each species
+mean_try_P_ldm <- try_P_ldm %>%
+  group_by(species_name) %>%
+  summarise(mean_P_ldm = mean(std_value)) %>%
+  mutate(unit = rep("mg/g", length = 3)) 
+
+# calculate weighted trait value (trait value x species abundance)
+## laguna mountain
+laguna_p_ldm_pije <- l_abundance %>%
+  filter(species == "PIJE") %>%
+  mutate(p_ldm_wtd = abundance*1.174033)
+
+laguna_p_ldm_quke <- l_abundance %>%
+  filter(species == "QUKE") %>%
+  mutate(p_ldm_wtd = abundance*2.235000)
+
+laguna_p_ldm_wtd <- c(laguna_p_ldm_pije$p_ldm_wtd, laguna_p_ldm_quke$p_ldm_wtd)
+
+l_abundance <- l_abundance %>%
+  mutate(p_ldm_wtd = laguna_p_ldm_wtd) %>%
+  mutate(plot_id = as.character(plot_id))
+
+## bluff mesa
+bm_p_ldm_pije <- bm_abundance %>%
+  filter(species == "PIJE") %>%
+  mutate(p_ldm_wtd = abundance*1.174033)
+
+bm_p_ldm_abco <- bm_abundance %>%
+  filter(species == "ABCO") %>%
+  mutate(p_ldm_wtd = abundance*1.348615) 
+
+bm_p_ldm_wtd <- c(bm_p_ldm_pije$p_ldm_wtd, bm_p_ldm_abco$p_ldm_wtd)
+
+bm_abundance <- bm_abundance %>%
+  mutate(p_ldm_wtd = bm_p_ldm_wtd) %>%
   mutate(plot_id = as.character(plot_id))
 ```
 
@@ -1386,7 +1308,10 @@ laguna_cwm <- l_abundance %>%
   mutate(ll_cwm = (sum(ll_wtd))/sum(abundance)) %>%
   mutate(width_cwm = (sum(width_wtd))/sum(abundance)) %>%
   mutate(height_cwm = (sum(height_wtd))/sum(abundance)) %>%
-  mutate(curl_cwm = (sum(curl_wtd))/sum(abundance))
+  mutate(curl_cwm = (sum(curl_wtd))/sum(abundance)) %>%
+  mutate(n_la_cwm = (sum(n_la_wtd))/sum(abundance)) %>%
+  mutate(n_ldm_cwm = (sum(n_ldm_wtd))/sum(abundance)) %>%
+  mutate(p_ldm_cwm = (sum(p_ldm_wtd))/sum(abundance))
 
 # calculate community weighted mean (PER PLOT)
 bluffmesa_cwm <- bm_abundance %>%
@@ -1395,19 +1320,47 @@ bluffmesa_cwm <- bm_abundance %>%
   mutate(ll_cwm = (sum(ll_wtd))/sum(abundance)) %>%
   mutate(width_cwm = (sum(width_wtd))/sum(abundance)) %>%
   mutate(height_cwm = (sum(height_wtd))/sum(abundance)) %>%
-  mutate(curl_cwm = (sum(curl_wtd))/sum(abundance))
-
-# calculate community weighted mean (PER PLOT)
-thomas_cwm <- tf_abundance %>%
-  group_by(plot_id) %>%
-  mutate(sla_cwm = (sum(sla_wtd))/sum(abundance)) %>%
-  mutate(ll_cwm = (sum(ll_wtd))/sum(abundance)) %>%
-  mutate(width_cwm = (sum(width_wtd))/sum(abundance)) %>%
-  mutate(height_cwm = (sum(height_wtd))/sum(abundance)) %>%
-  mutate(curl_cwm = (sum(curl_wtd))/sum(abundance))
+  mutate(curl_cwm = (sum(curl_wtd))/sum(abundance)) %>%
+  mutate(n_la_cwm = (sum(n_la_wtd))/sum(abundance)) %>%
+  mutate(n_ldm_cwm = (sum(n_ldm_wtd))/sum(abundance)) %>%
+  mutate(p_ldm_cwm = (sum(p_ldm_wtd))/sum(abundance))
 ```
 
 # data visualization
+## abundance
+```{r}
+# combine laguna & bm abundance data
+abundance_raw <- rbind(l_abundance, bm_abundance) %>%
+  select(c(project, species, abundance))
+
+print(abundance_raw$plot_id)
+
+# create vectors
+variable <- rep(c("row_num", "Abundance"), 77)
+plot_id <- c(rep(128, 2), rep(129, 2), rep(130, 2), rep(131, 2), rep(132, 2), rep(133, 2), rep(134, 2), rep(135, 2), rep(137, 2), rep(138, 2), rep(139, 2), rep(140, 2), rep(141, 2), rep(142, 2), rep(143, 2), rep(144, 2), rep(145, 2), rep(170, 2), rep(171, 2), rep(172, 2), rep(173, 2), rep(175, 2), rep(176, 2), rep(177, 2), rep(179, 2), rep(180, 2), rep(181, 2), rep(195, 2), rep(197, 2), rep(198, 2), rep(199, 2), rep(200, 2), rep(128, 2), rep(129, 2), rep(130, 2), rep(131, 2), rep(133, 2), rep(134, 2), rep(135, 2), rep(137, 2), rep(138, 2), rep(139, 2), rep(141, 2), rep(142, 2), rep(143, 2), rep(144, 2), rep(170, 2), rep(171, 2), rep(172, 2), rep(173, 2), rep(175, 2), rep(177, 2), rep(179, 2), rep(180, 2), rep(181, 2), rep(195, 2), rep(196, 2), rep(197, 2), rep(198, 2), rep(199, 2), rep(200, 2), rep(24, 2), rep(25, 2), rep(26, 2), rep(27, 2), rep(33, 2), rep(49, 2), rep(50, 2), rep(51, 2), rep(52, 2), rep(53, 2), rep(24, 2), rep(26, 2), rep(33, 2), rep(48, 2), rep(49, 2), rep(52, 2))
+value <- c(1, 0.287818153, 2, 0.314813660, 3, 0.392261532, 4, 0.160015467, 5, 0.212455165, 6, 0.253615201, 7, 0.313409674, 8, 0.202621388, 9, 0.305246887, 10, 0.089103884, 11, 0.267856919, 12, 0.129019207, 13, 0.148012053, 14, 0.198904378, 15, 0.114283470, 16, 0.207206369, 17, 0.029744009, 18, 0.012035251, 19, 0.089825016, 20, 0.017759026, 21, 0.009390125, 22, 0.040769295, 23, 0.011888362, 24, 0.048106009, 25, 0.037420706, 26, 0.072318359, 27, 0.015791370, 28, 0.136926541, 29, 0.085321678, 30, 0.035760876, 31, 0.001957867, 32, 0.084420423, 33, 0.354779881, 34, 0.048346562, 35, 0.107770188, 36, 0.123975868, 37, 0.086345359, 38, 0.171812232, 39, 0.079467872, 40, 0.410841468, 41, 0.059759213, 42, 0.000000000, 43, 0.316010208, 44, 0.047450804, 45, 0.143419240, 46, 0.027949359, 47, 0.383993188, 48, 0.244201954, 49, 0.254060772, 50, 0.313916775, 51, 0.351361515, 52, 0.093259572, 53, 0.483630431, 54, 0.276800442, 55, 0.324071979, 56, 0.319153438, 57, 0.186176328, 58, 0.057445953, 59, 0.104646946, 60, 0.420025617, 61, 0.299296319, 62, 0.340911768, 63, 0.105491180, 64, 0.109314173, 65, 0.340050263, 66, 0.305090823, 67, 0.114166586, 68, 0.115842923, 69, 0.131598372, 70, 0.018538687, 71, 0.144114770, 72, 0.033583031, 73, NA, 74, 0.127012168, 75, 0.141486105, 76, 0.876216111, 77, 0.032622407)
+species <- c(rep("PIJE", 62), rep("QUKE", 60), rep("PIJE", 20), rep("ABCO", 12))
+location <- c(rep("Laguna Mountain", 61), rep("Bluff Mesa", 16))
+
+abundance_arrange <- data.frame(plot_id, species, variable, value) %>%
+  filter(!variable=="row_num") %>%
+  mutate(location=location) %>%
+  slice(-73) %>%
+  mutate(plot_id = as.factor(plot_id))
+
+abundance_bar <- ggplot(abundance_arrange, aes(fill=species, y=value, x=plot_id)) + 
+    geom_bar(position="stack", stat="identity") +
+    facet_wrap(~location, scales = "free_x") +
+    theme_minimal() +
+    theme(axis.text.x = element_blank(),
+          axis.title = element_text(face = 'bold', size = 16)) +
+    xlab("Plot") +
+    ylab("Abundance") +
+    scale_fill_brewer(palette = "Paired")
+
+abundance_bar
+```
+
 ## leaf trait bar plots
 ```{r}
 # species IDs: 42135, 45408, 39, 42168, 45504, 45342, 44566, 55485
@@ -1418,7 +1371,7 @@ thomas_cwm <- tf_abundance %>%
 # laguna mountain all leaf traits
 # create a dataset
 l_trait_clean <- laguna_cwm %>%
-  select(plot_id, sla_cwm, ll_cwm, width_cwm, height_cwm, curl_cwm) %>%
+  select(plot_id, sla_cwm, ll_cwm, width_cwm, height_cwm, curl_cwm, n_la_cwm, n_ldm_cwm, p_ldm_cwm) %>%
   distinct()
 
 trait <- rep(c("row_num", "plot_id", "Spec leaf area (mm2/mg)" , "Leaf length (cm)" , "Leaf width (cm)", "Plant height (m)", "Leaf curl height (mm)") , 32)
@@ -1440,7 +1393,7 @@ laguna_cwm_plot <- ggplot(laguna_cwm_arrange, aes(fill=plot_id, y=cwm, x=plot_id
 
 # bluff mesa all leaf traits
 b_trait_clean <- bluffmesa_cwm %>%
-  select(plot_id, sla_cwm, ll_cwm, width_cwm, height_cwm, curl_cwm) %>%
+  select(plot_id, sla_cwm, ll_cwm, width_cwm, height_cwm, curl_cwm, n_la_cwm, n_ldm_cwm, p_ldm_cwm) %>%
   distinct()
 
 # create a dataframe
@@ -2131,13 +2084,15 @@ dl_csp_plot
 ## litter density vs. leaf trait scatterplots
 ```{r}
 # calculate litter density per plot (tons/m3)
-density <- fuels_whole %>%
+density_whole <- fuels_whole %>%
   select(macroplot, duff, litter, tot_dep) %>%
   mutate(tot_mass = duff + litter) %>%
   mutate(tot_dep_m = tot_dep/100) %>%
   mutate(volume_m3 = tot_dep_m*405) %>%
   mutate(mass_tons = (tot_mass/4046.86)*405) %>%
-  mutate(density = mass_tons/volume_m3) %>%
+  mutate(density = mass_tons/volume_m3) 
+
+density <- density_whole %>%
   slice(-c(9,18)) %>%
   mutate(location = c(rep("Laguna Mountain", 32), rep("Bluff Mesa", 11)))
 
@@ -2197,7 +2152,7 @@ height_dens_plot
 lc_dens_plot
 ```
 
-## fuel consumption vs. leaf trait scatterplots LEFT OFF HERE!  
+## fuel consumption vs. leaf trait scatterplots   
 ```{r}
 # add cwms to consumption dataframe
 consumption <- consumption %>%
@@ -2216,8 +2171,11 @@ sla_cons_plot <- ggplot(consumption, aes(x=sla, y=duff_litter_diff, color=locati
     ylab("Duff/litter consumed (tons/area)") +
     geom_smooth(method=lm , color="darkblue", se=TRUE)
 
+consumption_laguna <- consumption %>%
+  filter(!location == "Bluff Mesa")
+
 # scatterplot of leaf length vs. duff/litter consumed
-ll_cons_plot <- ggplot(consumption, aes(x=ll, y=duff_litter_diff, color=location)) +
+ll_cons_plot <- ggplot(consumption, aes(x=ll, y=duff_litter_diff, color = location)) +
     geom_point() +
     ggtitle("Correlation between leaf length and duff/litter consumed") +
     xlab("Leaf length (cm)") +
@@ -2495,4 +2453,363 @@ summary(dep_mult2) # display results of mult. regression --> SIGNIFICANT?
 dep_mult3 <- lm(dep_diff ~ lc + ll, data = consumption) # multiple regression model
 summary(dep_mult3) # display results of mult. regression --> SIGNIFICANT?
 ```
+
+
+## PCA
+### PCA: leaf traits (both locations)
+```{r}
+# create data frame of just leaf traits
+site <- c(rep("Laguna Mountain", 32), rep("Bluff Mesa", 10))
+
+trait_all <- rbind(l_trait_clean, b_trait_clean) %>% 
+  na.omit() %>%
+  ungroup() %>%
+  mutate(location = site) %>%
+  mutate(plot_id = as.numeric(plot_id)) %>%
+  slice(-c(4, 37)) %>%
+  arrange(plot_id)
+
+pca_trait_data <- trait_all %>%
+  select(-c(plot_id, location, height_cwm)) # select only the continuous variables being analyzed
+
+# conduct PCA, stats::prcomp 
+pca_traits <- prcomp(pca_trait_data, scale = TRUE)
+
+# show PCA results -> larger numbers = more variance explained by principal component; more explanatory power
+summary(pca_traits)
+
+# show scree plot (visualize how eigen values decrease with # of ordination axes)
+screeplot(pca_traits, type="lines")
+
+# calculate structure coefficients
+cor(pca_trait_data, pca_traits$x)
+
+# do the math, same results as above
+loadings <- pca_traits$rotation
+sdev <- pca_traits$sdev
+struct.function <- function(loadings, sdev){
+  loadings*sdev
+}
+
+s.corr <- t(apply(loadings, 1, struct.function, sdev))
+
+head(s.corr[, 1:4])
+
+# % of the variable's variance represented by that component
+s.corr2 <- s.corr^2
+s.corr2
+
+# calculate communality: proportion of variance explained after PCs have been retained
+# if you retain all PCs, communality will equal 1...
+s.corr.df <- as.data.frame(s.corr) %>%
+  select(PC1:PC2)
+
+strct.corr2 <- s.corr.df^2
+
+apply(strct.corr2, 1, sum) # what does this do? why are my values showing 1?
+
+# view pca
+biplot_traits <- autoplot(pca_traits, data = trait_all,
+                          colour = "location",
+                           loadings = TRUE, loadings.colour = "lightblue",
+                           loadings.label = TRUE, loadings.label.colour = "black") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.title = element_text(face = 'bold', size = 12),
+        axis.text = element_text(size = 10),
+        axis.text.x = element_text(size = 10, angle = 20))
+
+biplot_traits
+```
+
+### PCA: leaf traits (laguna)
+```{r}
+# create the data frame & only include the values to be analyzed in pca
+pca_laguna_data <- trait_all %>%
+  filter(location == "Laguna Mountain") %>%
+  select(-c(plot_id, location))
+
+# conduct PCA, stats::prcomp 
+pca_laguna <- prcomp(pca_laguna_data, scale=TRUE)
+
+# show PCA results -> larger numbers = more variance explained by principal component; more explanatory power
+summary(pca_laguna)
+
+# show scree plot (visualize how eigen values decrease with # of ordination axes)
+screeplot(pca_laguna, type="lines")
+
+# calculate structure coefficients
+cor(pca_laguna_data, pca_laguna$x)
+
+# do the math, same results as above
+loadings <- pca_laguna$rotation
+sdev <- pca_laguna$sdev
+struct.function <- function(loadings, sdev){
+  loadings*sdev
+}
+
+s.corr.l <- t(apply(loadings, 1, struct.function, sdev))
+
+head(s.corr.l[, 1:4])
+
+# % of the variable's variance represented by that component
+s.corr.l2 <- s.corr.l^2
+s.corr.l2
+
+# calculate communality: proportion of variance explained after PCs have been retained
+# if you retain all PCs, communality will equal 1...
+s.corr.l.df <- as.data.frame(s.corr.l) %>%
+  select(PC1:PC2)
+
+strct.corr.l2 <- s.corr.l.df^2
+
+apply(strct.corr.l2, 1, sum) # what does this do? why are my values showing 1?
+
+# view pca
+biplot_laguna <- autoplot(pca_laguna, data = pca_laguna_data,
+                           loadings = TRUE, loadings.colour = "lightblue",
+                           loadings.label = TRUE, loadings.label.colour = "black") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.title = element_text(face = 'bold', size = 12),
+        axis.text = element_text(size = 10),
+        axis.text.x = element_text(size = 10, angle = 20))
+
+biplot_laguna
+```
+
+### PCA; leaf traits (bluff mesa)
+```{r}
+# create the data frame & only include the values to be analyzed in pca
+pca_bluff_data <- trait_all %>%
+  filter(location == "Bluff Mesa") %>%
+  select(-c(plot_id, location, curl_cwm))
+
+# conduct PCA, stats::prcomp 
+pca_bluff <- prcomp(pca_bluff_data, scale=TRUE)
+
+# show PCA results -> larger numbers = more variance explained by principal component; more explanatory power
+summary(pca_bluff)
+
+# show scree plot (visualize how eigen values decrease with # of ordination axes)
+screeplot(pca_bluff, type="lines")
+
+# calculate structure coefficients
+cor(pca_bluff_data, pca_bluff$x)
+
+# do the math, same results as above
+loadings <- pca_bluff$rotation
+sdev <- pca_bluff$sdev
+struct.function <- function(loadings, sdev){
+  loadings*sdev
+}
+
+s.corr.b <- t(apply(loadings, 1, struct.function, sdev))
+
+head(s.corr.b[, 1:4])
+
+# % of the variable's variance represented by that component
+s.corr.b2 <- s.corr.b^2
+s.corr.b2
+
+# calculate communality: proportion of variance explained after PCs have been retained
+# if you retain all PCs, communality will equal 1...
+s.corr.b.df <- as.data.frame(s.corr.b) %>%
+  select(PC1:PC2)
+
+strct.corr.b2 <- s.corr.b.df^2
+
+apply(strct.corr.b2, 1, sum) # what does this do? why are my values showing 1?
+
+# view pca
+biplot_bluff <- autoplot(pca_bluff, data = pca_bluff_data,
+                           loadings = TRUE, loadings.colour = "lightblue",
+                           loadings.label = TRUE, loadings.label.colour = "black") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.title = element_text(face = 'bold', size = 12),
+        axis.text = element_text(size = 10),
+        axis.text.x = element_text(size = 10, angle = 20))
+
+biplot_bluff
+```
+
+### PCA: fire severity (both locations)
+```{r}
+# create data frame of just fire sev
+fire_all <- postfire_whole %>%
+  select(-c(location, species, category)) %>%
+  group_by(plot_id) %>%
+  summarise_all(mean) ## LEFT OFF HERE: ADD FUEL CONSUM DATA USING RBIND CONSUMPTION + FIRE_ALL
+
+pca_fire_data_all <- merge(fire_all, consumption, by = "plot_id") %>%
+  slice(-37) %>%
+  arrange(plot_id)
+
+pca_fire_data <- pca_fire_data_all %>%
+  select(-c(plot_id, location, sla, ll, lw, height, lc))
+
+# conduct PCA, stats::prcomp 
+pca_fire <- prcomp(pca_fire_data, scale=TRUE)
+
+# show PCA results -> larger numbers = more variance explained by principal component; more explanatory power
+summary(pca_fire)
+
+# show scree plot (visualize how eigen values decrease with # of ordination axes)
+screeplot(pca_fire, type="lines")
+
+# calculate structure coefficients
+cor(pca_fire_data, pca_fire$x)
+
+# do the math, same results as above
+loadings <- pca_fire$rotation
+sdev <- pca_fire$sdev
+struct.function <- function(loadings, sdev){
+  loadings*sdev
+}
+
+s.corr <- t(apply(loadings, 1, struct.function, sdev))
+
+head(s.corr[, 1:4])
+
+# % of the variable's variance represented by that component
+s.corr2 <- s.corr^2
+s.corr2
+
+# calculate communality: proportion of variance explained after PCs have been retained
+# if you retain all PCs, communality will equal 1...
+s.corr.df <- as.data.frame(s.corr) %>%
+  select(PC1:PC2)
+
+strct.corr2 <- s.corr.df^2
+
+apply(strct.corr2, 1, sum) # what does this do? why are my values showing 1?
+
+# view pca
+biplot_fire <- autoplot(pca_fire, data = pca_fire_data_all,
+                          colour = "location",
+                           loadings = TRUE, loadings.colour = "lightblue",
+                           loadings.label = TRUE, loadings.label.colour = "black") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.title = element_text(face = 'bold', size = 12),
+        axis.text = element_text(size = 10),
+        axis.text.x = element_text(size = 10, angle = 20))
+
+biplot_fire
+```
+
+### PCA: fuel loading (both locations)
+```{r}
+# fuel: delete 131, 136, 145, 26
+# create data frame of just fuel loading
+pca_fuel_all <- fuels_whole %>%
+  slice(-c(4, 9, 18, 37, 41))
+
+# load in density data & fit to fuel data
+density_pca <- density_whole %>%
+  slice(-c(4, 9, 18, 37, 41))
+
+pca_fuel_data <- merge(pca_fuel_all, density_pca, by = "macroplot") %>%
+  arrange(macroplot) %>%
+  select(c(one_hr, ten_hr, hun_hr, duff.x, litter.x, duff_dep, litt_dep, density))
+
+# conduct PCA, stats::prcomp 
+pca_fuel <- prcomp(pca_fuel_data, scale=TRUE)
+
+# show PCA results -> larger numbers = more variance explained by principal component; more explanatory power
+summary(pca_fuel)
+
+# show scree plot (visualize how eigen values decrease with # of ordination axes)
+screeplot(pca_fuel, type="lines")
+
+# calculate structure coefficients
+cor(pca_fuel_data, pca_fuel$x)
+
+# do the math, same results as above
+loadings <- pca_fuel$rotation
+sdev <- pca_fuel$sdev
+struct.function <- function(loadings, sdev){
+  loadings*sdev
+}
+
+s.corr <- t(apply(loadings, 1, struct.function, sdev))
+
+head(s.corr[, 1:4])
+
+# % of the variable's variance represented by that component
+s.corr2 <- s.corr^2
+s.corr2
+
+# calculate communality: proportion of variance explained after PCs have been retained
+# if you retain all PCs, communality will equal 1...
+s.corr.df <- as.data.frame(s.corr) %>%
+  select(PC1:PC2)
+
+strct.corr2 <- s.corr.df^2
+
+apply(strct.corr2, 1, sum) 
+
+# view pca
+biplot_fuel <- autoplot(pca_fuel, data = pca_fuel_all,
+                          colour = "location",
+                           loadings = TRUE, loadings.colour = "gray",
+                           loadings.label = TRUE, loadings.label.colour = "black") +
+  scale_color_manual(values=wes_palette(n=2, name = "GrandBudapest1")) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.title = element_text(face = 'bold', size = 12),
+        axis.text = element_text(size = 10),
+        axis.text.x = element_text(size = 10, angle = 20))
+
+biplot_fuel
+```
+
+### PCA scores
+```{r}
+traits_scores <- as.data.frame(pca_traits$x) # call scores for trait pca
+
+fire_scores <- as.data.frame(pca_fire$x) # call scores for fire severity pca
+
+fuel_scores <- as.data.frame(pca_fuel$x) # call scores for fuel loading pca
+```
+
+### PC regression
+```{r}
+# create vectors of PC1 scores for each PCA
+traits <- traits_scores$PC1
+fire <- fire_scores$PC1
+fuel <- fuel_scores$PC1
+
+# create data frame for PC regression with the PC1 scores vectors
+pcr_data <- data.frame(traits, fire, fuel)
+
+# traits v. fire sev
+lr_traits_fire = lm(traits~fire, data = pcr_data) # create the linear regression
+summary(lr_traits_fire) # review the results --> SIGNIFICANT
+
+# fuels v. fire sev
+lr_fuel_fire = lm(fuel~fire, data = pcr_data) # create the linear regression
+summary(lr_fuel_fire) # review the results --> SIGNIFICANT 
+
+# scatterplot of traits v. fire sev
+traits_fire_plot <- ggplot(pcr_data, aes(x=traits, y=fire)) +
+    geom_point() +
+    ggtitle("Traits v. fire severity PCR") +
+    xlab("Traits") +
+    ylab("Fire severity") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplot of fuels v. fire sev
+fuel_fire_plot <- ggplot(pcr_data, aes(x=fuel, y=fire)) +
+    geom_point() +
+    ggtitle("Fuels v. fire PCR") +
+    xlab("Fuels") +
+    ylab("Fire severity") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+traits_fire_plot
+fuel_fire_plot
+```
+
 

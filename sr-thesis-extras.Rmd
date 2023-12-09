@@ -1,0 +1,3639 @@
+---
+title: "sr. thesis extras"
+author: "Zoe Fung"
+date: "2023-02-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### set up
+```{r}
+# load required packages
+library(readr)
+library(ggplot2)
+library(tibble)
+library(janitor)
+library(plyr)
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(forcats)
+library(ggthemes)
+```
+
+### thomas fire
+```{r}
+# read in thomas fire data
+thomas1 <- read.csv("data/Nicole/thomas/TF_postfire_2018.csv") %>%
+  clean_names() %>%
+  slice_head(n = 67) %>%
+  as.data.frame() %>%
+  mutate(plot_id = c("PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-2", "PIPO-2", "PIPO-2", "PIPO-2", "PIPO-2", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-3", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1", "PIPO-1")) %>%
+  mutate(uv1 = rep("NA", length = 67)) %>%
+  mutate(uv2 = rep("NA", length = 67)) %>%
+  mutate(uv3 = rep("NA", length = 67)) %>%
+  mutate(height_m = na_if(height_m, "NO DATA")) 
+
+ht <- thomas1$height_m %>%
+    as.numeric(unlist("height_m"))
+
+# add new column to thomas 1
+thomas1$ht <- ht
+
+thomas1 <- thomas1 %>%
+  rename("location" = "project", "tag_no" = "tree", "dbh" = "dbh_cm", "char_ht" = "torch_height_m", "scorch_ht" = "scorch_height_m") %>% # NOTE: ARE TORCH AND CHAR THE SAME THING?
+  mutate(crwn_rto = (((ht - height_to_crown_base)/ht)*100)) %>% # calculate crown ratio from tree height & height to crown 
+  mutate(crwn_rad = (crown_width)/2) %>% # calculate crown radius from crown width 
+  mutate(tree_area = ((pi*(dbh^2)/4)/100)) %>% # calculate tree area from dbh
+  mutate(category = rep("post", length = 67)) %>%
+  mutate(cr_sc_pct = (100-percent_green)) %>%
+  select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, location, tree_area, category) 
+
+thomas2 <- read.csv("data/Nicole/thomas/TF_postfire_2018-2.csv") %>%
+  clean_names() %>%
+  slice_head(n = 35) %>%
+  mutate(uv1 = rep("NA", length = 35)) %>%
+  mutate(uv2 = rep("NA", length = 35)) %>%
+  mutate(uv3 = rep("NA", length = 35)) %>%
+  mutate(percent_green = rep("NA", length = 35)) %>% 
+  rename("location" = "project", "tag_no" = "tag", "dbh" = "dbh_cm", "ht" = "height_m", "char_ht" = "torch_ht", "cr_sc_pct" = "percent_green") %>% # NOTE: ARE TORCH AND CHAR THE SAME THING?
+  mutate(crwn_rto = (((ht - heigt_to_crown_m)/ht)*100)) %>% # calculate crown ratio from tree height & height to crown 
+  mutate(crwn_rad = (crown_width)/2) %>% # calculate crown radius from crown width 
+  mutate(tree_area = ((pi*(dbh^2)/4)/100)) %>% # calculate tree area from dbh
+  mutate(category = rep("post", length = 35)) %>%
+  select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, location, tree_area, category) 
+
+thomas3 <- read.csv("data/Nicole/thomas/TF_postfire_2018-3.csv") %>%
+  clean_names() %>%
+  slice_head(n = 137) %>%
+  mutate(uv1 = rep("NA", length = 137)) %>%
+  mutate(uv2 = rep("NA", length = 137)) %>%
+  mutate(uv3 = rep("NA", length = 137)) %>%
+  mutate(percent_green = rep("NA", length = 137)) %>%
+  mutate(heigt_to_crown_m = na_if(heigt_to_crown_m, "-")) %>%
+  as.data.frame()
+
+ht <- thomas3$height_m %>%
+    as.numeric(unlist("height_m"))
+
+height_to_crown_m <- thomas3$heigt_to_crown_m %>%
+  as.numeric(unlist("heigt_to_crown_m"))
+
+crown_wid <- thomas3$crown_width %>%
+    as.numeric(unlist("crown_width"))
+
+# add new column to thomas 1
+thomas3$ht <- ht
+thomas3$height_to_crown_m <- height_to_crown_m
+thomas3$crown_wid <- crown_wid
+
+thomas3 <- thomas3 %>%
+  rename("location" = "project", "tag_no" = "tag", "dbh" = "dbh_cm", "char_ht" = "torch_ht", "cr_sc_pct" = "percent_green") %>% # NOTE: ARE TORCH AND CHAR THE SAME THING?
+  mutate(crwn_rto = (((ht - height_to_crown_m)/ht)*100)) %>% # calculate crown ratio from tree height & height to crown 
+  mutate(crwn_rad = (crown_wid)/2) %>% # calculate crown radius from crown width 
+  mutate(tree_area = ((pi*(dbh^2)/4)/100)) %>% # calculate tree area from dbh
+  mutate(category = rep("post", length = 137)) %>%
+  select(plot_id, species, tag_no, status, dbh, ht, crwn_rto, crwn_rad, char_ht, scorch_ht, cr_sc_pct, uv1, uv2, uv3, location, tree_area, category) 
+
+# combine all thomas fire data
+thomas_post <- rbind(
+  thomas1, thomas2, thomas3)
+```
+
+### thomas fire 
+```{r}
+# plot size: 11.35 m radius (405 m^2)
+unique(thomas_post$species) # identify species present in bluff mesa fire data
+
+thomas_post_PIPO <- filter(thomas_post, species == "PIPO") # create data frame w/ only PIPO sp.
+thomas_post_QUWI <- filter(thomas_post, species == "QUWI") # create data frame w/ only QUWI sp.
+thomas_post_QUCH <- filter(thomas_post, species == "QUCH") # create data frame w/ only QUCH sp.
+thomas_post_PSMA <- filter(thomas_post, species == "PSMA") # create data frame w/ only PSMA sp.
+thomas_post_UMCA <- filter(thomas_post, species == "UMCA") # create data frame w/ only UMCA sp.
+
+#### PIPO
+
+unique(thomas_post_PIPO$plot_id) # print each plot ID where PIPO is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.3m radius circular plot
+thomas_post_PIPO_1 <- filter(thomas_post_PIPO, plot_id == "PIPO-1")
+thomas_post_PIPO_2 <- filter(thomas_post_PIPO, plot_id == "PIPO-2")
+thomas_post_PIPO_3 <- filter(thomas_post_PIPO, plot_id == "PIPO-3")
+
+# calculate plot area
+plot_area <- pi*(11.35^2)
+## plot area = 405 m^2
+
+# create data frame: project, year, plot_id, & abundance for PIPO
+thomas_post_PIPO_clean <- data.frame(
+  project = rep("Thomas", times = length(unique(thomas_post_PIPO$plot_id))), 
+  species = rep("PIPO", times = length(unique(thomas_post_PIPO$plot_id))),
+  plot_id = c(unique(thomas_post_PIPO$plot_id)),
+  abundance = c(sum(thomas_post_PIPO_1$tree_area)/plot_area, sum(thomas_post_PIPO_2$tree_area)/plot_area, sum(thomas_post_PIPO_3$tree_area)/plot_area),
+  avg_ht = c(mean(thomas_post_PIPO_1$ht), mean(thomas_post_PIPO_2$ht), mean(thomas_post_PIPO_3$ht)),
+  easting = c(292063, 291414, 291304),
+  northing = c(3824903, 3824672, 3824663)
+)
+
+#### QUWI
+
+unique(thomas_post_QUWI$plot_id) # print each plot ID where QUWI is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.3m radius circular plot
+thomas_post_QUWI_1 <- filter(thomas_post_QUWI, plot_id == "PIPO-2")
+thomas_post_QUWI_2 <- filter(thomas_post_QUWI, plot_id == "BC12")
+
+# calculate plot area
+plot_area <- pi*(11.35^2)
+## plot area = 405 m^2
+
+# create data frame: project, year, plot_id, & abundance for QUWI
+thomas_post_QUWI_clean <- data.frame(
+  project = rep("Thomas", times = length(unique(thomas_post_QUWI$plot_id))), 
+  species = rep("QUWI", times = length(unique(thomas_post_QUWI$plot_id))),
+  plot_id = c(unique(thomas_post_QUWI$plot_id)),
+  abundance = c(sum(thomas_post_QUWI_1$tree_area)/plot_area, sum(thomas_post_QUWI_2$tree_area)/plot_area),
+  avg_ht = c(mean(thomas_post_QUWI_1$ht), mean(thomas_post_QUWI_2$ht)),
+  easting = c(291414, 270783),
+  northing = c(3824672, 3818567)
+)
+
+#### QUCH
+
+unique(thomas_post_QUCH$plot_id) # print each plot ID where QUCH is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.35m radius circular plot
+thomas_post_QUCH_1 <- filter(thomas_post_QUCH, plot_id == "BC1")
+thomas_post_QUCH_2 <- filter(thomas_post_QUCH, plot_id == "BC10")
+thomas_post_QUCH_3 <- filter(thomas_post_QUCH, plot_id == "BC11")
+thomas_post_QUCH_4 <- filter(thomas_post_QUCH, plot_id == "BC12")
+thomas_post_QUCH_5 <- filter(thomas_post_QUCH, plot_id == "BC2")
+thomas_post_QUCH_6 <- filter(thomas_post_QUCH, plot_id == "BC3")
+thomas_post_QUCH_7 <- filter(thomas_post_QUCH, plot_id == "BC4")
+thomas_post_QUCH_8 <- filter(thomas_post_QUCH, plot_id == "BC5")
+thomas_post_QUCH_9 <- filter(thomas_post_QUCH, plot_id == "BC6")
+thomas_post_QUCH_10 <- filter(thomas_post_QUCH, plot_id == "BC7")
+
+# calculate plot area
+plot_area <- pi*(11.35^2)
+## plot area = 405 m^2
+
+# create data frame: project, year, plot_id, & abundance for QUCH
+thomas_post_QUCH_clean <- data.frame(
+  project = rep("Thomas", times = length(unique(thomas_post_QUCH$plot_id))), 
+  species = rep("QUCH", times = length(unique(thomas_post_QUCH$plot_id))),
+  plot_id = c(unique(thomas_post_QUCH$plot_id)),
+  abundance = c(sum(thomas_post_QUCH_1$tree_area)/plot_area, sum(thomas_post_QUCH_2$tree_area)/plot_area, sum(thomas_post_QUCH_3$tree_area)/plot_area, sum(thomas_post_QUCH_4$tree_area)/plot_area, sum(thomas_post_QUCH_5$tree_area)/plot_area, sum(thomas_post_QUCH_6$tree_area)/plot_area, sum(thomas_post_QUCH_7$tree_area)/plot_area, sum(thomas_post_QUCH_8$tree_area)/plot_area, sum(thomas_post_QUCH_9$tree_area)/plot_area, sum(thomas_post_QUCH_10$tree_area)/plot_area),
+  avg_ht = c(mean(thomas_post_QUCH_1$ht), mean(thomas_post_QUCH_2$ht), mean(thomas_post_QUCH_3$ht), mean(thomas_post_QUCH_4$ht), mean(thomas_post_QUCH_5$ht), mean(thomas_post_QUCH_6$ht), mean(thomas_post_QUCH_7$ht), mean(thomas_post_QUCH_8$ht), mean(thomas_post_QUCH_9$ht), mean(thomas_post_QUCH_10$ht)),
+  easting = c(298424, 292126, 291790, 270783, 298262, 298407, 298752, 299952, 300114, 298189),
+  northing = c(3822263, 3825085, 3824989, 3818567, 3822354, 3822698, 3821985, 3821912, 3821966, 3822595)
+)
+
+#### PSMA
+
+unique(thomas_post_PSMA$plot_id) # print each plot ID where PSMA is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.35m radius circular plot
+thomas_post_PSMA_1 <- filter(thomas_post_PSMA, plot_id == "BC1")
+thomas_post_PSMA_2 <- filter(thomas_post_PSMA, plot_id == "BC10")
+thomas_post_PSMA_3 <- filter(thomas_post_PSMA, plot_id == "BC11")
+thomas_post_PSMA_4 <- filter(thomas_post_PSMA, plot_id == "BC12")
+thomas_post_PSMA_5 <- filter(thomas_post_PSMA, plot_id == "BC2")
+thomas_post_PSMA_6 <- filter(thomas_post_PSMA, plot_id == "BC3")
+thomas_post_PSMA_7 <- filter(thomas_post_PSMA, plot_id == "BC4")
+thomas_post_PSMA_8 <- filter(thomas_post_PSMA, plot_id == "BC5")
+thomas_post_PSMA_9 <- filter(thomas_post_PSMA, plot_id == "BC6")
+thomas_post_PSMA_10 <- filter(thomas_post_PSMA, plot_id == "BC7")
+thomas_post_PSMA_11 <- filter(thomas_post_PSMA, plot_id == "BC8")
+thomas_post_PSMA_12 <- filter(thomas_post_PSMA, plot_id == "BC9")
+
+# calculate plot area
+plot_area <- pi*(11.35^2)
+## plot area = 405 m^2
+
+# create data frame: project, year, plot_id, & abundance for PSMA
+thomas_post_PSMA_clean <- data.frame(
+  project = rep("Thomas", times = length(unique(thomas_post_PSMA$plot_id))), 
+  species = rep("PSMA", times = length(unique(thomas_post_PSMA$plot_id))),
+  plot_id = c(unique(thomas_post_PSMA$plot_id)),
+  abundance = c(sum(thomas_post_PSMA_1$tree_area)/plot_area, sum(thomas_post_PSMA_2$tree_area)/plot_area, sum(thomas_post_PSMA_3$tree_area)/plot_area, sum(thomas_post_PSMA_4$tree_area)/plot_area, sum(thomas_post_PSMA_5$tree_area)/plot_area, sum(thomas_post_PSMA_6$tree_area)/plot_area, sum(thomas_post_PSMA_7$tree_area)/plot_area, sum(thomas_post_PSMA_8$tree_area)/plot_area, sum(thomas_post_PSMA_9$tree_area)/plot_area, sum(thomas_post_PSMA_10$tree_area)/plot_area, sum(thomas_post_PSMA_11$tree_area)/plot_area, sum(thomas_post_PSMA_12$tree_area)/plot_area),
+  avg_ht = c(mean(thomas_post_PSMA_1$ht), mean(thomas_post_PSMA_2$ht), mean(thomas_post_PSMA_3$ht), mean(thomas_post_PSMA_4$ht), mean(thomas_post_PSMA_5$ht), mean(thomas_post_PSMA_6$ht), mean(thomas_post_PSMA_7$ht), mean(thomas_post_PSMA_8$ht), mean(thomas_post_PSMA_9$ht), mean(thomas_post_PSMA_10$ht), mean(thomas_post_PSMA_11$ht), mean(thomas_post_PSMA_12$ht)),
+  easting = c(298424, 292126, 291790, 270783, 298262, 298407, 298752, 299952, 300114, 298189, 300302, 292336),
+  northing = c(3822263, 3825085, 3824989, 3818567, 3822354, 3822698, 3821985, 3821912, 3821966, 3822595, 3823239, 3825104)
+)
+
+#### UMCA
+
+unique(thomas_post_UMCA$plot_id) # print each plot ID where UMCA is present
+
+# create a data frame for each plot 
+## NOTE: each plot is an 11.35m radius circular plot
+thomas_post_UMCA_1 <- filter(thomas_post_UMCA, plot_id == "BC12")
+
+# calculate plot area
+plot_area <- pi*(11.35^2)
+## plot area = 405 m^2
+
+# create data frame: project, year, plot_id, & abundance for UMCA
+thomas_post_UMCA_clean <- data.frame(
+  project = rep("Thomas", times = length(unique(thomas_post_UMCA$plot_id))), 
+  species = rep("UMCA", times = length(unique(thomas_post_UMCA$plot_id))),
+  plot_id = c(unique(thomas_post_UMCA$plot_id)),
+  abundance = c(sum(thomas_post_UMCA_1$tree_area)/plot_area),
+  avg_ht = c(mean(thomas_post_UMCA_1$ht)),
+  easting = c(270783),
+  northing = c(3818567)
+)
+
+# combine all pre-fire data from thomas fire plots
+tf_abundance <- rbind(thomas_post_PIPO_clean, thomas_post_PSMA_clean, thomas_post_QUCH_clean, thomas_post_QUWI_clean, thomas_post_UMCA_clean)
+```
+
+## leaf traits - thomas fire
+```{r}
+## thomas fire
+tf_sla_pipo <- tf_abundance %>%
+  filter(species == "PIPO") %>%
+  mutate(sla_wtd = abundance*4.897218)
+
+tf_sla_quch <- tf_abundance %>%
+  filter(species == "QUCH") %>%
+  mutate(sla_wtd = abundance*8.862914)
+
+tf_sla_wtd <- c(tf_sla_pipo$sla_wtd, tf_sla_quch$sla_wtd)
+
+tf_abundance <- tf_abundance %>%
+  filter(species == "PIPO" | species == "QUCH") %>%
+  mutate(sla_wtd = tf_sla_wtd) %>%
+  mutate(plot_id = as.character(plot_id))
+
+## thomas fire
+tf_ll_pipo <- tf_abundance %>%
+  filter(species == "PIPO") %>%
+  mutate(ll_wtd = abundance*22.000000)
+
+tf_ll_quch <- tf_abundance %>%
+  filter(species == "QUCH") %>%
+  mutate(ll_wtd = abundance*6.166667)
+
+tf_ll_wtd <- c(tf_ll_pipo$ll_wtd, tf_ll_quch$ll_wtd)
+
+tf_abundance <- tf_abundance %>%
+  filter(species == "PIPO" | species == "QUCH") %>%
+  mutate(ll_wtd = tf_ll_wtd) %>%
+  mutate(plot_id = as.character(plot_id))
+
+## thomas fire
+tf_width_pipo <- tf_abundance %>%
+  filter(species == "PIPO") %>%
+  mutate(width_wtd = abundance*0.2814400)
+
+tf_width_quch <- tf_abundance %>%
+  filter(species == "QUCH") %>%
+  mutate(width_wtd = abundance*3.0222222)
+
+tf_width_wtd <- c(tf_width_pipo$width_wtd, tf_width_quch$width_wtd)
+
+tf_abundance <- tf_abundance %>%
+  filter(species == "PIPO" | species == "QUCH") %>%
+  mutate(width_wtd = tf_width_wtd) %>%
+  mutate(plot_id = as.character(plot_id))
+
+## thomas fire
+tf_height_pipo <- tf_abundance %>%
+  filter(species == "PIPO") %>%
+  mutate(height_wtd = abundance*18.489103)
+
+tf_height_quch <- tf_abundance %>%
+  filter(species == "QUCH") %>%
+  mutate(height_wtd = abundance*2.125775)
+
+tf_height_wtd <- c(tf_height_pipo$height_wtd, tf_height_quch$height_wtd)
+
+tf_abundance <- tf_abundance %>%
+  filter(species == "PIPO" | species == "QUCH") %>%
+  mutate(height_wtd = tf_height_wtd) %>%
+  mutate(plot_id = as.character(plot_id))
+
+## thomas fire
+tf_curl_pipo <- tf_abundance %>%
+  filter(species == "PIPO") %>%
+  mutate(curl_wtd = rep(0, length = tf_abundance))
+
+tf_curl_quch <- tf_abundance %>%
+  filter(species == "QUCH") %>%
+  mutate(curl_wtd = abundance*7.33)
+
+tf_curl_wtd <- c(tf_curl_pipo$curl_wtd, tf_curl_quch$curl_wtd)
+
+tf_abundance <- tf_abundance %>%
+  filter(species == "PIPO" | species == "QUCH") %>%
+  mutate(curl_wtd = tf_curl_wtd) %>%
+  mutate(plot_id = as.character(plot_id))
+
+# calculate community weighted mean (PER PLOT)
+thomas_cwm <- tf_abundance %>%
+  group_by(plot_id) %>%
+  mutate(sla_cwm = (sum(sla_wtd))/sum(abundance)) %>%
+  mutate(ll_cwm = (sum(ll_wtd))/sum(abundance)) %>%
+  mutate(width_cwm = (sum(width_wtd))/sum(abundance)) %>%
+  mutate(height_cwm = (sum(height_wtd))/sum(abundance)) %>%
+  mutate(curl_cwm = (sum(curl_wtd))/sum(abundance))
+```
+
+## pre post whole
+```{r}
+# combine pre-fire and post-fire data into one dataframe
+pre_post_whole <- rbind(
+  prefire_whole, postfire_whole, thomas_post
+)
+
+# export to csv
+write.csv(pre_post_whole, "data/Nicole/pre_post_whole.csv", row.names=FALSE)
+```
+
+#### fire locations
+```{r}
+# load USDA 1 dataset
+USDAfires <- read.csv("data/USDA_RDA_fires_list.csv") %>%
+  clean_names() %>% # standardize dataset variable names
+  filter(state=="California") # subset dataset to inlcude only CA fires
+# create list of fires in CA from USDA 1 dataset
+CAfires <- distinct(USDAfires,yr_fire_name)
+
+# load USDA 1 fire severity dataset
+USDAseverity <- read.csv("data/USDA_RDA_pre_post_trees.csv") %>%
+  clean_names() %>% # standardize dataset variable names
+  filter(yr_fire_name==c(CAfires$yr_fire_name)) # subset dataset to include only CA fires
+
+# create list of fires in CA that have species & fire severity data
+CAfires_clean <- distinct(USDAseverity,yr_fire_name)
+
+# filter USDA fires dataset to only include CA fires w/ location, species, & fire severity data
+USDAfires_clean <- USDAfires %>%
+  filter(yr_fire_name %in% CAfires_clean$yr_fire_name) 
+
+# create a .csv file for USDAfires_clean
+write.csv(USDAfires_clean, "USDAfires_clean.csv") # how do i specify a path for this file to be created in the data folder?
+
+# create vectors for lat, long, and fire year/name
+latitude <- c(37.279, 37.857, 38.805437, 36.874, 37.279722)
+longitude <- c(-119.318, -120.086, -120.629714, -118.905, -119.50014)
+yr_fire_name <- c("2013 - Aspen", "2013 - Rim", "2014 - King", "2015 - Rough", "2015 - Willow")
+
+# create dataframe 
+USDA2fires_clean <- as.data.frame(cbind(yr_fire_name,latitude,longitude))
+
+# create a .csv file for USDA2fires_clean
+write.csv(USDA2fires_clean, "USDA2fires_clean.csv")
+
+### PLOT locations for Nicole's data -- Laguna Mtn, Bluff Mesa, & Thomas fires
+# read in all plot location data & organize
+laguna_location <- read_csv("data/Nicole-data/LagunaMtn_plot_coordinates.csv") %>%
+  clean_names() %>% # standardize column names
+  select(site_year, plot_id, treatment_unit, easting, northing) %>% # subset data 
+  as.data.frame() %>%
+  drop_na("plot_id")
+bluffmesa_location <- read_csv("data/Nicole-data/BluffMesa_plot_coordinates.csv") %>%
+  clean_names() %>% # standardize column names
+  select(site_year, plot_id, treatment_unit, easting, northing) %>% # subset data
+  as.data.frame() %>%
+  drop_na("plot_id")
+thomas_location <- read_csv("data/Nicole-data/ThomasFire_plot_coordinates.csv") %>%
+  clean_names() %>% # standardize column names
+  select(site_year, plot_id, treatment_unit, easting, northing) %>% # subset data 
+  as.data.frame() %>%
+  drop_na("plot_id")
+```
+
+#### pre-fire: USDA/USFS data
+```{r}
+# load USDA 1 pre & post fire data
+USDA1_prefire <- read.csv("data/USDA_RDA_pre_post_trees.csv") %>%
+  clean_names() %>% # standardize column names
+  filter(yr_fire_name %in% USDAfires_clean$yr_fire_name) %>%
+  select(yr_fire_name, species, dataset, tree_num, genus, species_name, dbh_cm, drc_cm, ht_m, hcb_pre, cr_pre, cc, vr, cl_m) # subset data to only include CA fires w/ location, species, and fire severity data
+
+# add latitude data
+USDA1_prefire <- mutate(USDA1_prefire, latitude=case_when(
+    str_detect(yr_fire_name, "1989 - SEKI Crystal") ~ "36.60068",
+    str_detect(yr_fire_name, "SEKI Grant West I") ~ "36.74582",
+    str_detect(yr_fire_name, "SEKI Highway 2") ~ "36.57336",
+    str_detect(yr_fire_name, "SEKI Tharps") ~ "36.56328",
+    str_detect(yr_fire_name, "SEKI Deer Creek PNF") ~ "36.57336",
+    str_detect(yr_fire_name, "SEKI Grant West") ~ "36.74582",
+    str_detect(yr_fire_name, "LAVO Knob/ Lost Creek") ~ "40.56738",
+    str_detect(yr_fire_name, "SEKI Hole-inthe-Wall") ~ "36.78695",
+    str_detect(yr_fire_name, "SEKI Picnic Estates") ~ "36.79198",
+    str_detect(yr_fire_name, "Crystal") ~ "39.51724",
+    str_detect(yr_fire_name, "LAVO Butte Lake") ~ "40.58129",
+    str_detect(yr_fire_name, "SEKI Mineral King") ~ "36.46600",
+    str_detect(yr_fire_name, "WHIS Brandy Creek") ~ "40.61878",
+    str_detect(yr_fire_name, "1996 - WHIS Shasta Divide") ~ "40.57916",
+    str_detect(yr_fire_name, "REDW Mainstem") ~ "41.12729",
+    str_detect(yr_fire_name, "REDW Midbasin") ~ "41.13717",
+    str_detect(yr_fire_name, "Bucks") ~ "39.88539",
+    str_detect(yr_fire_name, "SEKI Hercules") ~ "36.56936",
+    str_detect(yr_fire_name, "SEKI Mineral KingS10") ~ "36.46601",
+    str_detect(yr_fire_name, "Storrie") ~ "40.02744",
+    str_detect(yr_fire_name, "Volcano Spring") ~ "39.15980",
+    str_detect(yr_fire_name, "FSS2") ~ "36.59506",
+    str_detect(yr_fire_name, "FSS5") ~ "36.58481",
+    str_detect(yr_fire_name, "FSS6") ~ "36.58518",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 174") ~ "41.54627",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 178") ~ "41.56750",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 179") ~ "41.58725",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 1") ~ "36.59455",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 4") ~ "36.58567",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 5") ~ "36.58582",
+    str_detect(yr_fire_name, "Star") ~ "39.09857",
+    str_detect(yr_fire_name, "Swain") ~ "40.67535",
+    str_detect(yr_fire_name, "Blodgett 129 - 60") ~ "38.91730",
+    str_detect(yr_fire_name, "Blodgett 130 - 340") ~ "38.89821",
+    str_detect(yr_fire_name, "Blodgett 131 - 400") ~ "38.89666",
+    str_detect(yr_fire_name, "Cone") ~ "40.75172",
+    str_detect(yr_fire_name, "McNalley") ~ "36.57336",
+    str_detect(yr_fire_name, "REDW Copper Creek") ~ "41.15085",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 181") ~ "41.60037",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 182") ~ "41.56346",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 183") ~ "41.55452",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 2") ~ "36.59416",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 3") ~ "36.59189",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 8") ~ "36.57340",
+    str_detect(yr_fire_name, "LABE South Boundary") ~ "41.69815",
+    str_detect(yr_fire_name, "2003 - WHIS Shasta Divide") ~ "40.57916",
+    str_detect(yr_fire_name, "Power") ~ "38.50190",
+    str_detect(yr_fire_name, "Tennant") ~ "41.55805",
+    str_detect(yr_fire_name, "Tharps2") ~ "36.56328",
+    str_detect(yr_fire_name, "Harding") ~ "39.63345",
+    str_detect(yr_fire_name, "SEKI Lewis Creek") ~ "36.76013",
+    str_detect(yr_fire_name, "Angora") ~ "38.88529",
+    str_detect(yr_fire_name, "Antelope") ~ "40.14120",
+    str_detect(yr_fire_name, "Grass Valley") ~ "34.26739",
+    str_detect(yr_fire_name, "PW-4") ~ "37.80125",
+    str_detect(yr_fire_name, "American River Complex") ~ "39.22988",
+    str_detect(yr_fire_name, "Peterson") ~ "40.89497",
+    str_detect(yr_fire_name, "Piute") ~ "35.48923",
+    str_detect(yr_fire_name, "Rich") ~ "40.06137",
+    str_detect(yr_fire_name, "2008 - Seki Crystal") ~ "36.60068",
+    str_detect(yr_fire_name, "WHIS White Rock") ~ "40.64606",
+    str_detect(yr_fire_name, "Milford") ~ "40.10646",
+    str_detect(yr_fire_name, "REDW Eastside") ~ "41.14705",
+    str_detect(yr_fire_name, "Mountain") ~ "33.71030",
+    str_detect(yr_fire_name, "Rim") ~ "37.90192",
+    str_detect(yr_fire_name, "Salmon Complex") ~ "41.31864",
+    str_detect(yr_fire_name, "Wooded Hills") ~ "32.85336"
+  ))
+
+# add longitude data
+USDA1_prefire <- mutate(USDA1_prefire, longitude=case_when(
+    str_detect(yr_fire_name, "1989 - SEKI Crystal") ~ "-118.8102",
+    str_detect(yr_fire_name, "SEKI Grant West I") ~ "-118.9772",
+    str_detect(yr_fire_name, "SEKI Highway 2") ~ "-118.7604",
+    str_detect(yr_fire_name, "SEKI Tharps") ~ "-118.7428",
+    str_detect(yr_fire_name, "SEKI Deer Creek PNF") ~ "-118.6585", 
+    str_detect(yr_fire_name, "SEKI Grant West") ~ "-118.9772",
+    str_detect(yr_fire_name, "LAVO Knob/ Lost Creek") ~ "-121.5252",
+    str_detect(yr_fire_name, "SEKI Hole-inthe-Wall") ~ "-118.6302",
+    str_detect(yr_fire_name, "SEKI Picnic Estates") ~ "-118.6669",
+    str_detect(yr_fire_name, "Crystal") ~ "-120.0372",
+    str_detect(yr_fire_name, "LAVO Butte Lake") ~ "-121.2966",
+    str_detect(yr_fire_name, "SEKI Mineral King") ~ "-118.6934",
+    str_detect(yr_fire_name, "WHIS Brandy Creek") ~ "-122.5739",
+    str_detect(yr_fire_name, "1996 - WHIS Shasta Divide") ~ "-122.5247",
+    str_detect(yr_fire_name, "REDW Mainstem") ~ "-123.8691",
+    str_detect(yr_fire_name, "REDW Midbasin") ~ "-123.8881",
+    str_detect(yr_fire_name, "Bucks") ~ "-121.3127",
+    str_detect(yr_fire_name, "SEKI Hercules") ~ "-118.7515",
+    str_detect(yr_fire_name, "SEKI Mineral KingS10") ~ "-118.6935",
+    str_detect(yr_fire_name, "Storrie") ~ "-121.2872",
+    str_detect(yr_fire_name, "Volcano Spring") ~ "-120.6647",
+    str_detect(yr_fire_name, "FSS2") ~ "-118.7470",
+    str_detect(yr_fire_name, "FSS5") ~ "-118.7552",
+    str_detect(yr_fire_name, "FSS6") ~ "-118.7596",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 174") ~ "-121.8868",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 178") ~ "-121.8468",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 179") ~ "-121.8417",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 1") ~ "-118.7470",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 4") ~ "-118.7549",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 5") ~ "-118.7592",
+    str_detect(yr_fire_name, "Star") ~ "-120.4895",
+    str_detect(yr_fire_name, "Swain") ~ "-121.2609",
+    str_detect(yr_fire_name, "Blodgett 129 - 60") ~ "-120.6639",
+    str_detect(yr_fire_name, "Blodgett 130 - 340") ~ "-120.6545",
+    str_detect(yr_fire_name, "Blodgett 131 - 400") ~ "-120.6489",
+    str_detect(yr_fire_name, "Cone") ~ "-121.1582",
+    str_detect(yr_fire_name, "McNalley") ~ "-118.4001",
+    str_detect(yr_fire_name, "REDW Copper Creek") ~ "-123.8945",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 181") ~ "-121.8468",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 182") ~ "-121.8937",
+    str_detect(yr_fire_name, "Southern Cascades Goosenest CA 183") ~ "-121.8638",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 2") ~ "-118.7520",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 3") ~ "-118.7552",
+    str_detect(yr_fire_name, "Southern Sierra Nevada Sequoia CA 8") ~ "-118.7721",
+    str_detect(yr_fire_name, "LABE South Boundary") ~ "-121.5030",
+    str_detect(yr_fire_name, "2003 - WHIS Shasta Divide") ~ "-122.5247",
+    str_detect(yr_fire_name, "Power") ~ "-120.2801",
+    str_detect(yr_fire_name, "Tennant") ~ "-121.9136",
+    str_detect(yr_fire_name, "Tharps2") ~ "-118.7428",
+    str_detect(yr_fire_name, "Harding") ~ "-120.3098",
+    str_detect(yr_fire_name, "SEKI Lewis Creek") ~ "-118.7051",
+    str_detect(yr_fire_name, "Angora") ~ "-120.0365",
+    str_detect(yr_fire_name, "Antelope") ~ "-120.5751",
+    str_detect(yr_fire_name, "Grass Valley") ~ "-117.2301",
+    str_detect(yr_fire_name, "PW-4") ~ "-119.8694",
+    str_detect(yr_fire_name, "American River Complex") ~ "-120.6351",
+    str_detect(yr_fire_name, "Peterson") ~ "-121.3170",
+    str_detect(yr_fire_name, "Piute") ~ "-118.3568",
+    str_detect(yr_fire_name, "Rich") ~ "-121.1244",
+    str_detect(yr_fire_name, "2008 - Seki Crystal") ~ "-118.8102",
+    str_detect(yr_fire_name, "WHIS White Rock") ~ "-122.5381",
+    str_detect(yr_fire_name, "Milford") ~ "-120.3957",
+    str_detect(yr_fire_name, "REDW Eastside") ~ "-123.8678",
+    str_detect(yr_fire_name, "Mountain") ~ "--116.7062",
+    str_detect(yr_fire_name, "Rim") ~ "--120.0836",
+    str_detect(yr_fire_name, "Salmon Complex") ~ "-123.1824",
+    str_detect(yr_fire_name, "Wooded Hills") ~ "-116.4381"
+  ))
+
+# determine how many data points are available for pre-fire data (include dbh measurements)
+USDA1_prefire <- drop_na(USDA1_prefire, dbh_cm) %>% # 23,509 DBH data points
+  distinct(yr_fire_name, species, dataset, tree_num, genus, species_name, dbh_cm, drc_cm, ht_m, hcb_pre, cr_pre, cc, vr, cl_m) # drop duplicate rows
+
+# identify the species for which pre/post-fire data exists
+USDA1_species <- distinct(USDA1_prefire, species)
+
+# create list of the CA fires w/ pre-fire data available
+USDA1pre_fires_list <- distinct(USDA1_prefire,yr_fire_name)
+
+# create a dataset with only fire name, latitude, and longitude for pre-fire data
+USDA1prefire_clean <- USDA1_prefire[, c("yr_fire_name", "latitude", "longitude")]
+
+# remove repeat rows: keep only 1 row for each set of fire/coordinates
+USDA1prefire_clean <- distinct(USDA1prefire_clean)
+
+# write csv for USDA1 prefire data
+write.csv(USDA1prefire_clean, "USDA1prefire_clean.csv")
+
+# test mutate on a smaller data table
+prefiretest <- slice(USDA1_prefire, 1:5) %>% # select first 5 rows of USDA1 prefire
+  select(yr_fire_name, species, dataset) %>% # only keep first 3 variables
+  mutate(latitude=case_when(
+    str_detect(yr_fire_name, "Grass Valley") ~ "34.26739",
+    str_detect(yr_fire_name, "FSS2") ~ "36.59506",
+    str_detect(yr_fire_name, "FSS5") ~ "36.58481",
+    str_detect(yr_fire_name, "McNalley") ~ "36.57336")) # add latitude column
+
+# create data frame for USDA 1 post-fire data
+USDA1_postfire <- read.csv("data/USDA_RDA_pre_post_trees.csv") %>%
+  clean_names() %>% # standardize variable names
+  filter(yr_fire_name %in% USDAfires_clean$yr_fire_name) %>%
+  select(yr_fire_name, species, dataset, times_burned, tree_num, genus, species_name, csh_m, cls_m, clk_m, cls_percent, clk_percent, cvs_percent, cvk_percent, cbs, bcha_m, bchm_m, bch_percent, bca, ckr, gca, gir_percent) # select only columns relating to post-fire measurements
+
+# determine how many data points are available for post-fire data (include crown scorch height & max bole char height measurements)
+USDA1_postfire <- drop_na(USDA1_postfire, csh_m) %>% 
+  drop_na(bchm_m) %>% 
+  distinct(yr_fire_name, species, dataset, tree_num, genus, species_name, csh_m, cls_m, clk_m, cls_percent, clk_percent, cvs_percent, cvk_percent, cbs, bcha_m, bchm_m, bch_percent, bca, ckr, gca, gir_percent) # drop duplicate rows -- 6,970 data points w/ both crown scorch height and max bole char height
+
+# load USDA 2 pre & post fire data
+crag <- read.csv("data/USDA:USFS/2005_Crag/!FBAT_Trees_Crag_Rawdata")
+```
+
+## coordinates
+```{r}
+# laguna mtn coordinates
+LM_coord <- read.csv("data/Nicole/laguna/LM_coordinates.csv") %>%
+  clean_names() %>%
+  select(site_year, plot_id, easting, northing) %>%
+  filter(plot_id > 127) %>%
+  filter(!duplicated(plot_id))
+
+# bluff mesa coordinates
+BM_coord <- read.csv("data/Nicole/bluffmesa/BM_coordinates.csv") %>%
+  clean_names() %>%
+  select(site_year, plot_id, easting, northing) %>%
+  filter(plot_id > 23) %>%
+  filter(plot_id < 54) %>%
+  slice(-(1:3)) %>%
+  filter(!duplicated(plot_id))
+
+# thomas fire coordinates
+TF_coord <- read.csv("data/Nicole/thomas/TF_coord.csv") %>%
+  clean_names() %>%
+  select(site_year, plot_id, easting, northing) %>%
+  slice(-(1))
+```
+
+## map building
+```{r}
+# creating a sample data.frame with your lat/lon points
+lon <- c(-38.31,-35.5)
+lat <- c(40.96, 37.5)
+df <- as.data.frame(cbind(lon,lat))
+
+# getting the map
+mapzoe <- get_map(location = c(lon = mean(df$lon), lat = mean(df$lat)), zoom = 4,
+                      maptype = "satellite", scale = 2)
+
+# plotting the map with some points on it
+ggmap(mapzoe) +
+  geom_point(data = df, aes(x = lon, y = lat, fill = "red", alpha = 0.8), size = 5, shape = 21) +
+  guides(fill=FALSE, alpha=FALSE, size=FALSE)
+```
+
+# leaf traits
+## sla
+```{r}
+# STANDARDIZE UNITS
+std_1 <- try_sla %>%
+  select(orig_value_str, orig_unit_str) %>%
+  filter(orig_unit_str == c("g m-2", "g/m2")) %>%
+  mutate(orig_value_str = (1/(orig_value_str/1000)))
+
+std_2 <- try_sla %>%
+  select(orig_value_str, orig_unit_str) %>%
+  filter(orig_unit_str == c("SLA cm2/g", "cm2 g-1", "cm2/g"))
+
+std_3 <- try_sla %>%
+  select(orig_value_str, orig_unit_str) %>%
+  filter(orig_unit_str == c("m2/kg", "mm2 / mg", "mg kg-1", "mm2/mg")) %>%
+  mutate(orig_value_str = (orig_value_str/10))
+
+std_value <- rbind(c(std_1, std_2, std_3))
+
+try_sla <- try_sla %>%
+  mutate(std_value = std_value)
+```
+
+### leaf compoundness (not relevant; no variation between plots)
+```{r}
+# # read in data from TRY database
+# try_compound <- read_csv("data/Traits/try-compound.csv") %>%
+#   clean_names() %>%
+#   select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value, unit_name) %>%
+#   filter(trait_id==c("17")) %>% # only include rows with compoundness measurements (exclude rows w/ other data measurements)
+#   mutate(species_name = str_replace(species_name, "Quercus chapmanni", "Quercus chapmanii")) %>%
+#   mutate(species_name = str_replace(species_name, "Quercus wislizeni", "Quercus wislizenii")) %>%
+#   mutate(species_name = str_replace(species_name, "Quercus keloggii", "Quercus kelloggii")) %>%
+#   mutate(std_value = as.numeric(orig_value_str))
+# 
+# unique(try_compound$species_name) # determine the species included in the compoundness data
+# 
+# # calculate mean value of SLA for each species
+# mean_try_sla <- try_sla %>%
+#   group_by(species_name) %>%
+#   summarise(mean_ll = mean(std_value)) %>%
+#   mutate(unit = rep("mm2/mg", length = 6))
+# 
+# # calculate community weighted mean (trait value x species abundance)
+# ## laguna mountain
+# laguna_sla_pije <- l_abundance %>%
+#   filter(species == "PIJE") %>%
+#   mutate(sla_cwm = abundance*3.182446)
+# 
+# laguna_sla_quke <- l_abundance %>%
+#   filter(species == "QUKE") %>%
+#   mutate(sla_cwm = abundance*9.012142)
+# 
+# laguna_sla_cwm <- c(laguna_sla_pije$sla_cwm, laguna_sla_quke$sla_cwm)
+# 
+# l_abundance <- l_abundance %>%
+#   mutate(sla_cwm = laguna_sla_cwm) %>%
+#   mutate(plot_id = as.character(plot_id))
+# 
+# ## bluff mesa
+# bm_sla_pije <- bm_abundance %>%
+#   filter(species == "PIJE") %>%
+#   mutate(sla_cwm = abundance*3.182446)
+# 
+# bm_sla_abco <- bm_abundance %>%
+#   filter(species == "ABCO") %>%
+#   mutate(sla_cwm = abundance*5.709716)
+# 
+# bm_sla_cwm <- c(bm_sla_pije$sla_cwm, bm_sla_abco$sla_cwm)
+# 
+# bm_abundance <- bm_abundance %>%
+#   mutate(sla_cwm = bm_sla_cwm) %>%
+#   mutate(plot_id = as.character(plot_id))
+# 
+# ## thomas fire
+# tf_sla_pipo <- tf_abundance %>%
+#   filter(species == "PIPO") %>%
+#   mutate(sla_cwm = abundance*4.897218)
+# 
+# tf_sla_quch <- tf_abundance %>%
+#   filter(species == "QUCH") %>%
+#   mutate(sla_cwm = abundance*8.862914)
+# 
+# tf_sla_cwm <- c(tf_sla_pipo$sla_cwm, tf_sla_quch$sla_cwm)
+# 
+# tf_abundance <- tf_abundance %>%
+#   filter(species == "PIPO" | species == "QUCH") %>%
+#   mutate(sla_cwm = tf_sla_cwm) %>%
+#   mutate(plot_id = as.character(plot_id))
+```
+
+### leaf area (old)
+#### laguna mountain
+```{r}
+### leaf area
+## laguna mountain
+# calculate QUCH mean leaf area
+QUCH_leaf_area <- (15.76 + 14.76 + 28.2 + 18.57 + 14.29 + 21.47 + 24.14 + 17 + 9.53 + 15.16 + 12.17 + 14.22 + 12.45 + 21.74 + 20.46 + 18.23 +12.71 + 29.86 + 22.27 + 17.11 + 15.23 + 11.67 + 17.02 + 16.09 + 12.36 + 12.5 + 20.97 + 18.67 + 21.87 + 18.84 + 18.44 + 14.72 + 14.64 + 17.83 + 11.87 + 21.58 + 12.54 + 15.76 + 15.76 + 21.3747)/40 # cm^2
+
+QUKE_leaf_area <- 40.89 # cm&2
+
+laguna_80 <-  (QUCH_leaf_area*0.02188190)+(QUKE_leaf_area*0.127896664) # NOTE: doesn't account for PIJE species present in plot 80; no leaf area data for PIJE
+laguna_81 <- (QUCH_leaf_area*0.137503524)+(QUKE_leaf_area*0.132905083) # NOTE: missing PIJE data
+laguna_82 <- (QUCH_leaf_area*0.036714895)+(QUKE_leaf_area*0.204246613) # NOTE: missing PIJE data
+laguna_83 <- (QUCH_leaf_area*0.030720348)+(QUKE_leaf_area*0.282228933) # NOTE: missing PIJE data
+laguna_85 <- (QUKE_leaf_area*0.104909155) # NOTE: missing PIJE data
+laguna_86 <- (QUKE_leaf_area*0.084400697) # NOTE: missing PIJE data
+laguna_87 <- (QUCH_leaf_area*0.013481479)+(QUKE_leaf_area*0.060271165) # NOTE: missing PIJE data
+laguna_88 <- (QUKE_leaf_area*0.210908254) # NOTE: missing PIJE data
+laguna_89 <- "NA" # NOTE: missing PIJE and PICO data
+laguna_90 <- "NA" # NOTE: nissing PIJE and PICO data
+laguna_91 <- (QUKE_leaf_area*0.043702522) # NOTE: missing PIJE and PICO data
+laguna_92 <- (QUKE_leaf_area*0.049942439) # NOTE: missing PIJE data
+laguna_93 <- (QUKE_leaf_area*0.077707730) # NOTE: missing PIJE data
+laguna_95 <- (QUKE_leaf_area*0.203380257) 
+laguna_97 <- (QUKE_leaf_area*0.052624520) # NOTE: missing PIJE data
+laguna_98 <- (QUKE_leaf_area*0.282672096) # NOTE: missing PIJE data
+laguna_99 <- (QUKE_leaf_area*0.005792153) # NOTE: missing PIJE data
+laguna_105 <- (QUKE_leaf_area*0.032854765) # NOTE: missing PIJE data
+laguna_106 <- "NA" # NOTE: missing PIJE data
+laguna_107 <- "NA" # NOTE: missing PIJE data
+laguna_108 <- (QUKE_leaf_area*0.066777547) # NOTE: missing PIJE data
+laguna_109 <- (QUKE_leaf_area*0.163879317) # NOTE: missing PIJE data
+laguna_110 <- (QUCH_leaf_area*0.018574086) # NOTE: missing PIJE data
+laguna_111 <- (QUKE_leaf_area*0.111012804) # NOTE: missing PIJE & PICO data
+laguna_112 <- (QUKE_leaf_area*0.346895411) # NOTE: missing PIJE & PICO data
+laguna_113 <- (QUKE_leaf_area*0.228543739) # NOTE: missing PIJE & PICO data
+laguna_114 <- (QUKE_leaf_area*0.098418239) 
+laguna_115 <- (QUKE_leaf_area*0.168117903)
+
+# community weighted mean vector
+cwm_la_laguna <- c(laguna_80, laguna_81, laguna_82, laguna_83, laguna_85, laguna_86, laguna_87, laguna_88, laguna_89, laguna_90, laguna_91, laguna_92, laguna_93, laguna_95, laguna_97, laguna_98, laguna_99, laguna_105, laguna_106, laguna_107, laguna_108, laguna_109, laguna_110, laguna_111, laguna_112, laguna_113, laguna_114, laguna_115) %>%
+  as.numeric()
+
+# data frame w/ plot ID & community weighted mean
+laguna_leaf_area <- data.frame(laguna_plots, cwm_la_laguna)
+
+# bar plot of plot x community weighted means
+laguna_la_box <-ggplot(laguna_leaf_area, aes(laguna_plots, cwm_la_laguna)) + 
+  geom_col(fill = "darkseagreen") +
+  xlab("Plot number") +
+  ylab("Community weighted mean (cm^2)") +
+  theme_bw() 
+
+# laguna_leaf_area %>% mutate(laguna_plots = fct_relevel(laguna_plots, "80", "81", "82", "83", "85", "86", "87", "88", "89", "90", "91", "92", "93", "95", "97", "98", "99", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115")) %>%
+
+laguna_la_box
+```
+
+#### bluff mesa 
+```{r}
+## bluff mesa
+# calculate ABCO mean leaf area
+ABCO_leaf_area <- (2.38 + 2.34 + 1.9 + 1.88 + 1.62 + 1.59 + 1.39 + 1.21 + 0.96 + 0.91 + 0.68 + 0.56 + 0.55 + 0.53 + 0.43 + 0.34 + 0.26 + 0.18 + 0.18 + 0.12 + 0.5)/21 # cm^2
+
+bluffmesa_24 <- (ABCO_leaf_area*0.03388088) # NOTE: missing PIJE data
+bluffmesa_25 <- "NA" # NOTE: missing PIJE data
+bluffmesa_26 <- "NA" # NOTE: missing PIJE and ABCO data
+bluffmesa_27 <- "NA" # NOTE: missing PILA data
+bluffmesa_33 <- (ABCO_leaf_area*0.12813866) # NOTE: missing PIJE data
+bluffmesa_48 <- (ABCO_leaf_area*0.14274096) 
+bluffmesa_49 <- (ABCO_leaf_area*0.88398739) # NOTE: missing PIJE data
+bluffmesa_50 <- "NA" # NOTE: missing PIJE data
+bluffmesa_51 <- "NA" # NOTE: missing PIJE data
+bluffmesa_52 <- (ABCO_leaf_area*0.03291174) # NOTE: missing PIJE data
+bluffmesa_53 <- "NA" # NOTE: missing PIJE data
+
+# community weighted mean vector
+cwm_la_bm <- c(bluffmesa_24, bluffmesa_25, bluffmesa_26, bluffmesa_27, bluffmesa_33, bluffmesa_48, bluffmesa_49, bluffmesa_50, bluffmesa_51, bluffmesa_52, bluffmesa_53) %>%
+  as.numeric()
+
+# data frame w/ plot ID & community weighted mean
+bluffmesa_leaf_area <- data.frame(bluffmesa_plots, cwm_la_bm)
+
+# bar plot of plot x community weighted means
+bluffmesa_la_box <-ggplot(bluffmesa_leaf_area, aes(bluffmesa_plots, cwm_la_bm)) + 
+  geom_col(fill = "thistle3") +
+  xlab("Plot number") +
+  ylab("Community weighted mean (cm^2)") +
+  ggtitle("Average leaf area at Bluff Mesa") +
+  theme_hc(style = "darkunica") +
+  scale_colour_hc("darkunica")
+
+bluffmesa_la_box
+```
+
+### leaf dry matter content (old)
+```{r}
+# read in data from TRY database 
+ldmc <- read.csv("data/Veg-data/ldmc.csv") %>%
+  clean_names() %>%
+  select(dataset_id, dataset, species_name, trait_id, trait_name, data_name, orig_value_str, orig_unit_str, std_value, unit_name) %>% 
+  filter(trait_id==c("47")) # only include rows with leaf length measurements (exclude rows w/ other data measurements)
+
+unique(ldmc$species_name) # determine the species included in the LDMC data
+
+# calculate community weighted mean (trait value x species abundance)
+## laguna mountain
+laguna_plots # recall all of the plots included in the laguna mountain burn area
+
+ldmc_ABCO <- ldmc %>% # subset leaf length data to only include ABCO
+  filter(ldmc$species_name == "Abies concolor")
+
+## bluff mesa
+bluffmesa_plots # recall all of the plots included in the bluff mesa burn area
+
+```
+
+## fire severity
+```{r}
+# add leaf trait cwm values to post-fire data
+scatterdata <- postfire_whole %>%
+  mutate(plot_id = as.factor(plot_id)) %>%
+  mutate(sla_cwm = case_match(
+    plot_id,
+    "128" ~ "4.504570",
+    "129" ~ "6.271273",
+    "130" ~ "3.822120",
+    "132" ~ "3.182446",
+    "133" ~ "5.096532",
+    "134" ~ "4.441635",
+    "135" ~ "5.857454",
+    "137" ~ "4.386646",
+    "138" ~ "7.973131",
+    "139" ~ "4.245819",
+    "140" ~ "3.182446", 
+    "141" ~ "3.182446",
+    "142" ~ "6.760211",
+    "143" ~ "4.892806",
+    "144" ~ "5.567014",
+    "145" ~ "NA", 
+    "170" ~ "6.006623",
+    "171" ~ "8.834978",
+    "172" ~ "7.444447",
+    "173" ~ "8.631266",
+    "175" ~ "8.842824",
+    "176" ~ "8.406037",
+    "177" ~ "8.353018",
+    "179" ~ "8.484731",
+    "180" ~ "8.317881",
+    "181" ~ "7.948559",
+    "195" ~ "8.737294",
+    "196" ~ "9.012142",
+    "197" ~ "4.905388",
+    "198" ~ "6.393818",
+    "199" ~ "8.554746",
+    "200" ~ "8.974255",
+    "24" ~ "3.409080",
+    "25" ~ "3.182446",
+    "26" ~ "NA",
+    "27" ~ "3.182446",
+    "33" ~ "3.925311",
+    "48" ~ "5.709716",
+    "49" ~ "5.418384",
+    "50" ~ "3.182446",
+    "51" ~ "3.182446",
+    "52" ~ "4.793937",
+    "53" ~ "3.182446"
+  )) %>%
+  mutate(sla_cwm = as.numeric(sla_cwm)) %>%
+  mutate(ll_cwm = case_match(
+    plot_id,
+    "128" ~ "18.15473",
+    "129" ~ "16.13438",
+    "130" ~ "18.93515",
+    "132" ~ "19.66667",
+    "133" ~ "17.47778",
+    "134" ~ "18.22670",
+    "135" ~ "16.60761",
+    "137" ~ "18.28958",
+    "138" ~ "14.18818",
+    "139" ~ "18.45063",
+    "140" ~ "19.66667", 
+    "141" ~ "19.66667",
+    "142" ~ "15.57524",
+    "143" ~ "17.71075",
+    "144" ~ "16.93975",
+    "145" ~ "NA", 
+    "170" ~ "16.43702",
+    "171" ~ "13.20260",
+    "172" ~ "14.79277",
+    "173" ~ "13.43556",
+    "175" ~ "13.19363",
+    "176" ~ "13.69312",
+    "177" ~ "13.75375",
+    "179" ~ "13.60313",
+    "180" ~ "13.79394",
+    "181" ~ "14.21628",
+    "195" ~ "13.31431",
+    "196" ~ "13.00000",
+    "197" ~ "17.69636",
+    "198" ~ "15.99424",
+    "199" ~ "13.52306",
+    "200" ~ "13.04333",
+    "24" ~ "18.172074",
+    "25" ~ "19.666667",
+    "26" ~ "NA",
+    "27" ~ "19.666667",
+    "33" ~ "14.767674",
+    "48" ~ "3.000000",
+    "49" ~ "4.921254",
+    "50" ~ "19.666667",
+    "51" ~ "19.666667",
+    "52" ~ "9.039318",
+    "53" ~ "19.666667"
+  )) %>%
+  mutate(ll_cwm = as.numeric(ll_cwm)) %>%
+  mutate(width_cwm = case_match(
+    plot_id,
+    "128" ~ "2.176432",
+    "129" ~ "4.850870",
+    "130" ~ "1.143340",
+    "132" ~ "0.175000",
+    "133" ~ "3.072545",
+    "134" ~ "2.081162",
+    "135" ~ "4.224431",
+    "137" ~ "1.997919",
+    "138" ~ "7.427145",
+    "139" ~ "1.784735",
+    "140" ~ "0.175000", 
+    "141" ~ "0.175000",
+    "142" ~ "5.591025",
+    "143" ~ "2.764144",
+    "144" ~ "3.784761",
+    "145" ~ "NA", 
+    "170" ~ "4.450242",
+    "171" ~ "8.731809",
+    "172" ~ "6.626821",
+    "173" ~ "8.423429",
+    "175" ~ "8.743687",
+    "176" ~ "8.082477",
+    "177" ~ "8.002217",
+    "179" ~ "8.201605",
+    "180" ~ "7.949028",
+    "181" ~ "7.389947",
+    "195" ~ "8.583935",
+    "196" ~ "9.000000",
+    "197" ~ "2.783191",
+    "198" ~ "5.036378",
+    "199" ~ "8.307593",
+    "200" ~ "8.942646",
+    "24" ~ "0.1779267",
+    "25" ~ "0.1750000",
+    "26" ~ "NA",
+    "27" ~ "0.1750000",
+    "33" ~ "0.1845931",
+    "48" ~ "0.2076364",
+    "49" ~ "0.2038742",
+    "50" ~ "0.1750000",
+    "51" ~ "0.1750000",
+    "52" ~ "0.1958103",
+    "53" ~ "0.1750000"
+  )) %>%
+  mutate(width_cwm = as.numeric(width_cwm)) %>%
+  mutate(height_cwm = case_match(
+    plot_id,
+    "128" ~ "45.00444",
+    "129" ~ "38.06834",
+    "130" ~ "47.68374",
+    "132" ~ "50.19511",
+    "133" ~ "42.68039",
+    "134" ~ "45.25152",
+    "135" ~ "39.69300",
+    "137" ~ "45.46741",
+    "138" ~ "31.38682",
+    "139" ~ "46.02030",
+    "140" ~ "50.19511", 
+    "141" ~ "50.19511",
+    "142" ~ "36.14876",
+    "143" ~ "43.48022",
+    "144" ~ "40.83327",
+    "145" ~ "NA", 
+    "170" ~ "39.10736",
+    "171" ~ "28.00320",
+    "172" ~ "33.46245",
+    "173" ~ "28.80298",
+    "175" ~ "27.97240",
+    "176" ~ "29.68723",
+    "177" ~ "29.89539",
+    "179" ~ "29.37828",
+    "180" ~ "30.03333",
+    "181" ~ "31.48330",
+    "195" ~ "28.38671",
+    "196" ~ "27.30766",
+    "197" ~ "43.43082",
+    "198" ~ "37.58723",
+    "199" ~ "29.10340",
+    "200" ~ "27.45640",
+    "24" ~ "49.87833",
+    "25" ~ "50.19511",
+    "26" ~ "NA",
+    "27" ~ "50.19511",
+    "33" ~ "49.15675",
+    "48" ~ "46.66255",
+    "49" ~ "47.06976",
+    "50" ~ "50.19511",
+    "51" ~ "50.19511",
+    "52" ~ "47.94260",
+    "53" ~ "50.19511"
+  )) %>%
+  mutate(height_cwm = as.numeric(height_cwm)) %>%
+    mutate(curl_cwm = case_match(
+    plot_id,
+    "128" ~ "7.672345",
+    "129" ~ "17.924610",
+    
+    \
+    "130" ~ "3.712061",
+    "132" ~ "0.000000",
+    "133" ~ "11.107529",
+    "134" ~ "7.307134",
+    "135" ~ "15.523200",
+    "137" ~ "6.988030",
+    "138" ~ "27.800572",
+    "139" ~ "6.170802",
+    "140" ~ "0.000000", 
+    "141" ~ "0.000000",
+    "142" ~ "20.761939",
+    "143" ~ "9.925297",
+    "144" ~ "13.837760",
+    "145" ~ "NA", 
+    "170" ~ "16.388830",
+    "171" ~ "32.801911",
+    "172" ~ "24.732590",
+    "173" ~ "31.619757",
+    "175" ~ "32.847442",
+    "176" ~ "30.312742",
+    "177" ~ "30.005072",
+    "179" ~ "30.769412",
+    "180" ~ "29.801173",
+    "181" ~ "27.657978",
+    "195" ~ "32.235045",
+    "196" ~ "33.830000",
+    "197" ~ "9.998311",
+    "198" ~ "18.635742",
+    "199" ~ "31.175708",
+    "200" ~ "33.610137",
+    "24" ~ "0",
+    "25" ~ "0",
+    "26" ~ "NA",
+    "27" ~ "0",
+    "33" ~ "0",
+    "48" ~ "0",
+    "49" ~ "0",
+    "50" ~ "0",
+    "51" ~ "0",
+    "52" ~ "0",
+    "53" ~ "0"
+  )) %>%
+  mutate(curl_cwm = as.numeric(curl_cwm))
+```
+## fuels
+```{r}
+
+
+# load in laguna mountain fuels data
+lm_fuels <- read.csv("data/Nicole/laguna/LM_coordinates.csv") %>%
+  as.data.frame() %>%
+  clean_names() %>%
+  filter(plot_id > 127) %>%
+  filter(plot_id < 201) %>%
+  select(site_year, plot_id, easting, northing, fuel_loading_tons_per_acre, x_19, x_20, x_21, x_22, x_23, fuel_height_in, x_24, x_25, x_26, distance_to_crown_ft) %>%
+  rename(fine_fuels = fuel_loading_tons_per_acre, hr_1 = x_19, hr_10 = x_20, hr_100 = x_21, cwd = x_22, total = x_23, duff = fuel_height_in, litter = x_24, duff_litter = x_25, fuel = x_26) %>%
+  mutate(fine_fuels = as.numeric(fine_fuels)) %>%
+  mutate(hr_1 = as.numeric(hr_1)) %>%
+  mutate(hr_10 = as.numeric(hr_10)) %>%
+  mutate(hr_100 = as.numeric(hr_100)) %>%
+  mutate(duff_litter = as.numeric(duff_litter)) %>%
+  mutate(distance_to_crown_ft = as.numeric(distance_to_crown_ft)) %>%
+  mutate(total = as.numeric(total)) %>%
+  mutate(plot_id = as.character(plot_id)) %>%
+  slice_head(n = 30)
+
+# load in bluff mesa fuels data
+bm_fuels <- read.csv("data/Nicole/bluffmesa/BM_coordinates.csv") %>%
+  clean_names() %>%
+  filter(plot_id > 23) %>%
+  filter(plot_id < 54) %>%
+  select(site_year, plot_id, easting, northing, fuels_tons_per_acre, x_16, x_17, x_18, x_19, fuel_height_in, x_20, distance_to_crown_ft) %>%
+  rename(hr_1 = fuels_tons_per_acre, hr_10 = x_16, hr_100 = x_17, cwd = x_18, total = x_19, duff_litter = fuel_height_in, fuel = x_20) %>%
+  mutate(fine_fuels = rep("NA", length = 40)) %>%
+  mutate(duff = rep("NA", length = 40)) %>%
+  mutate(litter = rep("NA", length = 40)) %>%
+  mutate(litter = na_if(litter, "NA"), duff = na_if(duff, "n/a"), fine_fuels = na_if(fine_fuels, "NA"))
+
+# load in thomas fire fuels data
+tf_fuels <- read.csv("data/Nicole/thomas/TF_coord.csv") %>%
+  clean_names() %>%
+  slice(-(1)) %>%
+  select(site_year, plot_id, easting, northing, fuels_tons_per_acre, x_16, x_17, x_18, x_19, fuel_height_in, x_20, distance_to_crown_ft) %>%
+  rename(hr_1 = fuels_tons_per_acre, hr_10 = x_16, hr_100 = x_17, cwd = x_18, total = x_19, duff_litter = fuel_height_in, fuel = x_20) %>%
+  mutate(fine_fuels = rep("NA", length = 15)) %>%
+  mutate(duff = rep("NA", length = 15)) %>%
+  mutate(litter = rep("NA", length = 15)) %>%
+  mutate(hr_1 = na_if(hr_1, "n/a"), hr_10 = na_if(hr_10, "n/a"), hr_100 = na_if(hr_100, "n/a"), cwd = na_if(cwd, "n/a"), total = na_if(total, "n/a"), duff_litter = na_if(duff_litter, "n/a"), fuel = na_if(fuel, "n/a"))
+
+fuels_whole <- rbind(
+  lm_fuels, bm_fuels, tf_fuels
+)
+```
+## fuels bar plot
+```{r}
+fine_fuels_num <- as.numeric(fuels_whole$fine_wood)
+hr_1_num <- as.numeric(fuels_whole$hr_1)
+hr_10_num <- as.numeric(lm_fuels$hr_10)
+hr_100_num <- as.numeric(lm_fuels$hr_100)
+duff_litter_num <- as.numeric(lm_fuels$duff_litter)
+dist_crown_num <- as.numeric(lm_fuels$distance_to_crown_ft) %>%
+  na.omit()
+
+# create vector of fine fuels sum
+fine_fuels <- sum(fine_fuels_num)
+hr_1 <- sum(hr_1_num)
+hr_10 <- sum(hr_10_num)
+hr_100 <- sum(hr_100_num)
+duff_litter <- sum(duff_litter_num)
+dist_crown <- sum(dist_crown_num)
+
+# create data frame for summary of fuels across laguna mountain
+lm_fuelsummary <- data.frame(
+  category = c("fine fuels", "1 hr", "10 hr", "100 hr", "duff/litter"), 
+  value = c(fine_fuels, hr_1, hr_10, hr_100, duff_litter)
+)
+
+# fuels summary bar plot
+lm_summaryplot <- ggplot(lm_fuelsummary, aes(x=reorder(category, value, na.rm = TRUE), y=value)) + 
+  geom_bar(col = "darkseagreen", fill = "darkseagreen", stat = "identity") +
+  ggtitle("Summary of fuels and distance to crown at Laguna Mountain") +
+  labs(y = "Fuel loading (tons/acre)", x = "Fuel category") 
+
+# fine fuels per plot
+lm_fineplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, fine_fuels, na.rm = TRUE), y=fine_fuels)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of fine fuels at Laguna Mountain") +
+  labs(y = "Fine fuels (tons/acre)", x = "Plot ID")
+
+# 1 HR fuels per plot
+lm_1hrplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, hr_1, na.rm = TRUE), y=hr_1)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of 1 hour fuels at Laguna Mountain") +
+  labs(y = "1 hour fuels (tons/acre)", x = "Plot ID")
+
+# 10 HR fuels per plot
+lm_10hrplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, hr_10, na.rm = TRUE), y=hr_10)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of 10 hour fuels at Laguna Mountain") +
+  labs(y = "10 hour fuels (tons/acre)", x = "Plot ID")
+
+# 100 HR fuels per plot
+lm_100hrplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, hr_100, na.rm = TRUE), y=hr_100)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of 100 hour fuels at Laguna Mountain") +
+  labs(y = "100 hour fuels (tons/acre)", x = "Plot ID")
+
+# duff & litter per plot
+lm_dufflitterplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, duff_litter, na.rm =  TRUE), y=duff_litter)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of duff and litter at Laguna Mountain") +
+  labs(y = "Duff and litter (tons/acre)", x = "Plot ID")
+
+# distance to crown per plot
+lm_distplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, distance_to_crown_ft, na.rm = TRUE), y=distance_to_crown_ft)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of distance to crown (ft) at Laguna Mountain")  +
+  labs(y = "Distance to crown (ft)", x = "Plot ID")# missing values --> no data for that plot
+
+# total fuels per plot
+lm_totalfuelsplot <- ggplot(lm_fuels, aes(x=reorder(plot_id, total, na.rm = TRUE), y=total)) + 
+  geom_bar(color = "darkseagreen3", fill = "darkseagreen3", stat = "identity") +
+  ggtitle("Distribution of total fuels at Laguna Mountain") +
+  labs(y = "Total fuels (tons/acre)", x = "Plot ID")
+
+lm_summaryplot
+lm_fineplot
+lm_1hrplot
+lm_10hrplot
+lm_100hrplot
+lm_dufflitterplot
+lm_distplot
+lm_totalfuelsplot
+```
+#### bluff mesa
+```{r}
+# bar plot of fuel distribution in bluff mesa (tons per acre)
+# subset fuels dataset to only include bluff mesa
+bm_fuels <- fuels_whole %>%
+  filter(location=="Bluff Mesa")
+
+unique(bm_fuels$macroplot)
+# save fuels as numeric
+bhr_1_num <- as.numeric(bm_fuels$hr_1)
+bhr_10_num <- as.numeric(bm_fuels$hr_10)
+bhr_100_num <- as.numeric(bm_fuels$hr_100)
+bduff_litter_num <- as.numeric(bm_fuels$duff_litter)
+bdist_crown_num <- as.numeric(bm_fuels$distance_to_crown_ft) %>%
+  na.omit()
+
+# create vector of fine fuels sum
+bhr_1 <- sum(bhr_1_num)
+bhr_10 <- sum(bhr_10_num)
+bhr_100 <- sum(bhr_100_num)
+bduff_litter <- sum(bduff_litter_num)
+bdist_crown <- sum(bdist_crown_num)
+
+# create data frame for summary of fuels across bluff mesa
+bm_fuelsummary <- data.frame(
+  category = c("1 hr", "10 hr", "100 hr", "duff/litter"), 
+  value = c(bhr_1, bhr_10, bhr_100, bduff_litter)
+)
+
+# make all y-values numeric rather than characters
+bm_fuels <- bm_fuels %>%
+  mutate(hr_1 = as.numeric(hr_1)) %>%
+  mutate(hr_10 = as.numeric(hr_10)) %>%
+  mutate(hr_100 = as.numeric(hr_100)) %>%
+  mutate(duff_litter = as.numeric(duff_litter)) %>%
+  mutate(distance_to_crown_ft = as.numeric(distance_to_crown_ft)) %>%
+  mutate(total = as.numeric(total))
+
+# fuels summary bar plot
+bm_summaryplot <- ggplot(bm_fuelsummary, aes(x=reorder(category, value, na.rm = TRUE), y=value)) + 
+  geom_bar(col = "darkslateblue", fill = "darkslateblue", stat = "identity") +
+  ggtitle("Summary of fuels and distance to crown at Bluff Mesa") +
+  labs(y = "Fuel loading (tons/acre)", x = "Fuel category") 
+
+# 1 HR fuels per plot
+bm_1hrplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, hr_1, na.rm = TRUE), y=hr_1)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of 1 hour fuels at Bluff Mesa") +
+  labs(y = "1 hour fuels (tons/acre)", x = "Plot ID")
+
+# 10 HR fuels per plot
+bm_10hrplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, hr_10, na.rm = TRUE), y=hr_10)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of 10 hour fuels at Bluff Mesa") +
+  labs(y = "10 hour fuels (tons/acre)", x = "Plot ID")
+
+# 100 HR fuels per plot
+bm_100hrplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, hr_100, na.rm = TRUE), y=hr_100)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of 100 hour fuels at Bluff Mesa") +
+  labs(y = "100 hour fuels (tons/acre)", x = "Plot ID")
+
+# duff & litter per plot
+bm_dufflitterplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, duff_litter, na.rm = TRUE), y=duff_litter)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of duff and litter at Bluff Mesa") +
+  labs(y = "Duff and litter (tons/acre)", x = "Plot ID")
+
+# distance to crown per plot
+bm_distplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, distance_to_crown_ft, na.rm = TRUE), y=distance_to_crown_ft)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of distance to crown (ft) at Bluff Mesa")  +
+  labs(y = "Distance to crown (ft)", x = "Plot ID")# missing values --> no data for that plot
+
+# total fuels per plot
+bm_totalfuelsplot <- ggplot(bm_fuels, aes(x=reorder(plot_id, total, na.rm = TRUE), y=total)) + 
+  geom_bar(color = "slateblue", fill = "slateblue", stat = "identity") +
+  ggtitle("Distribution of total fuels at Bluff Mesa") +
+  labs(y = "Total fuels (tons/acre)", x = "Plot ID")
+
+bm_summaryplot
+bm_1hrplot
+bm_10hrplot
+bm_100hrplot
+bm_dufflitterplot
+bm_distplot
+bm_totalfuelsplot
+```
+#### thomas fire
+```{r}
+# bar plot of fuel distribution in thomas fire (tons per acre)
+# save fuels as numeric
+thr_1_num <- as.numeric(tf_fuels$hr_1) %>%
+  na.omit()
+thr_10_num <- as.numeric(tf_fuels$hr_10) %>%
+  na.omit()
+thr_100_num <- as.numeric(tf_fuels$hr_100) %>%
+  na.omit()
+tduff_litter_num <- as.numeric(tf_fuels$duff_litter) %>%
+  na.omit()
+tdist_crown_num <- as.numeric(tf_fuels$distance_to_crown_ft) %>%
+  na.omit()
+
+# create vector of fine fuels sum
+hr_1 <- sum(thr_1_num)
+hr_10 <- sum(thr_10_num)
+hr_100 <- sum(thr_100_num)
+duff_litter <- sum(tduff_litter_num)
+dist_crown <- sum(tdist_crown_num)
+
+# create data frame for summary of fuels across Thomas Fire
+tf_fuelsummary <- data.frame(
+  category = c("1 hr", "10 hr", "100 hr", "duff/litter"), 
+  value = c(hr_1, hr_10, hr_100, duff_litter)
+)
+
+# make all y-values numeric rather than characters
+tf_fuels <- tf_fuels %>%
+  mutate(hr_1 = as.numeric(hr_1)) %>%
+  mutate(hr_10 = as.numeric(hr_10)) %>%
+  mutate(hr_100 = as.numeric(hr_100)) %>%
+  mutate(duff_litter = as.numeric(duff_litter)) %>%
+  mutate(distance_to_crown_ft = as.numeric(distance_to_crown_ft)) %>%
+  mutate(total = as.numeric(total))
+
+# fuels summary bar plot
+tf_summaryplot <- ggplot(tf_fuelsummary, aes(x=reorder(category, value, na.rm = TRUE), y=value)) + 
+  geom_bar(col = "plum4", fill = "plum4", stat = "identity") +
+  ggtitle("Summary of fuels and distance to crown at Thomas Fire") +
+  labs(y = "Fuel loading (tons/acre)", x = "Fuel category") 
+
+# 1 HR fuels per plot
+tf_1hrplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, hr_1, na.rm = TRUE), y=hr_1)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of 1 hour fuels at Thomas Fire") +
+  labs(y = "1 hour fuels (tons/acre)", x = "Plot ID")
+
+# 10 HR fuels per plot
+tf_10hrplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, hr_10, na.rm = TRUE), y=hr_10)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of 10 hour fuels at Thomas Fire") +
+  labs(y = "10 hour fuels (tons/acre)", x = "Plot ID")
+
+# 100 HR fuels per plot
+tf_100hrplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, hr_100, na.rm = TRUE), y=hr_100)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of 100 hour fuels at Thomas Fire") +
+  labs(y = "100 hour fuels (tons/acre)", x = "Plot ID")
+
+# duff & litter per plot
+tf_dufflitterplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, duff_litter, na.rm = TRUE), y=duff_litter)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of duff and litter at Thomas Fire") +
+  labs(y = "Duff and litter (tons/acre)", x = "Plot ID")
+
+# distance to crown per plot
+tf_distplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, distance_to_crown_ft, na.rm = TRUE), y=distance_to_crown_ft)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of distance to crown (ft) at Thomas Fire")  +
+  labs(y = "Distance to crown (ft)", x = "Plot ID")# missing values --> no data for that plot
+
+# total fuels per plot
+tf_totalfuelsplot <- ggplot(tf_fuels, aes(x=reorder(plot_id, total, na.rm = TRUE), y=total)) + 
+  geom_bar(color = "plum3", fill = "plum3", stat = "identity") +
+  ggtitle("Distribution of total fuels at Thomas Fire") +
+  labs(y = "Total fuels (tons/acre)", x = "Plot ID")
+
+tf_summaryplot
+tf_1hrplot
+tf_10hrplot
+tf_100hrplot
+tf_dufflitterplot
+tf_distplot
+tf_totalfuelsplot
+```
+## leaf trait bar plots
+### specific leaf area
+```{r}
+# bar plot of plot x community weighted means
+## laguna mountain
+laguna_sla_bar <-ggplot(laguna_cwm, aes(x = reorder(plot_id, sla_cwm), y = sla_cwm)) + 
+  geom_col(fill = "deepskyblue") +
+  xlab("Plot number") +
+  ylab("Community weighted mean (mm2/mg)") +
+  theme_bw() 
+
+laguna_sla_bar
+
+## bluff mesa
+bluffmesa_sla_bar <-ggplot(bluffmesa_cwm, aes(x = reorder(plot_id, sla_cwm), y = sla_cwm)) + 
+  geom_col(fill = "slategray3") +
+  xlab("Plot number") +
+  ylab("Community weighted mean (mm2/mg)") +
+  theme_bw() 
+
+bluffmesa_sla_bar
+
+## thomas fire
+thomas_sla_bar <-ggplot(thomas_cwm, aes(x = reorder(plot_id, sla_cwm), y = sla_cwm)) + 
+  geom_col(fill = "slategray") +
+  xlab("Plot number") +
+  ylab("Community weighted mean (mm2/mg)") +
+  theme_bw() 
+
+thomas_sla_bar
+```
+
+### leaf length
+```{r}
+# bar plot of plot x community weighted means
+## laguna mountain
+laguna_ll_bar <-ggplot(laguna_cwm, aes(x = reorder(plot_id, ll_cwm), y = ll_cwm)) + 
+  geom_col(fill = "deepskyblue") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf length (cm)") +
+  theme_bw() 
+
+laguna_ll_bar
+
+## bluff mesa
+bluffmesa_ll_bar <-ggplot(bluffmesa_cwm, aes(x = reorder(plot_id, ll_cwm), y = ll_cwm)) + 
+  geom_col(fill = "slategray3") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf length (cm)") +
+  theme_bw() 
+
+bluffmesa_ll_bar
+
+## thomas fire
+thomas_ll_bar <-ggplot(thomas_cwm, aes(x = reorder(plot_id, ll_cwm), y = ll_cwm)) + 
+  geom_col(fill = "slategray") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf length (cm)") +
+  theme_bw() 
+
+thomas_ll_bar
+```
+
+### leaf width
+```{r}
+# bar plot of plot x community weighted means
+## laguna mountain
+laguna_width_bar <-ggplot(laguna_cwm, aes(x = reorder(plot_id, width_cwm), y = width_cwm)) + 
+  geom_col(fill = "deepskyblue") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf width (cm)") +
+  theme_bw() 
+
+laguna_width_bar
+
+## bluff mesa
+bluffmesa_width_bar <-ggplot(bluffmesa_cwm, aes(x = reorder(plot_id, width_cwm), y = width_cwm)) + 
+  geom_col(fill = "slategray3") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf width (cm)") +
+  theme_bw() 
+
+bluffmesa_width_bar
+
+## thomas fire
+thomas_width_bar <-ggplot(thomas_cwm, aes(x = reorder(plot_id, width_cwm), y = width_cwm)) + 
+  geom_col(fill = "slategray") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf width (cm)") +
+  theme_bw() 
+
+thomas_width_bar
+```
+
+### plant height vegetative
+```{r}
+# bar plot of plot x community weighted means
+## laguna mountain
+laguna_height_bar <-ggplot(laguna_cwm, aes(x = reorder(plot_id, height_cwm), y = height_cwm)) + 
+  geom_col(fill = "deepskyblue") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf height (cm)") +
+  theme_bw() 
+
+laguna_height_bar
+
+## bluff mesa
+bluffmesa_height_bar <-ggplot(bluffmesa_cwm, aes(x = reorder(plot_id, height_cwm), y = height_cwm)) + 
+  geom_col(fill = "slategray3") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf height (cm)") +
+  theme_bw() 
+
+bluffmesa_height_bar
+
+## thomas fire
+thomas_height_bar <-ggplot(thomas_cwm, aes(x = reorder(plot_id, height_cwm), y = height_cwm)) + 
+  geom_col(fill = "slategray") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf height (cm)") +
+  theme_bw() 
+
+thomas_height_bar
+``` 
+
+### leaf curling
+```{r}
+# bar plot of plot x community weighted means
+## laguna mountain
+laguna_curl_bar <-ggplot(laguna_cwm, aes(x = reorder(plot_id, curl_cwm), y = curl_cwm)) + 
+  geom_col(fill = "deepskyblue") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf curl (mm)") +
+  theme_bw() 
+
+laguna_curl_bar
+
+## bluff mesa
+bluffmesa_curl_bar <-ggplot(bluffmesa_cwm, aes(x = reorder(plot_id, curl_cwm), y = curl_cwm)) + 
+  geom_col(fill = "slategray3") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf curl (mm)") +
+  theme_bw() 
+
+bluffmesa_curl_bar
+
+## thomas fire
+thomas_curl_bar <-ggplot(thomas_cwm, aes(x = reorder(plot_id, curl_cwm), y = curl_cwm)) + 
+  geom_col(fill = "slategray") +
+  xlab("Plot number") +
+  ylab("Community weighted mean leaf curl (mm)") +
+  theme_bw() 
+
+thomas_curl_bar
+```
+
+## fire severity box plots
+#### laguna mountain
+```{r}
+laguna_post <- laguna_post %>%
+  mutate(plot_id = as.character(plot_id))
+
+# char height across plots at laguna
+lm_char_plot <- ggplot(laguna_post, aes(x = reorder(plot_id, char_ht, na.rm = TRUE), char_ht)) +
+  geom_boxplot(fill = "darkseagreen3") +
+  ggtitle("Char height across plots at Laguna Mountain") +
+  labs(y = "Char height (ft)", x = "Plot") 
+
+
+lm_char_plot
+
+# scorch height across plots at laguna
+lm_scorch_plot <- ggplot(laguna_post, aes(x = reorder(plot_id, scorch_ht, na.rm = TRUE), scorch_ht)) +
+  geom_boxplot(fill = "darkseagreen3") +
+  ggtitle("Scorch height across plots at Laguna Mountain") +
+  labs(y = "Scorch height (ft)", x = "Plot") 
+
+lm_scorch_plot
+
+# crown scorch percent across plots at laguna
+lm_crscpct_plot <- ggplot(laguna_post, aes(x = reorder(plot_id, cr_sc_pct, na.rm = TRUE), cr_sc_pct)) +
+  geom_boxplot(fill = "darkseagreen3") +
+  ggtitle("Crown scorch percent across plots at Laguna Mountain") +
+  labs(y = "Crown scorch percent (%)", x = "Plot") 
+
+lm_crscpct_plot
+```
+#### bluff mesa
+```{r}
+bluffmesa_post <- bluffmesa_post %>%
+  mutate(plot_id = as.character(plot_id))
+
+# char height across plots at bluff mesa
+bm_char_plot <- ggplot(bluffmesa_post, aes(x = reorder(plot_id, char_ht, na.rm = TRUE), char_ht)) +
+  geom_boxplot(fill = "slateblue") +
+  ggtitle("Char height across plots at Bluff Mesa") +
+  labs(y = "Char height (ft)", x = "Plot") 
+
+bm_char_plot
+
+# scorch height across plots at bluff mesa
+bm_scorch_plot <- ggplot(bluffmesa_post, aes(x = reorder(plot_id, scorch_ht, na.rm = TRUE), scorch_ht)) +
+  geom_boxplot(fill = "slateblue") +
+  ggtitle("Scorch height across plots at Bluff Mesa") +
+  labs(y = "Char height (ft)", x = "Plot") 
+
+bm_scorch_plot
+
+# crown scorch percent across plots at bluff mesa
+bm_crscpct_plot <- ggplot(bluffmesa_post, aes(x = reorder(plot_id, cr_sc_pct, na.rm = TRUE), cr_sc_pct)) +
+  geom_boxplot(fill = "slateblue") +
+  ggtitle("Crown scorch percent across plots at Bluff Mesa") +
+  labs(y = "Crown scorch percent (%)", x = "Plot") 
+
+bm_crscpct_plot
+```
+#### thomas fire
+```{r}
+thomas_post <- thomas_post %>%
+  mutate(plot_id = as.character(plot_id))
+
+# char height across plots at laguna
+tf_char_plot <- ggplot(thomas_post, aes(x = reorder(plot_id, char_ht, na.rm = TRUE), char_ht)) +
+  geom_boxplot(fill = "plum3") +
+  ggtitle("Char height across plots at Thomas Fire") +
+  labs(y = "Char height (ft)", x = "Plot") 
+
+tf_char_plot
+
+# scorch height across plots at laguna
+tf_scorch_plot <- ggplot(thomas_post, aes(x = reorder(plot_id, scorch_ht, na.rm = TRUE), scorch_ht)) +
+  geom_boxplot(fill = "plum3") +
+  ggtitle("Scorch height across plots at Thomas Fire") +
+  labs(y = "Scorch height (ft)", x = "Plot") 
+
+tf_scorch_plot
+
+# crown scorch percent across plots at laguna
+tf_crscpct_plot <- ggplot(thomas_post, aes(x = reorder(plot_id, cr_sc_pct, na.rm = TRUE), cr_sc_pct)) +
+  geom_boxplot(fill = "plum3") +
+  ggtitle("Crown scorch percent across plots at Thomas Fire") +
+  labs(y = "Crown scorch percent (%)", x = "Plot") 
+
+tf_crscpct_plot
+```
+## scatterplots
+```{r}
+# determine fire sev. averages per plot
+mean_char_ht <- postfire_whole %>%
+  group_by(plot_id) %>%
+  summarise(mean_char_ht = mean(char_ht)) %>%
+  mutate(plot_id = as.factor(plot_id)) %>%
+  mutate(sla_cwm = case_match(
+    plot_id,
+    "128" ~ "4.504570",
+    "129" ~ "6.271273",
+    "130" ~ "3.822120",
+    "132" ~ "3.182446",
+    "133" ~ "5.096532",
+    "134" ~ "4.441635",
+    "135" ~ "5.857454",
+    "137" ~ "4.386646",
+    "138" ~ "7.973131",
+    "139" ~ "4.245819",
+    "140" ~ "3.182446", 
+    "141" ~ "3.182446",
+    "142" ~ "6.760211",
+    "143" ~ "4.892806",
+    "144" ~ "5.567014",
+    "145" ~ "NA", 
+    "170" ~ "6.006623",
+    "171" ~ "8.834978",
+    "172" ~ "7.444447",
+    "173" ~ "8.631266",
+    "175" ~ "8.842824",
+    "176" ~ "8.406037",
+    "177" ~ "8.353018",
+    "179" ~ "8.484731",
+    "180" ~ "8.317881",
+    "181" ~ "7.948559",
+    "195" ~ "8.737294",
+    "196" ~ "9.012142",
+    "197" ~ "4.905388",
+    "198" ~ "6.393818",
+    "199" ~ "8.554746",
+    "200" ~ "8.974255",
+    "24" ~ "3.409080",
+    "25" ~ "3.182446",
+    "26" ~ "NA",
+    "27" ~ "3.182446",
+    "33" ~ "3.925311",
+    "48" ~ "5.709716",
+    "49" ~ "5.418384",
+    "50" ~ "3.182446",
+    "51" ~ "3.182446",
+    "52" ~ "4.793937",
+    "53" ~ "3.182446"
+  )) %>%
+  mutate(sla_cwm = as.numeric(sla_cwm)) %>%
+  mutate(ll_cwm = case_match(
+    plot_id,
+    "128" ~ "18.15473",
+    "129" ~ "16.13438",
+    "130" ~ "18.93515",
+    "132" ~ "19.66667",
+    "133" ~ "17.47778",
+    "134" ~ "18.22670",
+    "135" ~ "16.60761",
+    "137" ~ "18.28958",
+    "138" ~ "14.18818",
+    "139" ~ "18.45063",
+    "140" ~ "19.66667", 
+    "141" ~ "19.66667",
+    "142" ~ "15.57524",
+    "143" ~ "17.71075",
+    "144" ~ "16.93975",
+    "145" ~ "NA", 
+    "170" ~ "16.43702",
+    "171" ~ "13.20260",
+    "172" ~ "14.79277",
+    "173" ~ "13.43556",
+    "175" ~ "13.19363",
+    "176" ~ "13.69312",
+    "177" ~ "13.75375",
+    "179" ~ "13.60313",
+    "180" ~ "13.79394",
+    "181" ~ "14.21628",
+    "195" ~ "13.31431",
+    "196" ~ "13.00000",
+    "197" ~ "17.69636",
+    "198" ~ "15.99424",
+    "199" ~ "13.52306",
+    "200" ~ "13.04333",
+    "24" ~ "18.172074",
+    "25" ~ "19.666667",
+    "26" ~ "NA",
+    "27" ~ "19.666667",
+    "33" ~ "14.767674",
+    "48" ~ "3.000000",
+    "49" ~ "4.921254",
+    "50" ~ "19.666667",
+    "51" ~ "19.666667",
+    "52" ~ "9.039318",
+    "53" ~ "19.666667"
+  )) %>%
+  mutate(ll_cwm = as.numeric(ll_cwm)) %>%
+  mutate(width_cwm = case_match(
+    plot_id,
+    "128" ~ "2.176432",
+    "129" ~ "4.850870",
+    "130" ~ "1.143340",
+    "132" ~ "0.175000",
+    "133" ~ "3.072545",
+    "134" ~ "2.081162",
+    "135" ~ "4.224431",
+    "137" ~ "1.997919",
+    "138" ~ "7.427145",
+    "139" ~ "1.784735",
+    "140" ~ "0.175000", 
+    "141" ~ "0.175000",
+    "142" ~ "5.591025",
+    "143" ~ "2.764144",
+    "144" ~ "3.784761",
+    "145" ~ "NA", 
+    "170" ~ "4.450242",
+    "171" ~ "8.731809",
+    "172" ~ "6.626821",
+    "173" ~ "8.423429",
+    "175" ~ "8.743687",
+    "176" ~ "8.082477",
+    "177" ~ "8.002217",
+    "179" ~ "8.201605",
+    "180" ~ "7.949028",
+    "181" ~ "7.389947",
+    "195" ~ "8.583935",
+    "196" ~ "9.000000",
+    "197" ~ "2.783191",
+    "198" ~ "5.036378",
+    "199" ~ "8.307593",
+    "200" ~ "8.942646",
+    "24" ~ "0.1779267",
+    "25" ~ "0.1750000",
+    "26" ~ "NA",
+    "27" ~ "0.1750000",
+    "33" ~ "0.1845931",
+    "48" ~ "0.2076364",
+    "49" ~ "0.2038742",
+    "50" ~ "0.1750000",
+    "51" ~ "0.1750000",
+    "52" ~ "0.1958103",
+    "53" ~ "0.1750000"
+  )) %>%
+  mutate(width_cwm = as.numeric(width_cwm)) %>%
+  mutate(height_cwm = case_match(
+    plot_id,
+    "128" ~ "45.00444",
+    "129" ~ "38.06834",
+    "130" ~ "47.68374",
+    "132" ~ "50.19511",
+    "133" ~ "42.68039",
+    "134" ~ "45.25152",
+    "135" ~ "39.69300",
+    "137" ~ "45.46741",
+    "138" ~ "31.38682",
+    "139" ~ "46.02030",
+    "140" ~ "50.19511", 
+    "141" ~ "50.19511",
+    "142" ~ "36.14876",
+    "143" ~ "43.48022",
+    "144" ~ "40.83327",
+    "145" ~ "NA", 
+    "170" ~ "39.10736",
+    "171" ~ "28.00320",
+    "172" ~ "33.46245",
+    "173" ~ "28.80298",
+    "175" ~ "27.97240",
+    "176" ~ "29.68723",
+    "177" ~ "29.89539",
+    "179" ~ "29.37828",
+    "180" ~ "30.03333",
+    "181" ~ "31.48330",
+    "195" ~ "28.38671",
+    "196" ~ "27.30766",
+    "197" ~ "43.43082",
+    "198" ~ "37.58723",
+    "199" ~ "29.10340",
+    "200" ~ "27.45640",
+    "24" ~ "49.87833",
+    "25" ~ "50.19511",
+    "26" ~ "NA",
+    "27" ~ "50.19511",
+    "33" ~ "49.15675",
+    "48" ~ "46.66255",
+    "49" ~ "47.06976",
+    "50" ~ "50.19511",
+    "51" ~ "50.19511",
+    "52" ~ "47.94260",
+    "53" ~ "50.19511"
+  )) %>%
+  mutate(height_cwm = as.numeric(height_cwm)) %>%
+    mutate(curl_cwm = case_match(
+    plot_id,
+    "128" ~ "7.672345",
+    "129" ~ "17.924610",
+    "130" ~ "3.712061",
+    "132" ~ "0.000000",
+    "133" ~ "11.107529",
+    "134" ~ "7.307134",
+    "135" ~ "15.523200",
+    "137" ~ "6.988030",
+    "138" ~ "27.800572",
+    "139" ~ "6.170802",
+    "140" ~ "0.000000", 
+    "141" ~ "0.000000",
+    "142" ~ "20.761939",
+    "143" ~ "9.925297",
+    "144" ~ "13.837760",
+    "145" ~ "NA", 
+    "170" ~ "16.388830",
+    "171" ~ "32.801911",
+    "172" ~ "24.732590",
+    "173" ~ "31.619757",
+    "175" ~ "32.847442",
+    "176" ~ "30.312742",
+    "177" ~ "30.005072",
+    "179" ~ "30.769412",
+    "180" ~ "29.801173",
+    "181" ~ "27.657978",
+    "195" ~ "32.235045",
+    "196" ~ "33.830000",
+    "197" ~ "9.998311",
+    "198" ~ "18.635742",
+    "199" ~ "31.175708",
+    "200" ~ "33.610137",
+    "24" ~ "0",
+    "25" ~ "0",
+    "26" ~ "NA",
+    "27" ~ "0",
+    "33" ~ "0",
+    "48" ~ "0",
+    "49" ~ "0",
+    "50" ~ "0",
+    "51" ~ "0",
+    "52" ~ "0",
+    "53" ~ "0"
+  )) %>%
+  mutate(curl_cwm = as.numeric(curl_cwm)) %>%
+  na.omit() %>%
+  mutate(location = rep(c("Bluff Mesa", "Laguna Mountain"), times = c(6, 20)))
+
+mean_scorch_ht <- postfire_whole %>%
+  group_by(plot_id) %>%
+  summarise(mean_scorch_ht = mean(scorch_ht)) %>%
+  mutate(plot_id = as.factor(plot_id)) %>%
+  mutate(sla_cwm = case_match(
+    plot_id,
+    "128" ~ "4.504570",
+    "129" ~ "6.271273",
+    "130" ~ "3.822120",
+    "132" ~ "3.182446",
+    "133" ~ "5.096532",
+    "134" ~ "4.441635",
+    "135" ~ "5.857454",
+    "137" ~ "4.386646",
+    "138" ~ "7.973131",
+    "139" ~ "4.245819",
+    "140" ~ "3.182446", 
+    "141" ~ "3.182446",
+    "142" ~ "6.760211",
+    "143" ~ "4.892806",
+    "144" ~ "5.567014",
+    "145" ~ "NA", 
+    "170" ~ "6.006623",
+    "171" ~ "8.834978",
+    "172" ~ "7.444447",
+    "173" ~ "8.631266",
+    "175" ~ "8.842824",
+    "176" ~ "8.406037",
+    "177" ~ "8.353018",
+    "179" ~ "8.484731",
+    "180" ~ "8.317881",
+    "181" ~ "7.948559",
+    "195" ~ "8.737294",
+    "196" ~ "9.012142",
+    "197" ~ "4.905388",
+    "198" ~ "6.393818",
+    "199" ~ "8.554746",
+    "200" ~ "8.974255",
+    "24" ~ "3.409080",
+    "25" ~ "3.182446",
+    "26" ~ "NA",
+    "27" ~ "3.182446",
+    "33" ~ "3.925311",
+    "48" ~ "5.709716",
+    "49" ~ "5.418384",
+    "50" ~ "3.182446",
+    "51" ~ "3.182446",
+    "52" ~ "4.793937",
+    "53" ~ "3.182446"
+  )) %>%
+  mutate(sla_cwm = as.numeric(sla_cwm)) %>%
+  mutate(ll_cwm = case_match(
+    plot_id,
+    "128" ~ "18.15473",
+    "129" ~ "16.13438",
+    "130" ~ "18.93515",
+    "132" ~ "19.66667",
+    "133" ~ "17.47778",
+    "134" ~ "18.22670",
+    "135" ~ "16.60761",
+    "137" ~ "18.28958",
+    "138" ~ "14.18818",
+    "139" ~ "18.45063",
+    "140" ~ "19.66667", 
+    "141" ~ "19.66667",
+    "142" ~ "15.57524",
+    "143" ~ "17.71075",
+    "144" ~ "16.93975",
+    "145" ~ "NA", 
+    "170" ~ "16.43702",
+    "171" ~ "13.20260",
+    "172" ~ "14.79277",
+    "173" ~ "13.43556",
+    "175" ~ "13.19363",
+    "176" ~ "13.69312",
+    "177" ~ "13.75375",
+    "179" ~ "13.60313",
+    "180" ~ "13.79394",
+    "181" ~ "14.21628",
+    "195" ~ "13.31431",
+    "196" ~ "13.00000",
+    "197" ~ "17.69636",
+    "198" ~ "15.99424",
+    "199" ~ "13.52306",
+    "200" ~ "13.04333",
+    "24" ~ "18.172074",
+    "25" ~ "19.666667",
+    "26" ~ "NA",
+    "27" ~ "19.666667",
+    "33" ~ "14.767674",
+    "48" ~ "3.000000",
+    "49" ~ "4.921254",
+    "50" ~ "19.666667",
+    "51" ~ "19.666667",
+    "52" ~ "9.039318",
+    "53" ~ "19.666667"
+  )) %>%
+  mutate(ll_cwm = as.numeric(ll_cwm)) %>%
+  mutate(width_cwm = case_match(
+    plot_id,
+    "128" ~ "2.176432",
+    "129" ~ "4.850870",
+    "130" ~ "1.143340",
+    "132" ~ "0.175000",
+    "133" ~ "3.072545",
+    "134" ~ "2.081162",
+    "135" ~ "4.224431",
+    "137" ~ "1.997919",
+    "138" ~ "7.427145",
+    "139" ~ "1.784735",
+    "140" ~ "0.175000", 
+    "141" ~ "0.175000",
+    "142" ~ "5.591025",
+    "143" ~ "2.764144",
+    "144" ~ "3.784761",
+    "145" ~ "NA", 
+    "170" ~ "4.450242",
+    "171" ~ "8.731809",
+    "172" ~ "6.626821",
+    "173" ~ "8.423429",
+    "175" ~ "8.743687",
+    "176" ~ "8.082477",
+    "177" ~ "8.002217",
+    "179" ~ "8.201605",
+    "180" ~ "7.949028",
+    "181" ~ "7.389947",
+    "195" ~ "8.583935",
+    "196" ~ "9.000000",
+    "197" ~ "2.783191",
+    "198" ~ "5.036378",
+    "199" ~ "8.307593",
+    "200" ~ "8.942646",
+    "24" ~ "0.1779267",
+    "25" ~ "0.1750000",
+    "26" ~ "NA",
+    "27" ~ "0.1750000",
+    "33" ~ "0.1845931",
+    "48" ~ "0.2076364",
+    "49" ~ "0.2038742",
+    "50" ~ "0.1750000",
+    "51" ~ "0.1750000",
+    "52" ~ "0.1958103",
+    "53" ~ "0.1750000"
+  )) %>%
+  mutate(width_cwm = as.numeric(width_cwm)) %>%
+  mutate(height_cwm = case_match(
+    plot_id,
+    "128" ~ "45.00444",
+    "129" ~ "38.06834",
+    "130" ~ "47.68374",
+    "132" ~ "50.19511",
+    "133" ~ "42.68039",
+    "134" ~ "45.25152",
+    "135" ~ "39.69300",
+    "137" ~ "45.46741",
+    "138" ~ "31.38682",
+    "139" ~ "46.02030",
+    "140" ~ "50.19511", 
+    "141" ~ "50.19511",
+    "142" ~ "36.14876",
+    "143" ~ "43.48022",
+    "144" ~ "40.83327",
+    "145" ~ "NA", 
+    "170" ~ "39.10736",
+    "171" ~ "28.00320",
+    "172" ~ "33.46245",
+    "173" ~ "28.80298",
+    "175" ~ "27.97240",
+    "176" ~ "29.68723",
+    "177" ~ "29.89539",
+    "179" ~ "29.37828",
+    "180" ~ "30.03333",
+    "181" ~ "31.48330",
+    "195" ~ "28.38671",
+    "196" ~ "27.30766",
+    "197" ~ "43.43082",
+    "198" ~ "37.58723",
+    "199" ~ "29.10340",
+    "200" ~ "27.45640",
+    "24" ~ "49.87833",
+    "25" ~ "50.19511",
+    "26" ~ "NA",
+    "27" ~ "50.19511",
+    "33" ~ "49.15675",
+    "48" ~ "46.66255",
+    "49" ~ "47.06976",
+    "50" ~ "50.19511",
+    "51" ~ "50.19511",
+    "52" ~ "47.94260",
+    "53" ~ "50.19511"
+  )) %>%
+  mutate(height_cwm = as.numeric(height_cwm)) %>%
+    mutate(curl_cwm = case_match(
+    plot_id,
+    "128" ~ "7.672345",
+    "129" ~ "17.924610",
+    "130" ~ "3.712061",
+    "132" ~ "0.000000",
+    "133" ~ "11.107529",
+    "134" ~ "7.307134",
+    "135" ~ "15.523200",
+    "137" ~ "6.988030",
+    "138" ~ "27.800572",
+    "139" ~ "6.170802",
+    "140" ~ "0.000000", 
+    "141" ~ "0.000000",
+    "142" ~ "20.761939",
+    "143" ~ "9.925297",
+    "144" ~ "13.837760",
+    "145" ~ "NA", 
+    "170" ~ "16.388830",
+    "171" ~ "32.801911",
+    "172" ~ "24.732590",
+    "173" ~ "31.619757",
+    "175" ~ "32.847442",
+    "176" ~ "30.312742",
+    "177" ~ "30.005072",
+    "179" ~ "30.769412",
+    "180" ~ "29.801173",
+    "181" ~ "27.657978",
+    "195" ~ "32.235045",
+    "196" ~ "33.830000",
+    "197" ~ "9.998311",
+    "198" ~ "18.635742",
+    "199" ~ "31.175708",
+    "200" ~ "33.610137",
+    "24" ~ "0",
+    "25" ~ "0",
+    "26" ~ "NA",
+    "27" ~ "0",
+    "33" ~ "0",
+    "48" ~ "0",
+    "49" ~ "0",
+    "50" ~ "0",
+    "51" ~ "0",
+    "52" ~ "0",
+    "53" ~ "0"
+  )) %>%
+  mutate(curl_cwm = as.numeric(curl_cwm)) %>%
+  na.omit() %>%
+  mutate(location = rep(c("Bluff Mesa", "Laguna Mountain"), times = c(6, 7)))
+
+mean_crsc_pct <- postfire_whole %>%
+  group_by(plot_id) %>%
+  summarise(mean_crsc_pct = mean(cr_sc_pct)) %>%
+  mutate(plot_id = as.factor(plot_id)) %>%
+  mutate(sla_cwm = case_match(
+    plot_id,
+    "128" ~ "4.504570",
+    "129" ~ "6.271273",
+    "130" ~ "3.822120",
+    "132" ~ "3.182446",
+    "133" ~ "5.096532",
+    "134" ~ "4.441635",
+    "135" ~ "5.857454",
+    "137" ~ "4.386646",
+    "138" ~ "7.973131",
+    "139" ~ "4.245819",
+    "140" ~ "3.182446", 
+    "141" ~ "3.182446",
+    "142" ~ "6.760211",
+    "143" ~ "4.892806",
+    "144" ~ "5.567014",
+    "145" ~ "NA", 
+    "170" ~ "6.006623",
+    "171" ~ "8.834978",
+    "172" ~ "7.444447",
+    "173" ~ "8.631266",
+    "175" ~ "8.842824",
+    "176" ~ "8.406037",
+    "177" ~ "8.353018",
+    "179" ~ "8.484731",
+    "180" ~ "8.317881",
+    "181" ~ "7.948559",
+    "195" ~ "8.737294",
+    "196" ~ "9.012142",
+    "197" ~ "4.905388",
+    "198" ~ "6.393818",
+    "199" ~ "8.554746",
+    "200" ~ "8.974255",
+    "24" ~ "3.409080",
+    "25" ~ "3.182446",
+    "26" ~ "NA",
+    "27" ~ "3.182446",
+    "33" ~ "3.925311",
+    "48" ~ "5.709716",
+    "49" ~ "5.418384",
+    "50" ~ "3.182446",
+    "51" ~ "3.182446",
+    "52" ~ "4.793937",
+    "53" ~ "3.182446"
+  )) %>%
+  mutate(sla_cwm = as.numeric(sla_cwm)) %>%
+  mutate(ll_cwm = case_match(
+    plot_id,
+    "128" ~ "18.15473",
+    "129" ~ "16.13438",
+    "130" ~ "18.93515",
+    "132" ~ "19.66667",
+    "133" ~ "17.47778",
+    "134" ~ "18.22670",
+    "135" ~ "16.60761",
+    "137" ~ "18.28958",
+    "138" ~ "14.18818",
+    "139" ~ "18.45063",
+    "140" ~ "19.66667", 
+    "141" ~ "19.66667",
+    "142" ~ "15.57524",
+    "143" ~ "17.71075",
+    "144" ~ "16.93975",
+    "145" ~ "NA", 
+    "170" ~ "16.43702",
+    "171" ~ "13.20260",
+    "172" ~ "14.79277",
+    "173" ~ "13.43556",
+    "175" ~ "13.19363",
+    "176" ~ "13.69312",
+    "177" ~ "13.75375",
+    "179" ~ "13.60313",
+    "180" ~ "13.79394",
+    "181" ~ "14.21628",
+    "195" ~ "13.31431",
+    "196" ~ "13.00000",
+    "197" ~ "17.69636",
+    "198" ~ "15.99424",
+    "199" ~ "13.52306",
+    "200" ~ "13.04333",
+    "24" ~ "18.172074",
+    "25" ~ "19.666667",
+    "26" ~ "NA",
+    "27" ~ "19.666667",
+    "33" ~ "14.767674",
+    "48" ~ "3.000000",
+    "49" ~ "4.921254",
+    "50" ~ "19.666667",
+    "51" ~ "19.666667",
+    "52" ~ "9.039318",
+    "53" ~ "19.666667"
+  )) %>%
+  mutate(ll_cwm = as.numeric(ll_cwm)) %>%
+  mutate(width_cwm = case_match(
+    plot_id,
+    "128" ~ "2.176432",
+    "129" ~ "4.850870",
+    "130" ~ "1.143340",
+    "132" ~ "0.175000",
+    "133" ~ "3.072545",
+    "134" ~ "2.081162",
+    "135" ~ "4.224431",
+    "137" ~ "1.997919",
+    "138" ~ "7.427145",
+    "139" ~ "1.784735",
+    "140" ~ "0.175000", 
+    "141" ~ "0.175000",
+    "142" ~ "5.591025",
+    "143" ~ "2.764144",
+    "144" ~ "3.784761",
+    "145" ~ "NA", 
+    "170" ~ "4.450242",
+    "171" ~ "8.731809",
+    "172" ~ "6.626821",
+    "173" ~ "8.423429",
+    "175" ~ "8.743687",
+    "176" ~ "8.082477",
+    "177" ~ "8.002217",
+    "179" ~ "8.201605",
+    "180" ~ "7.949028",
+    "181" ~ "7.389947",
+    "195" ~ "8.583935",
+    "196" ~ "9.000000",
+    "197" ~ "2.783191",
+    "198" ~ "5.036378",
+    "199" ~ "8.307593",
+    "200" ~ "8.942646",
+    "24" ~ "0.1779267",
+    "25" ~ "0.1750000",
+    "26" ~ "NA",
+    "27" ~ "0.1750000",
+    "33" ~ "0.1845931",
+    "48" ~ "0.2076364",
+    "49" ~ "0.2038742",
+    "50" ~ "0.1750000",
+    "51" ~ "0.1750000",
+    "52" ~ "0.1958103",
+    "53" ~ "0.1750000"
+  )) %>%
+  mutate(width_cwm = as.numeric(width_cwm)) %>%
+  mutate(height_cwm = case_match(
+    plot_id,
+    "128" ~ "45.00444",
+    "129" ~ "38.06834",
+    "130" ~ "47.68374",
+    "132" ~ "50.19511",
+    "133" ~ "42.68039",
+    "134" ~ "45.25152",
+    "135" ~ "39.69300",
+    "137" ~ "45.46741",
+    "138" ~ "31.38682",
+    "139" ~ "46.02030",
+    "140" ~ "50.19511", 
+    "141" ~ "50.19511",
+    "142" ~ "36.14876",
+    "143" ~ "43.48022",
+    "144" ~ "40.83327",
+    "145" ~ "NA", 
+    "170" ~ "39.10736",
+    "171" ~ "28.00320",
+    "172" ~ "33.46245",
+    "173" ~ "28.80298",
+    "175" ~ "27.97240",
+    "176" ~ "29.68723",
+    "177" ~ "29.89539",
+    "179" ~ "29.37828",
+    "180" ~ "30.03333",
+    "181" ~ "31.48330",
+    "195" ~ "28.38671",
+    "196" ~ "27.30766",
+    "197" ~ "43.43082",
+    "198" ~ "37.58723",
+    "199" ~ "29.10340",
+    "200" ~ "27.45640",
+    "24" ~ "49.87833",
+    "25" ~ "50.19511",
+    "26" ~ "NA",
+    "27" ~ "50.19511",
+    "33" ~ "49.15675",
+    "48" ~ "46.66255",
+    "49" ~ "47.06976",
+    "50" ~ "50.19511",
+    "51" ~ "50.19511",
+    "52" ~ "47.94260",
+    "53" ~ "50.19511"
+  )) %>%
+  mutate(height_cwm = as.numeric(height_cwm)) %>%
+    mutate(curl_cwm = case_match(
+    plot_id,
+    "128" ~ "7.672345",
+    "129" ~ "17.924610",
+    "130" ~ "3.712061",
+    "132" ~ "0.000000",
+    "133" ~ "11.107529",
+    "134" ~ "7.307134",
+    "135" ~ "15.523200",
+    "137" ~ "6.988030",
+    "138" ~ "27.800572",
+    "139" ~ "6.170802",
+    "140" ~ "0.000000", 
+    "141" ~ "0.000000",
+    "142" ~ "20.761939",
+    "143" ~ "9.925297",
+    "144" ~ "13.837760",
+    "145" ~ "NA", 
+    "170" ~ "16.388830",
+    "171" ~ "32.801911",
+    "172" ~ "24.732590",
+    "173" ~ "31.619757",
+    "175" ~ "32.847442",
+    "176" ~ "30.312742",
+    "177" ~ "30.005072",
+    "179" ~ "30.769412",
+    "180" ~ "29.801173",
+    "181" ~ "27.657978",
+    "195" ~ "32.235045",
+    "196" ~ "33.830000",
+    "197" ~ "9.998311",
+    "198" ~ "18.635742",
+    "199" ~ "31.175708",
+    "200" ~ "33.610137",
+    "24" ~ "0",
+    "25" ~ "0",
+    "26" ~ "NA",
+    "27" ~ "0",
+    "33" ~ "0",
+    "48" ~ "0",
+    "49" ~ "0",
+    "50" ~ "0",
+    "51" ~ "0",
+    "52" ~ "0",
+    "53" ~ "0"
+  )) %>%
+  mutate(curl_cwm = as.numeric(curl_cwm)) %>%
+  na.omit() %>%
+  mutate(location = rep(c("Bluff Mesa", "Laguna Mountain"), times = c(6, 7)))
+
+# scatterplots with combined data from both laguna & bluff mesa
+# SLA vs. char height
+sla_char_scatter <- ggplot(mean_char_ht, aes(x=sla_cwm, y=mean_char_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Char height as a function of specific leaf area") +
+  labs(y = "Char height (m)", x = "Specific leaf area (mm2/mg)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# SLA vs. scorch height
+sla_scorch_scatter <- ggplot(mean_scorch_ht, aes(x=sla_cwm, y=mean_scorch_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Scorch height as a function of specific leaf area") +
+  labs(y = "Scorch height (m)", x = "Specific leaf area (mm2/mg)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# SLA vs. crown scorch %
+sla_crscpct_scatter <- ggplot(mean_crsc_pct, aes(x=sla_cwm, y=mean_crsc_pct, color=location)) + 
+    geom_point() +
+  ggtitle("Crown scorch % as a function of specific leaf area") +
+  labs(y = "Crown scorch (%)", x = "Specific leaf area (mm2/mg)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# leaf length vs. char height
+ll_char_scatter <- ggplot(mean_char_ht, aes(x=ll_cwm, y=mean_char_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Char height as a function of leaf length") +
+  labs(y = "Char height (m)", x = "Leaf length (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# leaf length vs. scorch height
+ll_scorch_scatter <- ggplot(mean_scorch_ht, aes(x=ll_cwm, y=mean_scorch_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Scorch height as a function of leaf length") +
+  labs(y = "Scorch height (m)", x = "Leaf length (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# leaf length vs. crown scorch %
+ll_crscpct_scatter <- ggplot(mean_crsc_pct, aes(x=ll_cwm, y=mean_crsc_pct, color=location)) + 
+    geom_point() +
+  ggtitle("Crown scorch % as a function of leaf length") +
+  labs(y = "Crown scorch (%)", x = "Leaf length (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# leaf width vs. char height
+width_char_scatter <- ggplot(mean_char_ht, aes(x=width_cwm, y=mean_char_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Char height as a function of leaf width") +
+  labs(y = "Char height (m)", x = "Leaf width (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# leaf width vs. scorch height
+width_scorch_scatter <- ggplot(mean_scorch_ht, aes(x=width_cwm, y=mean_scorch_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Scorch height as a function of leaf width") +
+  labs(y = "Scorch height (m)", x = "Leaf width (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# leaf width vs. crown scorch %
+width_crscpct_scatter <- ggplot(mean_crsc_pct, aes(x=width_cwm, y=mean_crsc_pct, color=location)) + 
+    geom_point() +
+  ggtitle("Crown scorch % as a function of leaf width") +
+  labs(y = "Crown scorch (%)", x = "Leaf width (cm)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# plant height vs. char height
+height_char_scatter <- ggplot(mean_char_ht, aes(x=height_cwm, y=mean_char_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Char height as a function of plant height") +
+  labs(y = "Char height (m)", x = "Plant height (m)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# plant height vs. scorch height
+height_scorch_scatter <- ggplot(mean_scorch_ht, aes(x=height_cwm, y=mean_scorch_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Scorch height as a function of plant height") +
+  labs(y = "Scorch height (m)", x = "Plant height (m)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# plant height vs. crown scorch %
+height_crscpct_scatter <- ggplot(mean_crsc_pct, aes(x=height_cwm, y=mean_crsc_pct, color=location)) + 
+    geom_point() +
+  ggtitle("Crown scorch % as a function of plant height") +
+  labs(y = "Crown scorch (%)", x = "Plant height (m)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# curling vs. char height
+curl_char_scatter <- ggplot(mean_char_ht, aes(x=curl_cwm, y=mean_char_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Char height as a function of leaf curling") +
+  labs(y = "Char height (m)", x = "Leaf curl height (mm)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# curling vs. scorch height
+curl_scorch_scatter <- ggplot(mean_scorch_ht, aes(x=curl_cwm, y=mean_scorch_ht, color=location)) + 
+    geom_point() +
+  ggtitle("Scorch height as a function of leaf curling") +
+  labs(y = "Scorch height (m)", x = "Leaf curl height (mm)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# plant height vs. crown scorch %
+curl_crscpct_scatter <- ggplot(mean_crsc_pct, aes(x=curl_cwm, y=mean_crsc_pct, color=location)) + 
+    geom_point() +
+  ggtitle("Crown scorch % as a function of leaf curling") +
+  labs(y = "Crown scorch (%)", x = "Leaf curl height (mm)") +
+  geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+sla_char_scatter
+sla_crscpct_scatter
+sla_scorch_scatter
+ll_char_scatter
+ll_scorch_scatter
+ll_crscpct_scatter
+width_char_scatter
+width_scorch_scatter
+width_crscpct_scatter
+height_char_scatter
+height_scorch_scatter
+height_crscpct_scatter
+curl_char_scatter
+curl_scorch_scatter
+curl_crscpct_scatter
+```
+# old linear regressions
+```{r}
+# SLA v. scorch height
+lm_sla_scorch = lm(mean_scorch_ht~sla_cwm, data = mean_scorch_ht) # create the linear regression
+summary(lm_sla_scorch) # review the results --> not significant
+
+# SLA v. crown scorch %
+lm_sla_crscpct = lm(mean_crsc_pct~sla_cwm, data = mean_crsc_pct) # create the linear regression
+summary(lm_sla_crscpct) # review the results --> not significant
+
+# leaf length v. char height
+lm_ll_char = lm(mean_char_ht~ll_cwm, data = mean_char_ht) # create the linear regression
+summary(lm_ll_char) # review the results --> SIGNIFICANT
+
+# leaf length v. scorch height
+lm_ll_scorch = lm(mean_scorch_ht~ll_cwm, data = mean_scorch_ht) # create the linear regression
+summary(lm_ll_scorch) # review the results --> not significant
+
+# leaf length v. crown scorch %
+lm_ll_crscpct = lm(mean_crsc_pct~ll_cwm, data = mean_crsc_pct) # create the linear regression
+summary(lm_ll_crscpct) # review the results --> not significant
+
+# leaf width v. char height
+lm_width_char = lm(mean_char_ht~width_cwm, data = mean_char_ht) # create the linear regression
+summary(lm_width_char) # review the results --> SIGNIFICANT
+
+# leaf width v. scorch height
+lm_width_scorch = lm(mean_scorch_ht~width_cwm, data = mean_scorch_ht) # create the linear regression
+summary(lm_width_scorch) # review the results --> not significant
+
+# leaf width v. crown scorch %
+lm_width_crscpct = lm(mean_crsc_pct~width_cwm, data = mean_crsc_pct) # create the linear regression
+summary(lm_width_crscpct) # review the results --> not significant
+
+# plant veg height v. char height
+lm_height_char = lm(mean_char_ht~height_cwm, data = mean_char_ht) # create the linear regression
+summary(lm_height_char) # review the results --> SIGNIFICANT
+
+# plant veg height v. scorch height
+lm_height_scorch = lm(mean_scorch_ht~height_cwm, data = mean_scorch_ht) # create the linear regression
+summary(lm_height_scorch) # review the results --> not significant
+
+# plant veg height v. crown scorch %
+lm_height_crscpct = lm(mean_crsc_pct~height_cwm, data = mean_crsc_pct) # create the linear regression
+summary(lm_height_crscpct) # review the results --> not significant
+
+# leaf curl height v. char height
+lm_curl_char = lm(mean_char_ht~curl_cwm, data = mean_char_ht) # create the linear regression
+summary(lm_curl_char) # review the results --> SIGNIFICANT
+
+# leaf curl height v. scorch height
+lm_curl_scorch = lm(mean_scorch_ht~curl_cwm, data = mean_scorch_ht) # create the linear regression
+summary(lm_curl_scorch) # review the results --> not significant
+
+# leaf curl height v. crown scorch %
+lm_curl_crscpct = lm(mean_crsc_pct~curl_cwm, data = mean_crsc_pct) # create the linear regression
+summary(lm_curl_crscpct) # review the results --> not significant
+```
+## multiple regression
+```{r}
+# check perfect multicollinearities
+cor_char <- mean_char_ht %>%
+  select(-location) %>%
+  mutate(plot_id = as.numeric(plot_id))
+cor(cor_char)
+
+cor_scorch <- mean_scorch_ht %>%
+  select(-location) %>%
+  mutate(plot_id = as.numeric(plot_id))
+cor(cor_scorch)
+
+cor_crscpct <- mean_crsc_pct %>%
+  select(-location) %>%
+  mutate(plot_id = as.numeric(plot_id))
+cor(cor_crscpct)
+```
+
+## anova (in progress...)
+```{r}
+# variation in SLA between plots (not working because there is no within variance??)
+## laguna mtn
+l_sla_aov <- aov(sla_cwm ~ plot_id, data = l_abundance)
+
+summary(l_sla_aov)
+
+## bluff mesa
+bm_sla_aov <- aov(sla_cwm ~ plot_id, data = bm_abundance)
+
+summary(bm_sla_aov)
+```
+
+## fire severity vs. leaf trait scatterplots
+```{r}
+# calculate mean char height per plot
+mean_char_ht <- postfire_whole %>%
+  group_by(plot_id) %>%
+  summarise(mean_char_ht = mean(char_ht))
+
+# build data frame
+bm_char_scatter <- bm_cwm_arrange %>%
+  mutate(char_ht = case_match(
+    plot_id,
+    "24" ~ "0.0000000",
+    "25" ~ "2.4750000",
+    "26" ~ "0.7333333",
+    "27" ~ "0.2666667",
+    "33" ~ "3.0500000",
+    "49" ~ "1.1550000",
+    "50" ~ "1.0175000",
+    "51" ~ "0.5500000",
+    "52" ~ "0.7400000",
+    "53" ~ "2.5800000",
+    "48" ~ "0.9500000")) %>%
+  mutate(char_ht=as.numeric(char_ht)) %>%
+  mutate(location=rep("Bluff Mesa", 50))
+  
+lm_char_scatter <- laguna_cwm_arrange %>%
+  mutate(char_ht = case_match(
+    plot_id,
+    "128" ~ "3.6500000",
+    "129" ~ "0.9541667",
+    "130" ~ "2.4083333",
+    "131" ~ "NA",
+    "132" ~ "6.6000000",
+    "133" ~ "0.7500000",
+    "134" ~ "5.5700000",
+    "135" ~ "4.5000000",
+    "137" ~ "3.3428571",
+    "138" ~ "2.7428571",
+    "139" ~ "2.0416667", 
+    "140" ~ "1.0642857",
+    "141" ~ "2.8375000",
+    "142" ~ "1.9000000",
+    "143" ~ "1.5400000",
+    "144" ~ "0.5166667",
+    "145" ~ "2.5333333",
+    "170" ~ "1.4571429",
+    "171" ~ "0.3387500",
+    "172" ~ "1.4811111",
+    "173" ~ "0.5560000",
+    "175" ~ "0.7350000",
+    "176" ~ "0.4928571",
+    "177" ~ "0.8985714",
+    "179" ~ "0.7166667",
+    "180" ~ "0.1688235",
+    "181" ~ "0.8110526",
+    "195" ~ "0.3424000",
+    "197" ~ "2.6320000",
+    "198" ~ "2.4200000",
+    "199" ~ "2.4183333",
+    "200" ~ "0.3409091",
+    "196" ~ "0.8300000"
+  )) %>%
+  mutate(char_ht=na_if(char_ht, "NA")) %>%
+  na.omit() %>%
+  mutate(char_ht=as.numeric(char_ht)) %>%
+  mutate(location=rep("Laguna Mountain", 155))
+
+char_scatter <- rbind(lm_char_scatter, bm_char_scatter)
+
+# faceted scatterplots of char height vs traits
+traits_char_plot <- ggplot(char_scatter, aes(x=cwm, y=char_ht, color=location)) + 
+    geom_point() +
+    facet_wrap(~trait, scales = c("free")) +
+    ggtitle("Correlations between functional traits and char height") +
+    xlab("Trait community weighted mean") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplots of char height vs traits
+sla_char <- char_scatter %>%
+  filter(trait=="Spec leaf area (mm2/mg)")
+sla_char_plot <- ggplot(sla_char, aes(x=cwm, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between specific leaf area and char height") +
+    xlab("Specific leaf area (mm2/mg)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+ll_char <- char_scatter %>%
+  filter(trait=="Leaf length (cm)")
+ll_char_plot <- ggplot(ll_char, aes(x=cwm, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf length and char height") +
+    xlab("Leaf length (cm)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+lw_char <- char_scatter %>%
+  filter(trait=="Leaf width (cm)")
+lw_char_plot <- ggplot(lw_char, aes(x=cwm, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf width and char height") +
+    xlab("Leaf width (cm)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+height_char <- char_scatter %>%
+  filter(trait=="Plant height (m)")
+height_char_plot <- ggplot(height_char, aes(x=cwm, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between plant height and char height") +
+    xlab("Plant height (m)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+lc_char <- char_scatter %>%
+  filter(trait=="Leaf curl height (mm)")
+lc_char_plot <- ggplot(lc_char, aes(x=cwm, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf curl height and char height") +
+    xlab("Leaf curl height (mm)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# calculate mean scorch height per plot
+mean_scorch_ht <- postfire_whole %>%
+  group_by(plot_id) %>%
+  summarise(mean_scorch_ht = mean(scorch_ht))
+
+# create data frame for scorch scatterplots
+bm_scorch_scatter <- bm_cwm_arrange %>%
+  mutate(scorch_ht = case_match(
+    plot_id,
+    "24" ~ "0.0000000",
+    "25" ~ "3.0000000",
+    "26" ~ "0.000000",
+    "27" ~ "4.000000",
+    "33" ~ "6.950000",
+    "49" ~ "1.5800000",
+    "50" ~ "11.0000000",
+    "51" ~ "1.400000",
+    "52" ~ "2.466667",
+    "53" ~ "5.400000",
+    "48" ~ "4.8333333")) %>%
+  mutate(scorch_ht=as.numeric(scorch_ht)) %>%
+  mutate(location=rep("Bluff Mesa", 50))
+
+lm_scorch_scatter <- laguna_cwm_arrange %>%
+  mutate(scorch_ht = case_match(
+    plot_id,
+    "128" ~ "7.8500000",
+    "129" ~ "0.0000000",
+    "130" ~ "6.0750000",
+    "131" ~ "NA",
+    "132" ~ "15.7000000",
+    "133" ~ "2.2833333",
+    "134" ~ "8.2500000",
+    "135" ~ "3.6666667",
+    "137" ~ "3.1142857",
+    "138" ~ "5.2571429",
+    "139" ~ "9.3166667",
+    "140" ~ "2.4142857",
+    "141" ~ "4.6625000",
+    "142" ~ "4.8000000",
+    "143" ~ "4.4100000",
+    "144" ~ "0.3333333",
+    "145" ~ "1.4750000",
+    "170" ~ "3.8428571",
+    "171" ~ "3.3250000",
+    "172" ~ "2.7111111",
+    "173" ~ "3.5000000",
+    "175" ~ "5.6500000",
+    "176" ~ "0.6285714",
+    "177" ~ "0.7142857",
+    "179" ~ "0.6333333",
+    "180" ~ "0.3235294",
+    "181" ~ "1.3473684",
+    "195" ~ "0.4000000",
+    "197" ~ "6.1200000",
+    "198" ~ "6.2000000",
+    "199" ~ "6.2666667",
+    "200" ~ "2.1272727",
+    "196" ~ "0.0000000"
+  )) %>%
+  mutate(scorch_ht=na_if(scorch_ht, "NA")) %>%
+  na.omit() %>%
+  mutate(scorch_ht=as.numeric(scorch_ht)) %>%
+  mutate(location=rep("Laguna Mountain", 155))
+
+scorch_scatter <- rbind(lm_scorch_scatter, bm_scorch_scatter)
+
+# faceted scatterplots of scorch height vs traits
+traits_scorch_plot <- ggplot(scorch_scatter, aes(x=cwm, y=scorch_ht, color=location)) + 
+    geom_point() +
+    facet_wrap(~trait, scales = c("free")) +
+    ggtitle("Correlations between functional traits and scorch height") +
+    xlab("Trait community weighted mean") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# stand alone scatterplots of scorh height vs traits
+sla_scorch <- scorch_scatter %>%
+  filter(trait=="Spec leaf area (mm2/mg)")
+sla_scorch_plot <- ggplot(sla_scorch, aes(x=cwm, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between specific leaf area and scorch height") +
+    xlab("Specific leaf area (mm2/mg)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+ll_scorch <- scorch_scatter %>%
+  filter(trait=="Leaf length (cm)")
+ll_scorch_plot <- ggplot(ll_scorch, aes(x=cwm, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf length and scorch height") +
+    xlab("Leaf length (cm)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+lw_scorch <- scorch_scatter %>%
+  filter(trait=="Leaf width (cm)")
+lw_scorch_plot <- ggplot(lw_scorch, aes(x=cwm, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf width and scorch height") +
+    xlab("Leaf width (cm)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+height_scorch <- scorch_scatter %>%
+  filter(trait=="Plant height (m)")
+height_scorch_plot <- ggplot(height_scorch, aes(x=cwm, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between plant height and scorch height") +
+    xlab("Plant height (m)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+lc_scorch <- scorch_scatter %>%
+  filter(trait=="Leaf curl height (mm)")
+lc_scorch_plot <- ggplot(lc_scorch, aes(x=cwm, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf curl height and scorch height") +
+    xlab("Leaf curl height (mm)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# calculate mean crown scorch % per plot
+mean_csp <- postfire_whole %>%
+  group_by(plot_id) %>%
+  summarise(mean_csp = mean(cr_sc_pct))
+
+# create data frame for scorch scatterplots
+bm_csp_scatter <- bm_cwm_arrange %>%
+  mutate(csp = case_match(
+    plot_id,
+    "24" ~ "0.0000000",
+    "25" ~ "0.8750000",
+    "26" ~ "0.000000",
+    "27" ~ "0.1666667",
+    "33" ~ "17.5000000",
+    "49" ~ "8.1000000",
+    "50" ~ "45.0000000",
+    "51" ~ "0.6250000",
+    "52" ~ "6.8333333",
+    "53" ~ "27.4000000",
+    "48" ~ "25.0000000")) %>%
+  mutate(csp=as.numeric(csp)) %>%
+  mutate(location=rep("Bluff Mesa", 50))
+
+lm_csp_scatter <- laguna_cwm_arrange %>%
+  mutate(csp = case_match(
+    plot_id,
+    "128" ~ "28.1250000",
+    "129" ~ "0.0000000",
+    "130" ~ "18.3333333",
+    "131" ~ "NA",
+    "132" ~ "81.6666667",
+    "133" ~ "31.0000000",
+    "134" ~ "29.0000000",
+    "135" ~ "0.8333333",
+    "137" ~ "14.7142857",
+    "138" ~ "61.0000000",
+    "139" ~ "7.5000000",
+    "140" ~ "8.2142857",
+    "141" ~ "26.0625000",
+    "142" ~ "27.3750000",
+    "143" ~ "29.5000000",
+    "144" ~ "1.6666667",
+    "145" ~ "8.3333333",
+    "170" ~ "22.0000000",
+    "171" ~ "26.0000000",
+    "172" ~ "4.5555556",
+    "173" ~ "40.9333333",
+    "175" ~ "6.8750000",
+    "176" ~ "1.7142857",
+    "177" ~ "10.0000000",
+    "179" ~ "1.6666667",
+    "180" ~ "2.9411765",
+    "181" ~ "8.9473684",
+    "195" ~ "0.8000000",
+    "197" ~ "0.0000000",
+    "198" ~ "55.0000000",
+    "199" ~ "60.8333333",
+    "200" ~ "10.5454545",
+    "196" ~ "0.0000000"
+  )) %>%
+  mutate(csp=na_if(csp, "NA")) %>%
+  na.omit() %>%
+  mutate(csp=as.numeric(csp)) %>%
+  mutate(location=rep("Laguna Mountain", 155))
+
+csp_scatter <- rbind(lm_csp_scatter, bm_csp_scatter)
+
+# faceted scatterplots of crown scorch % vs traits
+traits_csp_plot <- ggplot(csp_scatter, aes(x=cwm, y=csp, color=location)) + 
+    geom_point() +
+    facet_wrap(~trait, scales = c("free")) +
+    ggtitle("Correlations between functional traits and crown scorch") +
+    xlab("Trait community weighted mean") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# stand alone scatterplots of crown scorch % vs traits
+sla_csp <- csp_scatter %>%
+  filter(trait=="Spec leaf area (mm2/mg)")
+sla_csp_plot <- ggplot(sla_csp, aes(x=cwm, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between specific leaf area and crown scorch") +
+    xlab("Specific leaf area (mm2/mg)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+ll_csp <- csp_scatter %>%
+  filter(trait=="Leaf length (cm)")
+ll_csp_plot <- ggplot(ll_csp, aes(x=cwm, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf length and crown scorch") +
+    xlab("Leaf length (cm)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+lw_csp <- csp_scatter %>%
+  filter(trait=="Leaf width (cm)")
+lw_csp_plot <- ggplot(lw_csp, aes(x=cwm, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf width and crown scorch") +
+    xlab("Leaf width (cm)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+height_csp <- csp_scatter %>%
+  filter(trait=="Plant height (m)")
+height_csp_plot <- ggplot(height_csp, aes(x=cwm, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between plant height and crown scorch") +
+    xlab("Plant height (m)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+lc_csp <- csp_scatter %>%
+  filter(trait=="Leaf curl height (mm)")
+lc_csp_plot <- ggplot(lc_csp, aes(x=cwm, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between leaf curl height and crown scorch") +
+    xlab("Leaf curl height (mm)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# display plots
+traits_char_plot
+traits_scorch_plot
+traits_csp_plot
+
+sla_char_plot
+ll_char_plot
+lw_char_plot
+height_char_plot
+lc_char_plot
+sla_scorch_plot
+ll_scorch_plot
+lw_scorch_plot
+height_scorch_plot
+lc_scorch_plot
+sla_csp_plot
+ll_csp_plot
+lw_csp_plot
+height_csp_plot
+lc_csp_plot
+```
+
+## fire severity vs. fuels scatterplots
+```{r}
+# filter fuel data to only include 1hr fuels
+one_hr <- fuel_class %>%
+  filter(fuel_class=="one_hr") %>%
+  slice(-c(4, 9)) %>%
+  mutate(char_ht = mean_char_ht$mean_char_ht) %>%
+  mutate(scorch_ht = mean_scorch_ht$mean_scorch_ht) %>%
+  mutate(csp = mean_csp$mean_csp) %>%
+  slice(-39)
+
+# filter fuel data to only include 10hr fuels
+ten_hr <- fuel_class %>%
+  filter(fuel_class=="ten_hr") %>%
+  slice(-c(4, 9)) %>%
+  mutate(char_ht = mean_char_ht$mean_char_ht) %>%
+  mutate(scorch_ht = mean_scorch_ht$mean_scorch_ht) %>%
+  mutate(csp = mean_csp$mean_csp) %>%
+  slice(-39)
+
+# filter fuel data to only include 100hr fuels
+hun_hr <- fuel_class %>%
+  filter(fuel_class=="hun_hr") %>%
+  slice(-c(4, 9)) %>%
+  mutate(char_ht = mean_char_ht$mean_char_ht) %>%
+  mutate(scorch_ht = mean_scorch_ht$mean_scorch_ht) %>%
+  mutate(csp = mean_csp$mean_csp) %>%
+  slice(-39)
+
+# scatterplots of char height vs fuels
+one_char_plot <- ggplot(one_hr, aes(x=value, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 1-hour fuel loading and char height") +
+    xlab("1-hour fuels (tons/acre)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+ten_char_plot <- ggplot(ten_hr, aes(x=value, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 10-hour fuel loading and char height") +
+    xlab("10-hour fuels (tons/acre)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+hun_char_plot <- ggplot(hun_hr, aes(x=value, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 100-hour fuel loading and char height") +
+    xlab("100-hour fuels (tons/acre)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplots of crown scorch vs fuels
+one_csp_plot <- ggplot(one_hr, aes(x=value, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 1-hour fuel loading and crown scorch") +
+    xlab("1-hour fuels (tons/acre)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+ten_csp_plot <- ggplot(ten_hr, aes(x=value, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 10-hour fuel loading and crown scorch") +
+    xlab("10-hour fuels (tons/acre)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+hun_csp_plot <- ggplot(hun_hr, aes(x=value, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 100-hour fuel loading and crown scorch") +
+    xlab("100-hour fuels (tons/acre)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+one_scorch_plot <- ggplot(one_hr, aes(x=value, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 1-hour fuel loading and scorch height") +
+    xlab("1-hour fuels (tons/acre)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+ten_scorch_plot <- ggplot(ten_hr, aes(x=value, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 10-hour fuel loading and scorch height") +
+    xlab("10-hour fuels (tons/acre)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+hun_scorch_plot <- ggplot(hun_hr, aes(x=value, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between 100-hour fuel loading and scorch height") +
+    xlab("100-hour fuels (tons/acre)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+```
+
+## linear regressions: leaf traits vs. fire severity
+```{r}
+# SLA v. char height
+lr_sla_char = lm(char_ht~cwm, data = sla_char) # create the linear regression
+summary(lr_sla_char) # review the results --> SIGNIFICANT
+
+# leaf length v. char height
+lr_ll_char = lm(char_ht~cwm, data = ll_char) # create the linear regression
+summary(lr_ll_char) # review the results --> SIGNIFICANT
+
+# leaf width v. char height
+lr_lw_char = lm(char_ht~cwm, data = lw_char) # create the linear regression
+summary(lr_lw_char) # review the results --> SIGNIFICANT
+
+# plant height v. char height
+lr_height_char = lm(char_ht~cwm, data = height_char) # create the linear regression
+summary(lr_height_char) # review the results --> SIGNIFICANT
+
+# curl height v. char height
+lr_lc_char = lm(char_ht~cwm, data = lc_char) # create the linear regression
+summary(lr_lc_char) # review the results --> SIGNIFICANT
+
+# SLA v. scorch height
+lr_sla_scorch = lm(scorch_ht~cwm, data = sla_scorch) # create the linear regression
+summary(lr_sla_scorch) # review the results --> SIGNIFICANT
+
+# leaf length v. scorch height
+lr_ll_scorch = lm(scorch_ht~cwm, data = ll_scorch) # create the linear regression
+summary(lr_ll_scorch) # review the results --> SIGNIFICANT
+
+# leaf width v. scorch height
+lr_lw_scorch = lm(scorch_ht~cwm, data = lw_scorch) # create the linear regression
+summary(lr_lw_scorch) # review the results --> SIGNIFICANT
+
+# plant height v. scorch height
+lr_height_scorch = lm(scorch_ht~cwm, data = height_scorch) # create the linear regression
+summary(lr_height_scorch) # review the results --> SIGNIFICANT
+
+# leaf curl height v. scorch height
+lr_lc_scorch = lm(scorch_ht~cwm, data = lc_scorch) # create the linear regression
+summary(lr_lc_scorch) # review the results --> SIGNIFICANT
+
+# SLA v. crown scorch percent
+lr_sla_csp = lm(csp~cwm, data = sla_csp) # create the linear regression
+summary(lr_sla_csp) # review the results --> not significant
+
+# leaf length v. crown scorch percent
+lr_ll_csp = lm(csp~cwm, data = ll_csp) # create the linear regression
+summary(lr_ll_csp) # review the results --> not significant
+
+# leaf width v. crown scorch percent
+lr_lw_csp = lm(csp~cwm, data = lw_csp) # create the linear regression
+summary(lr_lw_csp) # review the results --> not significant
+
+# plant height v. crown scorch percent
+lr_height_csp = lm(csp~cwm, data = height_csp) # create the linear regression
+summary(lr_height_csp) # review the results --> not significant
+
+# leaf curl height v. crown scorch percent
+lr_lc_csp = lm(csp~cwm, data = lc_csp) # create the linear regression
+summary(lr_lc_csp) # review the results --> not significant
+```
+
+## linear regressions: fuels vs. fire severity
+```{r}
+# 1 hr v. char height
+lr_one_char = lm(char_ht~value, data = one_hr) # create the linear regression
+summary(lr_one_char) # review the results --> not significant
+
+# 10 hr v. char height
+lr_ten_char = lm(char_ht~value, data = ten_hr) # create the linear regression
+summary(lr_ten_char) # review the results --> not significant
+
+# 100 hr v. char height
+lr_hun_char = lm(char_ht~value, data = hun_hr) # create the linear regression
+summary(lr_hun_char) # review the results --> not significant
+
+# duff/litter v. char height
+lr_dl_char = lm(char_ht~duff_litter, data = duff_litter_total) # create the linear regression
+summary(lr_dl_char) # review the results --> not significant
+
+# 1 hr v. scorch height
+lr_one_scorch = lm(scorch_ht~value, data = one_hr) # create the linear regression
+summary(lr_one_scorch) # review the results --> not significant
+
+# 10 hr v. scorch height
+lr_ten_scorch = lm(scorch_ht~value, data = ten_hr) # create the linear regression
+summary(lr_ten_scorch) # review the results --> not significant
+
+# 100 hr v. scorch height
+lr_hun_scorch = lm(scorch_ht~value, data = hun_hr) # create the linear regression
+summary(lr_hun_scorch) # review the results --> not significant
+
+# duff/litter v. scorch height
+lr_dl_scorch = lm(scorch_ht~duff_litter, data = duff_litter_total) # create the linear regression
+summary(lr_dl_scorch) # review the results --> not significant
+
+# 1 hr v. crown scorch
+lr_one_csp = lm(csp~value, data = one_hr) # create the linear regression
+summary(lr_one_csp) # review the results --> not significant
+
+# 10 hr v. crown scorch 
+lr_ten_csp = lm(csp~value, data = ten_hr) # create the linear regression
+summary(lr_ten_csp) # review the results --> not significant
+
+# 100 hr v. crown scorch 
+lr_hun_csp = lm(csp~value, data = hun_hr) # create the linear regression
+summary(lr_hun_csp) # review the results --> not significant
+
+# duff/litter v. crown scorch 
+lr_dl_csp = lm(csp~duff_litter, data = duff_litter_total) # create the linear regression
+summary(lr_dl_csp) # review the results --> not significant
+```
+
+# multiple regression 
+## multiple regression: leaf traits vs. fire severity
+```{r}
+# create dataframe 
+char_ht <- sla_char$char_ht
+sla <- sla_char$cwm
+ll <- ll_char$cwm
+width <- lw_char$cwm
+height <- height_char$cwm
+curl <- lc_char$cwm
+
+char_mult_data <- data.frame(char_ht, sla, ll, width, height, curl)
+cor(char_mult_data)
+
+# char height: sla, ll, & width
+char_mult1 <- lm(char_ht ~ sla + ll + width, data = char_mult_data) # multiple regression model
+summary(char_mult1) # display results of mult. regression --> not significant
+
+# char height: sla, ll, & curl
+char_mult3 <- lm(char_ht ~ sla + ll + curl, data = char_mult_data) # multiple regression model
+summary(char_mult3) # display results of mult. regression --> not significant
+
+# create dataframe 
+scorch_ht <- sla_scorch$scorch_ht
+sla <- sla_scorch$cwm
+ll <- ll_scorch$cwm
+width <- lw_scorch$cwm
+height <- height_scorch$cwm
+curl <- lc_scorch$cwm
+
+scorch_mult_data <- data.frame(scorch_ht, sla, ll, width, height, curl)
+
+# scorch height: sla, ll, & width
+scorch_mult1 <- lm(scorch_ht ~ sla + ll + width, data = scorch_mult_data) # multiple regression model
+summary(scorch_mult1) # display results of mult. regression --> SIGNIFICANT?
+
+# scorch height: sla, ll, & curl
+scorch_mult3 <- lm(scorch_ht ~ sla + ll + curl, data = scorch_mult_data) # multiple regression model
+summary(scorch_mult3) # display results of mult. regression --> SIGNIFICANT?
+
+# create dataframe 
+csp <- sla_csp$csp
+sla <- sla_csp$cwm
+ll <- ll_csp$cwm
+width <- lw_csp$cwm
+height <- height_csp$cwm
+curl <- lc_csp$cwm
+
+csp_mult_data <- data.frame(csp, sla, ll, width, height, curl)
+
+# crown scorch %: sla, ll, & width
+csp_mult1 <- lm(csp ~ sla + ll + width, data = csp_mult_data) # multiple regression model
+summary(csp_mult1) # display results of mult. regression --> not significant
+
+# crown scorch %: sla, ll, & curl
+csp_mult3 <- lm(csp ~ sla + ll + curl, data = csp_mult_data) # multiple regression model
+summary(csp_mult3) # display results of mult. regression --> not significant
+```
+
+## fire severity vs. fuels scatterplots
+```{r}
+# combine duff & litter values together per plot
+duff_litter_total <- duff_litter %>%
+  group_by(plot_id) %>%
+  summarise(duff_litter = sum(value)) %>%
+  slice(-c(4,9)) %>%
+  mutate(location = c(rep("Laguna Mountain", 32), rep("Bluff Mesa", 11))) %>%
+  mutate(char_ht = mean_char_ht$mean_char_ht) %>%
+  mutate(scorch_ht = mean_scorch_ht$mean_scorch_ht) %>%
+  mutate(csp = mean_csp$mean_csp) 
+
+# scatterplot of duff & litter vs. char height
+dl_char_plot <- ggplot(duff_litter_total, aes(x=duff_litter, y=char_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between duff & litter loading and char height") +
+    xlab("Duff & litter (tons/acre)") +
+    ylab("Mean char height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplot of duff & litter vs. scorch height
+dl_scorch_plot <- ggplot(duff_litter_total, aes(x=duff_litter, y=scorch_ht, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between duff & litter loading and scorch height") +
+    xlab("Duff & litter (tons/acre)") +
+    ylab("Mean scorch height per plot (m)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# scatterplot of duff & litter vs. crown scorch 
+dl_csp_plot <- ggplot(duff_litter_total, aes(x=duff_litter, y=csp, color=location)) + 
+    geom_point() +
+    ggtitle("Correlation between duff & litter loading and crown scorch") +
+    xlab("Duff & litter (tons/acre)") +
+    ylab("Mean crown scorch per plot (%)") +
+    geom_smooth(method=lm , color="darkblue", se=TRUE)
+
+# print plots
+dl_char_plot
+dl_scorch_plot
+dl_csp_plot
+```
+
+# check model assumptions
+```{r}
+### fire severity ~ leaf traits
+# sla v char
+# plot histogram of residuals
+ggplot(data = sla_char, aes(x = lr_sla_char$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E1 <- residuals(lr_sla_char, "pearson")
+ggqqplot(E1)
+
+# scatterplot
+
+# char mult1
+# plot histogram of residuals
+ggplot(data = char_mult_data, aes(x = char_mult1$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E2 <- residuals(char_mult1, "pearson")
+ggqqplot(E2)
+
+# scatterplot
+
+# char mult3
+# plot histogram of residuals
+ggplot(data = char_mult_data, aes(x = char_mult3$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E3 <- residuals(char_mult3, "pearson")
+ggqqplot(E3)
+
+# scatterplot
+
+# scorch mult1
+# plot histogram of residuals
+ggplot(data = scorch_mult_data, aes(x = scorch_mult1$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E4 <- residuals(scorch_mult1, "pearson")
+ggqqplot(E4)
+
+# scatterplot
+
+# scorch mult3
+# plot histogram of residuals
+ggplot(data = scorch_mult_data, aes(x = scorch_mult3$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E5 <- residuals(scorch_mult3, "pearson")
+ggqqplot(E5)
+
+# scatterplot
+
+# csp mult1
+# plot histogram of residuals
+ggplot(data = csp_mult_data, aes(x = csp_mult1$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E6 <- residuals(csp_mult1, "pearson")
+ggqqplot(E6)
+
+# scatterplot
+
+# csp mult3
+# plot histogram of residuals
+ggplot(data = csp_mult_data, aes(x = csp_mult3$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E7 <- residuals(csp_mult3, "pearson")
+ggqqplot(E7)
+
+# scatterplot
+
+### fuel consumption ~ leaf traits
+# 1hr mult1
+# plot histogram of residuals
+ggplot(data = consumption, aes(x = onehr_mult1$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E8 <- residuals(onehr_mult1, "pearson")
+ggqqplot(E8)
+
+# scatterplot
+
+# 1hr mult2
+# plot histogram of residuals
+ggplot(data = consumption, aes(x = onehr_mult2$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E9 <- residuals(onehr_mult2, "pearson")
+ggqqplot(E9)
+
+# scatterplot
+
+# 1hr mult3
+# plot histogram of residuals
+ggplot(data = consumption, aes(x = onehr_mult3$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E10 <- residuals(onehr_mult3, "pearson")
+ggqqplot(E10)
+
+# scatterplot
+
+# 10hr mult1
+# plot histogram of residuals
+ggplot(data = consumption, aes(x = tenhr_mult1$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E11 <- residuals(tenhr_mult1, "pearson")
+ggqqplot(E11)
+
+# scatterplot
+
+# 100hr mult1
+# plot histogram of residuals
+ggplot(data = consumption, aes(x = hunhr_mult1$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E12 <- residuals(hunhr_mult1, "pearson")
+ggqqplot(E12)
+
+# scatterplot
+
+# duff/litter mult1
+# plot histogram of residuals
+ggplot(data = consumption, aes(x = dl_mult1$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E13 <- residuals(dl_mult1, "pearson")
+ggqqplot(E13)
+
+# scatterplot
+
+# duff/litter mult2
+# plot histogram of residuals
+ggplot(data = consumption, aes(x = dl_mult2$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E14 <- residuals(dl_mult2, "pearson")
+ggqqplot(E14)
+
+# scatterplot
+
+# duff/litter mult3
+# plot histogram of residuals
+ggplot(data = consumption, aes(x = dl_mult3$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E15 <- residuals(dl_mult3, "pearson")
+ggqqplot(E15)
+
+# scatterplot
+
+# duff/litter depth mult1
+# plot histogram of residuals
+ggplot(data = consumption, aes(x = dep_mult1$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E16 <- residuals(dep_mult1, "pearson")
+ggqqplot(E16)
+
+# scatterplot
+
+# duff/litter depth mult2
+# plot histogram of residuals
+ggplot(data = consumption, aes(x = dep_mult2$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E17 <- residuals(dep_mult2, "pearson")
+ggqqplot(E17)
+
+# scatterplot
+
+# duff/litter depth mult3
+# plot histogram of residuals
+ggplot(data = consumption, aes(x = dep_mult3$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E18 <- residuals(dep_mult3, "pearson")
+ggqqplot(E18)
+
+# scatterplot
+
+### litter density ~ leaf traits
+# leaf length 
+# plot histogram of residuals (why is this not working?)
+ggplot(data = density, aes(x = lr_ll_dens$residuals)) +
+    geom_histogram(fill = 'steelblue', color = 'black') +
+    labs(title = 'Histogram of Residuals', x = 'Residuals', y = 'Frequency')
+
+# qqplot
+E8 <- residuals(onehr_mult1, "pearson")
+ggqqplot(E8)
+
+# scatterplot
+```
+
+### PCA: leaf traits (laguna)
+```{r}
+# create the data frame & only include the values to be analyzed in pca
+pca_laguna_data <- trait_all %>%
+  filter(location == "Laguna Mountain") %>%
+  select(-c(plot_id, location))
+
+# conduct PCA, stats::prcomp 
+pca_laguna <- prcomp(pca_laguna_data, scale=TRUE)
+
+# show PCA results -> larger numbers = more variance explained by principal component; more explanatory power
+summary(pca_laguna)
+
+# show scree plot (visualize how eigen values decrease with # of ordination axes)
+screeplot(pca_laguna, type="lines")
+
+# calculate structure coefficients
+cor(pca_laguna_data, pca_laguna$x)
+
+# do the math, same results as above
+loadings <- pca_laguna$rotation
+sdev <- pca_laguna$sdev
+struct.function <- function(loadings, sdev){
+  loadings*sdev
+}
+
+s.corr.l <- t(apply(loadings, 1, struct.function, sdev))
+
+head(s.corr.l[, 1:4])
+
+# % of the variable's variance represented by that component
+s.corr.l2 <- s.corr.l^2
+s.corr.l2
+
+# calculate communality: proportion of variance explained after PCs have been retained
+# if you retain all PCs, communality will equal 1...
+s.corr.l.df <- as.data.frame(s.corr.l) %>%
+  select(PC1:PC2)
+
+strct.corr.l2 <- s.corr.l.df^2
+
+apply(strct.corr.l2, 1, sum) # what does this do? why are my values showing 1?
+
+# view pca
+biplot_laguna <- autoplot(pca_laguna, data = pca_laguna_data,
+                           loadings = TRUE, loadings.colour = "lightblue",
+                           loadings.label = TRUE, loadings.label.colour = "black", loadings.label.repel=TRUE) +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.title = element_text(face = 'bold', size = 12),
+        axis.text = element_text(size = 10),
+        axis.text.x = element_text(size = 10, angle = 20))
+
+biplot_laguna
+```
+
+### PCA; leaf traits (bluff mesa)
+```{r}
+# create the data frame & only include the values to be analyzed in pca
+pca_bluff_data <- trait_all %>%
+  filter(location == "Bluff Mesa") %>%
+  select(-c(plot_id, location, curl_cwm))
+
+# conduct PCA, stats::prcomp 
+pca_bluff <- prcomp(pca_bluff_data, scale=TRUE)
+
+# show PCA results -> larger numbers = more variance explained by principal component; more explanatory power
+summary(pca_bluff)
+
+# show scree plot (visualize how eigen values decrease with # of ordination axes)
+screeplot(pca_bluff, type="lines")
+
+# calculate structure coefficients
+cor(pca_bluff_data, pca_bluff$x)
+
+# do the math, same results as above
+loadings <- pca_bluff$rotation
+sdev <- pca_bluff$sdev
+struct.function <- function(loadings, sdev){
+  loadings*sdev
+}
+
+s.corr.b <- t(apply(loadings, 1, struct.function, sdev))
+
+head(s.corr.b[, 1:4])
+
+# % of the variable's variance represented by that component
+s.corr.b2 <- s.corr.b^2
+s.corr.b2
+
+# calculate communality: proportion of variance explained after PCs have been retained
+# if you retain all PCs, communality will equal 1...
+s.corr.b.df <- as.data.frame(s.corr.b) %>%
+  select(PC1:PC2)
+
+strct.corr.b2 <- s.corr.b.df^2
+
+apply(strct.corr.b2, 1, sum) # what does this do? why are my values showing 1?
+
+# view pca
+biplot_bluff <- autoplot(pca_bluff, data = pca_bluff_data,
+                           loadings = TRUE, loadings.colour = "lightblue",
+                           loadings.label = TRUE, loadings.label.colour = "black") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.title = element_text(face = 'bold', size = 12),
+        axis.text = element_text(size = 10),
+        axis.text.x = element_text(size = 10, angle = 20))
+
+biplot_bluff
+```
